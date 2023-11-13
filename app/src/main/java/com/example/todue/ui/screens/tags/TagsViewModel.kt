@@ -1,10 +1,10 @@
-package com.example.todue.modelView
+package com.example.todue.ui.screens.tags
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.dataLayer.TagDao
-import com.example.todue.dataLayer.TagEvent
-import com.example.todue.dataLayer.TagSortType
+import com.example.todue.dataLayer.local.TagDao
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.ui.sortType.TagSortType
 import com.example.todue.state.TagState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TagViewModel(
+class TagsViewModel(
     private val tagDao: TagDao
 ): ViewModel() {
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)

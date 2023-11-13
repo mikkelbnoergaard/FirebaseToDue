@@ -1,4 +1,4 @@
-package com.example.todue.dataLayer
+package com.example.todue.ui.sortType
 
 enum class TagSortType {
 

@@ -1,8 +1,8 @@
 package com.example.todue.state
 
-import com.example.todue.dataLayer.Tag
-import com.example.todue.dataLayer.ToDoSortType
-import com.example.todue.dataLayer.ToDo
+import com.example.todue.dataLayer.local.Tag
+import com.example.todue.ui.sortType.ToDoSortType
+import com.example.todue.dataLayer.local.ToDo
 
 data class ToDoState(
     val toDos: List<ToDo> = emptyList(),

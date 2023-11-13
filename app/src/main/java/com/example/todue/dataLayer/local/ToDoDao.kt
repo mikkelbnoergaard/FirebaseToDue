@@ -1,4 +1,4 @@
-package com.example.todue.dataLayer
+package com.example.todue.dataLayer.local
 
 import androidx.room.Dao
 import androidx.room.Delete

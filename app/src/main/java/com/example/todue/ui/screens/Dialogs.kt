@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
-import com.example.todue.dataLayer.Tag
-import com.example.todue.dataLayer.TagEvent
-import com.example.todue.dataLayer.ToDo
-import com.example.todue.dataLayer.ToDoEvent
-import com.example.todue.modifier.getBottomLineShape
+import com.example.todue.dataLayer.local.Tag
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.dataLayer.local.ToDo
+import com.example.todue.ui.event.ToDoEvent
+import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.textColor

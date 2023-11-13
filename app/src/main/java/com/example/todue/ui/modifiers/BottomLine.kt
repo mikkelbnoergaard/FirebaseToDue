@@ -1,4 +1,4 @@
-package com.example.todue.modifier
+package com.example.todue.ui.modifiers
 
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.ui.graphics.Shape

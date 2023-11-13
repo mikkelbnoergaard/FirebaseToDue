@@ -58,15 +58,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.todue.dataLayer.Tag
-import com.example.todue.dataLayer.TagEvent
-import com.example.todue.dataLayer.ToDo
-import com.example.todue.dataLayer.ToDoEvent
-import com.example.todue.dataLayer.ToDoSortType
-import com.example.todue.modelView.TabItem
-import com.example.todue.modifier.getBottomLineShape
+import com.example.todue.dataLayer.local.Tag
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.dataLayer.local.ToDo
+import com.example.todue.ui.event.ToDoEvent
+import com.example.todue.ui.sortType.ToDoSortType
+import com.example.todue.navigation.TabItem
+import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.screens.calendar.CalendarScreen
+import com.example.todue.ui.screens.overview.OverviewScreen
+import com.example.todue.ui.screens.settings.Settings
+import com.example.todue.ui.screens.statistics.StatisticsScreen
+import com.example.todue.ui.screens.tags.TagsScreen
 import com.example.todue.ui.theme.barColor
 import com.example.todue.ui.theme.itemColor
 import com.example.todue.ui.theme.textColor
@@ -145,7 +150,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onToDoEvent = onToDoEvent)
                 3 -> StatisticsScreen()
-                4 -> MoreScreen()
+                4 -> Settings()
                 else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onToDoEvent = onToDoEvent)
             }
         }
