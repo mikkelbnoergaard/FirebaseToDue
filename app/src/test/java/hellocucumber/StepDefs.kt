@@ -1,50 +1,56 @@
 package hellocucumber
 
-import io.cucumber.java.en.*
-import org.junit.jupiter.api.Assertions.*
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.todue.dataLayer.local.Tag
+import com.example.todue.dataLayer.local.ToDo
+import com.example.todue.ui.event.ToDoEvent
 import io.cucumber.java.PendingException
-import io.cucumber.java.en.Given
-import io.cucumber.java.en.When
-import io.cucumber.java.en.Then
+import io.cucumber.java.en.*
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.junit.Assert.*
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.*
 
-class IsItFriday {
-    companion object {
-        fun isItFriday(today: String): String {
-            return if ("Friday" == today) "TGIF" else "Nope"
-        }
+class ToDoFactory {
+    fun createNewToDo(title: String, description: String, tag: String, dueDate: String, finished: Boolean) {
+        val title = title,
+        val description = String,
+        val tag = String,
+        val dueDate = String,
+        val finished = Boolean,
+
+        data class ToDo(
+            val title: String,
+            val description: String,
+            val tag: String,
+            val dueDate: String,
+            val finished: Boolean,
+
+            @PrimaryKey(autoGenerate = true)
+            val id: Int = 0
+        )
     }
 }
 
 class StepDefs {
-    var today: String? = null
-    var actualAnswer: String? = null
-    @Given("an example scenario")
-    fun anExampleScenario() {
+    val myNewToDo
+
+    @Given ("That I press the \"+\" button")
+    fun i_Create_A_New_ToDo() {
+        val myNewToDo = ToDoFactory(
+            title = "test",
+            description = "Dette er en test",
+            tag = "testingToDo",
+            dueDate = "01-01-1971\n00:01",
+            finished = false
+        )
     }
 
-    @When("all step definitions are implemented")
-    fun allStepDefinitionsAreImplemented() {
+    @Then ("the app should accept inputs")
+    fun toBeDetermined(){
     }
-
-    @Then("the scenario passes")
-    fun theScenarioPasses() {
-    }
-
-    @Given("today is {string}")
-    fun today_is(today: String?) {
-        this.today = today
-    }
-
-    @When("I ask whether it's Friday yet")
-    fun i_ask_whether_it_s_Friday_yet() {
-        actualAnswer = today?.let { IsItFriday.isItFriday(it) }
-    }
-
-    @Then("I should be told {string}")
-    fun i_should_be_told(expectedAnswer: String?) {
-        assertEquals(expectedAnswer, actualAnswer)
-    }
-
 }
