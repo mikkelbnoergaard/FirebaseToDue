@@ -27,7 +27,7 @@ class ToDoRepository @Inject constructor(
     }
 
     suspend fun completeToDo(id : Int) {
-        dataSource.updateFinished(id,true)
+        dataSource.updateFinished(id)
     }
 
     fun getToDosOrderedByTitle() : Flow<List<ToDo>> {

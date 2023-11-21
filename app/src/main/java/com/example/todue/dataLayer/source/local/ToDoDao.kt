@@ -35,6 +35,6 @@ interface ToDoDao {
     fun getToDosOrderedByDueDate(): Flow<List<ToDo>>
 
     @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
-    suspend fun updateFinished(toDoId: Int , finished: Boolean)
+    suspend fun updateFinished(toDoId: Int)
 
 }

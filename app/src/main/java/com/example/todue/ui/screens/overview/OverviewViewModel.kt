@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 
 class OverviewViewModel(
-    private val toDoRepository: ToDoRepository,
+    private val toDoRepository: ToDoDao,
     private val tagDao: TagDao,
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
@@ -79,7 +79,7 @@ class OverviewViewModel(
                 }
 
                 viewModelScope.launch{
-                    toDoRepository.createTodo(toDo.title, toDo.description, toDo.tag, toDo.dueDate, toDo.finished)
+                    toDoRepository.createToDo(toDo)
                 }
                 _toDoState.update { it.copy(
                     isCreatingToDo = false,
