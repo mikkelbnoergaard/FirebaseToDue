@@ -2,7 +2,7 @@ package com.example.todue.ui.screens.tags
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.dataLayer.local.TagDao
+import com.example.todue.dataLayer.source.local.TagDao
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.sortType.TagSortType
 import com.example.todue.state.TagState

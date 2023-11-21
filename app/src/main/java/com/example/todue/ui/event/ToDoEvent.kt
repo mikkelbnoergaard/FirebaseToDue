@@ -1,7 +1,7 @@
 package com.example.todue.ui.event
 
 import com.example.todue.ui.sortType.ToDoSortType
-import com.example.todue.dataLayer.local.ToDo
+import com.example.todue.dataLayer.source.local.ToDo
 
 sealed interface ToDoEvent {
     object CreateToDo: ToDoEvent

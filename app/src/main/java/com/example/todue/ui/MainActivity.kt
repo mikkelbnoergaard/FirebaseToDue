@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.todue.ui.theme.ToDoTheme
-import com.example.todue.dataLayer.local.ToDoDatabase
+import com.example.todue.dataLayer.source.local.ToDoDatabase
 import com.example.todue.ui.screens.tags.TagsViewModel
 import com.example.todue.ui.screens.overview.OverviewViewModel
 import com.example.todue.ui.screens.GeneralLayout
@@ -31,11 +31,12 @@ class MainActivity : ComponentActivity() {
             name = "todo.db"
         ).build()
     }
+
     private val overviewViewModel by viewModels<OverviewViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return OverviewViewModel(db.dao, db.tagDao) as T
+                    return OverviewViewModel(db.toDoDao, db.tagDao) as T
                 }
             }
         }

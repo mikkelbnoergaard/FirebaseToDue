@@ -1,4 +1,4 @@
-package com.example.todue.dataLayer.local
+package com.example.todue.dataLayer.source.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -8,6 +8,6 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class ToDoDatabase: RoomDatabase() {
-    abstract val dao: ToDoDao
+    abstract val toDoDao: ToDoDao
     abstract val tagDao: TagDao
 }

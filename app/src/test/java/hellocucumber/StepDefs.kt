@@ -1,7 +1,7 @@
 
 package hellocucumber
 
-import com.example.todue.dataLayer.local.ToDo
+import com.example.todue.dataLayer.source.local.ToDo
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When

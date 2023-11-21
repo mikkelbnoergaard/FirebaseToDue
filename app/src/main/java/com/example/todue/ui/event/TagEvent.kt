@@ -1,6 +1,6 @@
 package com.example.todue.ui.event
 
-import com.example.todue.dataLayer.local.Tag
+import com.example.todue.dataLayer.source.local.Tag
 
 //Might be used in the future
 sealed interface TagEvent {

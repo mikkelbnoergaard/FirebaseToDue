@@ -2,11 +2,12 @@ package com.example.todue.ui.screens.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.dataLayer.local.Tag
-import com.example.todue.dataLayer.local.TagDao
+import com.example.todue.dataLayer.source.local.Tag
+import com.example.todue.dataLayer.source.local.TagDao
 import com.example.todue.ui.sortType.ToDoSortType
-import com.example.todue.dataLayer.local.ToDo
-import com.example.todue.dataLayer.local.ToDoDao
+import com.example.todue.dataLayer.source.local.ToDo
+import com.example.todue.dataLayer.source.local.ToDoDao
+import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.ToDoState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,9 +19,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
+
 class OverviewViewModel(
-    private val dao: ToDoDao,
-    private val tagDao: TagDao
+    private val toDoRepository: ToDoRepository,
+    private val tagDao: TagDao,
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
@@ -30,10 +33,10 @@ class OverviewViewModel(
     private val _toDos = toDoSortType
         .flatMapLatest { sortType ->
             when(sortType) {
-                ToDoSortType.TITLE -> dao.getToDosOrderedByTitle()
-                ToDoSortType.TAG -> dao.getToDosOrderedByTag(tagSort)
-                ToDoSortType.DESCRIPTION -> dao.getToDosOrderedByDescription()
-                ToDoSortType.DUE_DATE -> dao.getToDosOrderedByDueDate()
+                ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
+                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTag(tagSort)
+                ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
+                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -76,7 +79,7 @@ class OverviewViewModel(
                 }
 
                 viewModelScope.launch{
-                    dao.createToDo(toDo)
+                    toDoRepository.createTodo(toDo.title, toDo.description, toDo.tag, toDo.dueDate, toDo.finished)
                 }
                 _toDoState.update { it.copy(
                     isCreatingToDo = false,
@@ -89,11 +92,13 @@ class OverviewViewModel(
                 ) }
 
             }
+            /* SKAL IMPLEMENTERES SENERE
             is ToDoEvent.DeleteToDo -> {
                 viewModelScope.launch {
-                    dao.deleteToDo(toDoEvent.toDo)
+                    toDoRepository.deleteToDo(toDoEvent.toDo)
                 }
             }
+            */
             is ToDoEvent.HideCreateDialog -> {
                 _toDoState.update {it.copy(
                     isCreatingToDo = false
