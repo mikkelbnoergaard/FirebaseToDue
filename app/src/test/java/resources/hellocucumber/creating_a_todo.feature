@@ -1,4 +1,4 @@
-Feature: Have I created a todo?
+Feature: Have I created a to-do?
   I want to create a todo
 
   Scenario: Creating a to-do item with all required fields
