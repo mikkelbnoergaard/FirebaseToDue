@@ -47,42 +47,7 @@ internal object CreateToDo {
 
 class Stepdefs {
 
-    //editing_a_todo
-    //dummy used to store data outside of functions
-    var dummyToDo1 = CreateToDo.createToDo("", "", "", "", false)
-    @Given("The user has already created a to-do")
-    fun user_has_created_a_to_do(){
-        var toDo = CreateToDo.createToDo(
-            title = "UserCreatedTitle",
-            description = "UserCreatedDescription",
-            tag = "UserCreatedTag",
-            dueDate = "20-11-2023\n22:30",
-            finished = false
-        )
-        dummyToDo1 = toDo
-    }
-
-    @When("The user edits the to-do information to {string}, {string}, {string} and {string}")
-    fun user_edits_to_do(editedTitle: String, editedDescription: String, editedTag: String, editedDueDate: String){
-        dummyToDo1.title = editedTitle
-        dummyToDo1.description = editedDescription
-        dummyToDo1.tag = editedTag
-        dummyToDo1.dueDate = editedDueDate
-    }
-
-    @Then("I view the edited to-do and I should see {string}, {string}, {string} and {string}")
-    fun i_view_the_edited_to_do_and_i_should_see(expectedTitle: String, expectedDescription: String, expectedTag: String, expectedDueDate: String){
-        assertEquals(dummyToDo1.title, expectedTitle)
-        assertEquals(dummyToDo1.description, expectedDescription)
-        assertEquals(dummyToDo1.tag, expectedTag)
-        assertEquals(dummyToDo1.dueDate, expectedDueDate)
-    }
-
-
-
-
-
-    //creating_a_todo
+    //##########creating_a_todo##########
     var title = ""
     var description = ""
     var tag = ""
@@ -114,11 +79,58 @@ class Stepdefs {
         assertEquals(expectedToDoTag, dummyToDo2.tag)
         assertEquals(expectedToDoDueDate, dummyToDo2.dueDate)
     }
+    //########################################
 
 
 
 
-    //is_it_friday
+
+    //##########editing_a_todo##########
+    //dummy used to store data outside of functions
+    var dummyToDo1 = CreateToDo.createToDo("", "", "", "", false)
+    @Given("The user has already created a to-do")
+    fun user_has_created_a_to_do(){
+        var toDo = CreateToDo.createToDo(
+            title = "UserCreatedTitle",
+            description = "UserCreatedDescription",
+            tag = "UserCreatedTag",
+            dueDate = "20-11-2023\n22:30",
+            finished = false
+        )
+        dummyToDo1 = toDo
+    }
+
+    @When("The user edits the to-do information to {string}, {string}, {string} and {string}")
+    fun user_edits_to_do(editedTitle: String, editedDescription: String, editedTag: String, editedDueDate: String){
+        dummyToDo1.title = editedTitle
+        dummyToDo1.description = editedDescription
+        dummyToDo1.tag = editedTag
+        dummyToDo1.dueDate = editedDueDate
+    }
+
+    @Then("I view the edited to-do and I should see {string}, {string}, {string} and {string}")
+    fun i_view_the_edited_to_do_and_i_should_see(expectedTitle: String, expectedDescription: String, expectedTag: String, expectedDueDate: String){
+        assertEquals(dummyToDo1.title, expectedTitle)
+        assertEquals(dummyToDo1.description, expectedDescription)
+        assertEquals(dummyToDo1.tag, expectedTag)
+        assertEquals(dummyToDo1.dueDate, expectedDueDate)
+    }
+    //########################################
+
+
+
+
+
+    //##########completing_a_todo##########
+    //insert cucumber test
+    //########################################
+
+
+
+
+
+
+    //##########is_it_friday##########
     var today: String = ""
     var actualAnswer: String = ""
 
@@ -138,4 +150,5 @@ class Stepdefs {
     fun i_should_be_told(expectedAnswer: String) {
         assertEquals(expectedAnswer, actualAnswer)
     }
+    //########################################
 }
