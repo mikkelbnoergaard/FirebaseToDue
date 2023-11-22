@@ -1,12 +1,21 @@
 
 package hellocucumber
 
-import com.example.todue.dataLayer.source.local.ToDo
+import androidx.room.PrimaryKey
+//import com.example.todue.dataLayer.local.ToDo
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.jupiter.api.Assertions.*
 
+
+class ToDo(
+    val title: String,
+    val description: String,
+    val tag: String,
+    val dueDate: String,
+    val finished: Boolean,
+)
 
 internal object IsItFriday {
     fun isItFriday(today: String): String? {
@@ -26,7 +35,6 @@ internal object CreateToDo {
         dueDate: String,
         finished: Boolean
     ): ToDo {
-
         return ToDo(
             title = title,
             description = description,
@@ -39,30 +47,35 @@ internal object CreateToDo {
 
 class Stepdefs {
 
-    //create to-do, should be edited to actual object is created
     var title = ""
     var description = ""
     var tag = ""
     var dueDate = ""
     var finished = false
 
-    @Given("I create a to-do")
-    fun i_create_a_to_do() {
-        title = "Cucumber title"
-        description = "Cucumber description"
-        tag = "Cucumber tag"
-        dueDate = "20-11-2023\n22:30"
+    var dummyToDo = CreateToDo.createToDo(title, description, tag, dueDate, finished)
+
+    @Given("The user creates a to-do with title {string}, description {string}, tag {string} and dueDate {string}")
+    fun user_creates_a_to_do(toDoTitle: String, toDoDescription: String, toDoTag: String, toDoDueDate: String) {
+        title = toDoTitle
+        description = toDoDescription
+        tag = toDoTag
+        dueDate = toDoDueDate
         finished = false
     }
 
     @Then("The to-do object is created")
     fun the_to_do_object_is_created() {
-        //var toDo = CreateToDo.createToDo(title, description, tag, dueDate, finished)
+        val toDo = CreateToDo.createToDo(title, description, tag, dueDate, finished)
+        dummyToDo = toDo
     }
 
-    @When("I view that to-do I should see {string}")
-    fun i_view_that_to_do_i_should_see(expectedToDoTitle: String) {
-        assertEquals(expectedToDoTitle, title)
+    @When("I view that to-do I should see {string}, {string}, {string} and {string}")
+    fun i_view_that_to_do_i_should_see(expectedToDoTitle: String, expectedToDoDescription: String, expectedToDoTag: String, expectedToDoDueDate: String) {
+        assertEquals(expectedToDoTitle, dummyToDo.title)
+        assertEquals(expectedToDoDescription, dummyToDo.description)
+        assertEquals(expectedToDoTag, dummyToDo.tag)
+        assertEquals(expectedToDoDueDate, dummyToDo.dueDate)
     }
 
 
