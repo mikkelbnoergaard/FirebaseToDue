@@ -23,20 +23,10 @@ import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import android.content.Context
+import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 
 class MainActivity : ComponentActivity() {
-
-    /*
-    private val db by lazy { // Lazy initialization of the Room database instance.
-        Room.databaseBuilder(
-            applicationContext,
-            ToDoDatabase::class.java,
-            name = "todo.db"
-        ).build()
-    }
-
-     */
 
     private val overviewViewModel by viewModels<OverviewViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
@@ -44,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return OverviewViewModel(
                         ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
-                        DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext))
+                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
             }
@@ -55,7 +45,9 @@ class MainActivity : ComponentActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TagsViewModel(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext))) as T
+                    return TagsViewModel(
+                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
                 }
             }
         }

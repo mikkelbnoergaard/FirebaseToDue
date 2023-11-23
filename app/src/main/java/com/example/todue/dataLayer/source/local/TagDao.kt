@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TagDao {
 
+    @Query("SELECT * FROM tag")
+    fun observeAll(): Flow<List<Tag>>
+
     @Insert
     suspend fun createTag(tag: Tag)
 

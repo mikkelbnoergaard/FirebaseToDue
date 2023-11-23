@@ -3,11 +3,9 @@ package com.example.todue.ui.screens.overview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.Tag
-import com.example.todue.dataLayer.source.local.TagDao
+import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
-import com.example.todue.dataLayer.source.local.ToDoDao
-import com.example.todue.dataLayer.source.local.ToDoDatabase
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.ToDoState
@@ -20,11 +18,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
-
 class OverviewViewModel(
     private val toDoRepository: ToDoRepository,
-    private val tagDao: TagDao,
+    private val tagRepository: TagRepository
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
@@ -62,7 +58,7 @@ class OverviewViewModel(
                     return
                 }
 
-                val toDo = ToDo(
+                val toDoObject = ToDo(
                     title = title,
                     description = description,
                     tag = tag,
@@ -71,21 +67,24 @@ class OverviewViewModel(
                 )
 
                 val tagObject = Tag(
-                    title = toDo.tag,
+                    title = toDoObject.tag,
                     toDoAmount = 1
                 )
 
                 viewModelScope.launch{
-                    tagDao.createTag(tagObject)
+                    tagRepository.createTag(
+                        tagObject.title,
+                        tagObject.toDoAmount
+                    )
                 }
 
                 viewModelScope.launch{
                     toDoRepository.createTodo(
-                        toDo.title,
-                        toDo.description,
-                        toDo.tag,
-                        toDo.dueDate,
-                        toDo.finished
+                        toDoObject.title,
+                        toDoObject.description,
+                        toDoObject.tag,
+                        toDoObject.dueDate,
+                        toDoObject.finished
                         )
                 }
 

@@ -21,7 +21,7 @@ class ToDoRepository @Inject constructor(
             description = description,
             tag = tag,
             dueDate = dueDate,
-            finished = finished,
+            finished = finished
         )
         dataSource.createToDo(toDo)
     }
@@ -29,6 +29,10 @@ class ToDoRepository @Inject constructor(
 
     suspend fun completeToDo(id : Int) {
         dataSource.updateFinished(id)
+    }
+
+    suspend fun deleteToDo(toDo: ToDo){
+        dataSource.deleteToDo(toDo)
     }
 
     fun getToDosOrderedByTitle() : Flow<List<ToDo>> {

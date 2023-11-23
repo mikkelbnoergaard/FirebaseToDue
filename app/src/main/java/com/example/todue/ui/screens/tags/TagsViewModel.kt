@@ -2,7 +2,7 @@ package com.example.todue.ui.screens.tags
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.dataLayer.source.local.TagDao
+import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.sortType.TagSortType
 import com.example.todue.state.TagState
@@ -16,23 +16,23 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TagsViewModel(
-    private val tagDao: TagDao
+    private val tagRepository: TagRepository
 ): ViewModel() {
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _tags = tagSortType
-        .flatMapLatest { sortType ->
-            when(sortType) {
-                TagSortType.TITLE -> tagDao.getTagsOrderedByTitle()
+        .flatMapLatest { tagSortType ->
+            when(tagSortType) {
+                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _tagState = MutableStateFlow(TagState())
-    val tagState = combine(_tagState, tagSortType, _tags){ state, sortType, tags ->
+    val tagState = combine(_tagState, tagSortType, _tags){ state, tagSortType, tags ->
         state.copy(
             tags = tags,
-            tagSortType = sortType
+            tagSortType = tagSortType
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TagState())
 
@@ -46,10 +46,11 @@ class TagsViewModel(
                 if(title.isBlank() || toDoAmount == 0) {
                     return
                 }
+
             }
             is TagEvent.DeleteTag -> {
                 viewModelScope.launch {
-                    tagDao.deleteTag(tagEvent.tag)
+                    tagRepository.deleteTag(tagEvent.tag)
                 }
             }
             is TagEvent.ShowDeleteDialog -> {
