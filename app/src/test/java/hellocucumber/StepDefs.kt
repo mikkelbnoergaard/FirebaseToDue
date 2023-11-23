@@ -55,7 +55,7 @@ class Stepdefs {
     var finished = false
 
     //dummy used to store data outside of functions
-    var dummyToDo2 = CreateToDo.createToDo(title, description, tag, dueDate, finished)
+    var dummyToDo1 = CreateToDo.createToDo(title, description, tag, dueDate, finished)
 
     @Given("The user creates a to-do with title {string}, description {string}, tag {string} and dueDate {string}")
     fun user_creates_a_to_do(toDoTitle: String, toDoDescription: String, toDoTag: String, toDoDueDate: String) {
@@ -69,15 +69,18 @@ class Stepdefs {
     @Then("The to-do object is created")
     fun the_to_do_object_is_created() {
         val toDo = CreateToDo.createToDo(title, description, tag, dueDate, finished)
-        dummyToDo2 = toDo
+        dummyToDo1 = toDo
     }
 
     @When("I view that to-do I should see {string}, {string}, {string} and {string}")
-    fun i_view_that_to_do_i_should_see(expectedToDoTitle: String, expectedToDoDescription: String, expectedToDoTag: String, expectedToDoDueDate: String) {
-        assertEquals(expectedToDoTitle, dummyToDo2.title)
-        assertEquals(expectedToDoDescription, dummyToDo2.description)
-        assertEquals(expectedToDoTag, dummyToDo2.tag)
-        assertEquals(expectedToDoDueDate, dummyToDo2.dueDate)
+    fun i_view_that_to_do_i_should_see(expectedToDoTitle: String,
+                                       expectedToDoDescription: String,
+                                       expectedToDoTag: String,
+                                       expectedToDoDueDate: String) {
+        assertEquals(expectedToDoTitle, dummyToDo1.title)
+        assertEquals(expectedToDoDescription, dummyToDo1.description)
+        assertEquals(expectedToDoTag, dummyToDo1.tag)
+        assertEquals(expectedToDoDueDate, dummyToDo1.dueDate)
     }
     //########################################
 
@@ -87,7 +90,7 @@ class Stepdefs {
 
     //##########editing_a_todo##########
     //dummy used to store data outside of functions
-    var dummyToDo1 = CreateToDo.createToDo("", "", "", "", false)
+    var dummyToDo2 = CreateToDo.createToDo("", "", "", "", false)
     @Given("The user has already created a to-do")
     fun user_has_created_a_to_do(){
         var toDo = CreateToDo.createToDo(
@@ -97,23 +100,23 @@ class Stepdefs {
             dueDate = "20-11-2023\n22:30",
             finished = false
         )
-        dummyToDo1 = toDo
+        dummyToDo2 = toDo
     }
 
     @When("The user edits the to-do information to {string}, {string}, {string} and {string}")
     fun user_edits_to_do(editedTitle: String, editedDescription: String, editedTag: String, editedDueDate: String){
-        dummyToDo1.title = editedTitle
-        dummyToDo1.description = editedDescription
-        dummyToDo1.tag = editedTag
-        dummyToDo1.dueDate = editedDueDate
+        dummyToDo2.title = editedTitle
+        dummyToDo2.description = editedDescription
+        dummyToDo2.tag = editedTag
+        dummyToDo2.dueDate = editedDueDate
     }
 
     @Then("I view the edited to-do and I should see {string}, {string}, {string} and {string}")
     fun i_view_the_edited_to_do_and_i_should_see(expectedTitle: String, expectedDescription: String, expectedTag: String, expectedDueDate: String){
-        assertEquals(dummyToDo1.title, expectedTitle)
-        assertEquals(dummyToDo1.description, expectedDescription)
-        assertEquals(dummyToDo1.tag, expectedTag)
-        assertEquals(dummyToDo1.dueDate, expectedDueDate)
+        assertEquals(dummyToDo2.title, expectedTitle)
+        assertEquals(dummyToDo2.description, expectedDescription)
+        assertEquals(dummyToDo2.tag, expectedTag)
+        assertEquals(dummyToDo2.dueDate, expectedDueDate)
     }
     //########################################
 
@@ -122,7 +125,26 @@ class Stepdefs {
 
 
     //##########completing_a_todo##########
-    //insert cucumber test
+    var dummyToDo3 = CreateToDo.createToDo("", "", "", "", false)
+    @Given("The user has already created a to-do that needs to be finished")
+    fun user_has_created_a_to_do_to_finish(){
+        var toDo = CreateToDo.createToDo(
+            title = "UserCreatedTitle",
+            description = "UserCreatedDescription",
+            tag = "UserCreatedTag",
+            dueDate = "20-11-2023\n22:30",
+            finished = false
+        )
+        dummyToDo3 = toDo
+    }
+    @When("The user edits the to-do finished value to true")
+    fun user_completes_to_do(){
+        dummyToDo3.finished = true
+    }
+    @Then("I view the edited to-do and I should see {string}")
+    fun i_view_the_completed_to_do_and_i_should_see(finished: String){
+        assertEquals(dummyToDo3.finished.toString(), finished) //toString to simplify passing a boolean
+    }
     //########################################
 
 
