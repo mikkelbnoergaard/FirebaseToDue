@@ -16,14 +16,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.todue.ui.theme.ToDoTheme
 import com.example.todue.dataLayer.source.local.ToDoDatabase
+import com.example.todue.di.DatabaseModules
 import com.example.todue.ui.screens.tags.TagsViewModel
 import com.example.todue.ui.screens.overview.OverviewViewModel
 import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import android.content.Context
+import com.example.todue.dataLayer.source.local.ToDoRepository
 
 class MainActivity : ComponentActivity() {
 
+    /*
     private val db by lazy { // Lazy initialization of the Room database instance.
         Room.databaseBuilder(
             applicationContext,
@@ -32,11 +36,16 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
+     */
+
     private val overviewViewModel by viewModels<OverviewViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return OverviewViewModel(db.toDoDao, db.tagDao) as T
+                    return OverviewViewModel(
+                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
+                        DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext))
+                    ) as T
                 }
             }
         }
@@ -46,7 +55,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TagsViewModel(db.tagDao) as T
+                    return TagsViewModel(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext))) as T
                 }
             }
         }

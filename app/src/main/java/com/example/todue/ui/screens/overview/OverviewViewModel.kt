@@ -7,6 +7,7 @@ import com.example.todue.dataLayer.source.local.TagDao
 import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.dataLayer.source.local.ToDoDao
+import com.example.todue.dataLayer.source.local.ToDoDatabase
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.ToDoState
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 
 
 class OverviewViewModel(
-    private val toDoRepository: ToDoDao,
+    private val toDoRepository: ToDoRepository,
     private val tagDao: TagDao,
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
@@ -79,8 +80,15 @@ class OverviewViewModel(
                 }
 
                 viewModelScope.launch{
-                    toDoRepository.createToDo(toDo)
+                    toDoRepository.createTodo(
+                        toDo.title,
+                        toDo.description,
+                        toDo.tag,
+                        toDo.dueDate,
+                        toDo.finished
+                        )
                 }
+
                 _toDoState.update { it.copy(
                     isCreatingToDo = false,
                     isDeletingToDo = false,
