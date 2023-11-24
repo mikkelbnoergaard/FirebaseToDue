@@ -38,10 +38,10 @@ class OverviewViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _toDoState = MutableStateFlow(ToDoState())
-    val toDoState = combine(_toDoState, toDoSortType, _toDos){ state, sortType, toDos ->
-        state.copy(
+    val toDoState = combine(_toDoState, toDoSortType, _toDos){ toDoState, toDoSortType, toDos ->
+        toDoState.copy(
             toDos = toDos,
-            toDoSortType = sortType
+            toDoSortType = toDoSortType
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ToDoState())
 
@@ -85,7 +85,7 @@ class OverviewViewModel(
                         toDoObject.tag,
                         toDoObject.dueDate,
                         toDoObject.finished
-                        )
+                    )
                 }
 
                 _toDoState.update { it.copy(

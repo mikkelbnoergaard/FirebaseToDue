@@ -29,8 +29,8 @@ class TagsViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _tagState = MutableStateFlow(TagState())
-    val tagState = combine(_tagState, tagSortType, _tags){ state, tagSortType, tags ->
-        state.copy(
+    val tagState = combine(_tagState, tagSortType, _tags){ tagState, tagSortType, tags ->
+        tagState.copy(
             tags = tags,
             tagSortType = tagSortType
         )
@@ -42,9 +42,18 @@ class TagsViewModel(
                 val title = tagState.value.title
                 val toDoAmount = tagState.value.toDoAmount
 
-                if(title.isBlank() || toDoAmount == 0) {
-                    return
+
+                viewModelScope.launch{
+                    tagRepository.createTag(
+                        title,
+                        toDoAmount
+                    )
                 }
+
+                _tagState.update { it.copy(
+                    title = "",
+                    toDoAmount = 0
+                ) }
 
             }
             is TagEvent.DeleteTag -> {

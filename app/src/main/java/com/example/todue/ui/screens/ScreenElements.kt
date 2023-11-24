@@ -148,10 +148,10 @@ fun GeneralLayout(
             when(index){
                 0 -> CalendarScreen()
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onToDoEvent = onToDoEvent)
+                2 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 3 -> StatisticsScreen()
                 4 -> Settings()
-                else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onToDoEvent = onToDoEvent)
+                else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
             }
         }
         TabRow(
@@ -421,6 +421,7 @@ fun PlusButtonRow(
 @Composable
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
     Box(
@@ -429,7 +430,7 @@ fun ScrollableToDoColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onToDoEvent = onToDoEvent)
+            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
         ToDoList(toDoState, onToDoEvent)
         PlusButtonRow(onToDoEvent)
@@ -465,7 +466,7 @@ fun ScrollableTagRow(
                     }else{
                         selected.value = true
                         buttonColor.value = itemColor
-                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TAG,tag.title))
+                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TAG, tag.title))
                     }
                 },
                 modifier = Modifier

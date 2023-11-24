@@ -48,6 +48,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CreateToDoDialog(
     toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -155,6 +156,7 @@ fun CreateToDoDialog(
                     onClick = {
                         onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
                         onToDoEvent(ToDoEvent.CreateToDo)
+                        onTagEvent(TagEvent.CreateTag)
                         onToDoEvent(ToDoEvent.CreateTag)
                     },
                     modifier = Modifier

@@ -17,6 +17,7 @@ import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.screens.AccountButton
 import com.example.todue.ui.screens.ScrollableTagRow
 import com.example.todue.ui.screens.ScrollableToDoColumn
@@ -28,6 +29,7 @@ import com.example.todue.ui.theme.barColor
 fun OverviewScreen(
     toDoState: ToDoState,
     tagState: TagState,
+    onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
     Column(
@@ -50,6 +52,6 @@ fun OverviewScreen(
             AccountButton(onClick = {})
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent)
-        ScrollableToDoColumn(toDoState = toDoState, onToDoEvent = onToDoEvent)
+        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
     }
 }
