@@ -15,5 +15,5 @@ data class ToDoState(
     val isCreatingToDo: Boolean = false,
     val isDeletingToDo: Boolean = false,
     val isCheckingToDo: Boolean = false,
-    var toDoSortType: ToDoSortType = ToDoSortType.TITLE
+    val toDoSortType: ToDoSortType = ToDoSortType.TITLE
 )

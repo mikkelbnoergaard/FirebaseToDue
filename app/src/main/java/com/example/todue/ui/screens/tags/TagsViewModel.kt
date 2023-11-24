@@ -36,7 +36,6 @@ class TagsViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TagState())
 
-
     fun onEvent(tagEvent: TagEvent) {
         when(tagEvent){
             is TagEvent.CreateTag -> {
