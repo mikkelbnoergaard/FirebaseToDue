@@ -138,7 +138,19 @@ fun CreateToDoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                val dueDateString: String = pickedDate.toString() + "\n" + pickedTime.hour.toString() + ":" + pickedTime.minute.toString()
+                //these variables are a quick fix for hour and minute not being saved correctly in database
+                //previously, the first 0 was left out of hh and mm
+                var hourZero = ""
+                var minuteZero = ""
+                if(pickedTime.hour < 10){
+                    hourZero = "0"
+                }
+                if(pickedTime.minute < 10){
+                    minuteZero = "0"
+                }
+
+                val dueDateString: String = pickedDate.toString() + "\n" + hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
+
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
