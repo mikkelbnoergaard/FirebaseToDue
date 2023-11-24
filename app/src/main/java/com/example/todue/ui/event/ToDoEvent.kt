@@ -1,9 +1,12 @@
-package com.example.todue.dataLayer
+package com.example.todue.ui.event
+
+import com.example.todue.ui.sortType.ToDoSortType
+import com.example.todue.dataLayer.source.local.ToDo
 
 sealed interface ToDoEvent {
-    object CreateToDo: ToDoEvent
+    data object CreateToDo: ToDoEvent
 
-    object CreateTag: ToDoEvent
+    data object CreateTag: ToDoEvent
 
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent
@@ -11,12 +14,12 @@ sealed interface ToDoEvent {
     data class SetDueDate(val dueDate: String): ToDoEvent
     data class SetFinished(val finished: Boolean): ToDoEvent
 
-    object ShowCreateDialog: ToDoEvent
-    object HideCreateDialog: ToDoEvent
-    object ShowDeleteDialog: ToDoEvent
-    object HideDeleteDialog: ToDoEvent
-    object ShowToDoDialog: ToDoEvent
-    object HideToDoDialog: ToDoEvent
+    data object ShowCreateDialog: ToDoEvent
+    data object HideCreateDialog: ToDoEvent
+    data object ShowDeleteDialog: ToDoEvent
+    data object HideDeleteDialog: ToDoEvent
+    data object ShowToDoDialog: ToDoEvent
+    data object HideToDoDialog: ToDoEvent
 
     data class FinishToDo(val toDo: ToDo): ToDoEvent
 

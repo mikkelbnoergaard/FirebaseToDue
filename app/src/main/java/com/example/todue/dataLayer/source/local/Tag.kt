@@ -1,4 +1,4 @@
-package com.example.todue.dataLayer
+package com.example.todue.dataLayer.source.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

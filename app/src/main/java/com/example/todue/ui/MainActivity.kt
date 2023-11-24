@@ -15,37 +15,39 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.todue.ui.theme.ToDoTheme
-import com.example.todue.dataLayer.ToDoDatabase
-import com.example.todue.modelView.TagViewModel
-import com.example.todue.modelView.ToDoViewModel
+import com.example.todue.dataLayer.source.local.ToDoDatabase
+import com.example.todue.di.DatabaseModules
+import com.example.todue.ui.screens.tags.TagsViewModel
+import com.example.todue.ui.screens.overview.OverviewViewModel
 import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import android.content.Context
+import com.example.todue.dataLayer.source.local.TagRepository
+import com.example.todue.dataLayer.source.local.ToDoRepository
 
 class MainActivity : ComponentActivity() {
 
-    private val db by lazy { // Lazy initialization of the Room database instance.
-        Room.databaseBuilder(
-            applicationContext,
-            ToDoDatabase::class.java,
-            name = "todo.db"
-        ).build()
-    }
-    private val toDoViewModel by viewModels<ToDoViewModel>( // ViewModels to manage the state of the to-do lists.
+    private val overviewViewModel by viewModels<OverviewViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ToDoViewModel(db.dao, db.tagDao) as T
+                    return OverviewViewModel(
+                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
+                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
                 }
             }
         }
     )
 
-    private val tagViewModel by viewModels<TagViewModel>( // ViewModels to manage the state of the tags.
+    private val tagsViewModel by viewModels<TagsViewModel>( // ViewModels to manage the state of the tags.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TagViewModel(db.tagDao) as T
+                    return TagsViewModel(
+                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
                 }
             }
         }
@@ -55,8 +57,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ToDoTheme {
-                val state by toDoViewModel.toDoState.collectAsState()
-                val tagState by tagViewModel.tagState.collectAsState()
+                val state by overviewViewModel.toDoState.collectAsState()
+                val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
                 val useDarkIcons = !isSystemInDarkTheme()
 
@@ -73,7 +75,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
-                    GeneralLayout(toDoState = state, tagState = tagState, onToDoEvent = toDoViewModel::onEvent, onTagEvent = tagViewModel::onEvent)
+                    GeneralLayout(toDoState = state, tagState = tagState, onToDoEvent = overviewViewModel::onEvent, onTagEvent = tagsViewModel::onEvent)
                 }
             }
         }

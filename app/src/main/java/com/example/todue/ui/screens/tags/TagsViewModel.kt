@@ -1,10 +1,10 @@
-package com.example.todue.modelView
+package com.example.todue.ui.screens.tags
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.dataLayer.TagDao
-import com.example.todue.dataLayer.TagEvent
-import com.example.todue.dataLayer.TagSortType
+import com.example.todue.dataLayer.source.local.TagRepository
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.ui.sortType.TagSortType
 import com.example.todue.state.TagState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,27 +15,26 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TagViewModel(
-    private val tagDao: TagDao
+class TagsViewModel(
+    private val tagRepository: TagRepository
 ): ViewModel() {
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _tags = tagSortType
-        .flatMapLatest { sortType ->
-            when(sortType) {
-                TagSortType.TITLE -> tagDao.getTagsOrderedByTitle()
+        .flatMapLatest { tagSortType ->
+            when(tagSortType) {
+                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _tagState = MutableStateFlow(TagState())
-    val tagState = combine(_tagState, tagSortType, _tags){ state, sortType, tags ->
-        state.copy(
+    val tagState = combine(_tagState, tagSortType, _tags){ tagState, tagSortType, tags ->
+        tagState.copy(
             tags = tags,
-            tagSortType = sortType
+            tagSortType = tagSortType
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TagState())
-
 
     fun onEvent(tagEvent: TagEvent) {
         when(tagEvent){
@@ -43,13 +42,23 @@ class TagViewModel(
                 val title = tagState.value.title
                 val toDoAmount = tagState.value.toDoAmount
 
-                if(title.isBlank() || toDoAmount == 0) {
-                    return
+
+                viewModelScope.launch{
+                    tagRepository.createTag(
+                        title,
+                        toDoAmount
+                    )
                 }
+
+                _tagState.update { it.copy(
+                    title = "",
+                    toDoAmount = 0
+                ) }
+
             }
             is TagEvent.DeleteTag -> {
                 viewModelScope.launch {
-                    tagDao.deleteTag(tagEvent.tag)
+                    tagRepository.deleteTag(tagEvent.tag)
                 }
             }
             is TagEvent.ShowDeleteDialog -> {

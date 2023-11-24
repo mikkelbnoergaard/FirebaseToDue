@@ -28,11 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
-import com.example.todue.dataLayer.Tag
-import com.example.todue.dataLayer.TagEvent
-import com.example.todue.dataLayer.ToDo
-import com.example.todue.dataLayer.ToDoEvent
-import com.example.todue.modifier.getBottomLineShape
+import com.example.todue.dataLayer.source.local.Tag
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.dataLayer.source.local.ToDo
+import com.example.todue.ui.event.ToDoEvent
+import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.textColor
@@ -48,6 +48,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CreateToDoDialog(
     toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -138,11 +139,24 @@ fun CreateToDoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                val dueDateString: String = pickedDate.toString() + "\n" + pickedTime.hour.toString() + ":" + pickedTime.minute.toString()
+                //these variables are a quick fix for hour and minute not being saved correctly in database
+                //previously, the first 0 was left out of hh and mm
+                var hourZero = ""
+                var minuteZero = ""
+                if(pickedTime.hour < 10){
+                    hourZero = "0"
+                }
+                if(pickedTime.minute < 10){
+                    minuteZero = "0"
+                }
+
+                val dueDateString: String = pickedDate.toString() + "\n" + hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
+
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
                         onToDoEvent(ToDoEvent.CreateToDo)
+                        onTagEvent(TagEvent.CreateTag)
                         onToDoEvent(ToDoEvent.CreateTag)
                     },
                     modifier = Modifier

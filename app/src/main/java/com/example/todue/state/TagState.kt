@@ -1,7 +1,7 @@
 package com.example.todue.state
 
-import com.example.todue.dataLayer.TagSortType
-import com.example.todue.dataLayer.Tag
+import com.example.todue.ui.sortType.TagSortType
+import com.example.todue.dataLayer.source.local.Tag
 
 data class TagState(
     val tags: List<Tag> = emptyList(),

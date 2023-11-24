@@ -1,4 +1,4 @@
-package com.example.todue.modelView
+package com.example.todue.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
