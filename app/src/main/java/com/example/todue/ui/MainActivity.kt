@@ -13,16 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
 import com.example.todue.ui.theme.ToDoTheme
-import com.example.todue.dataLayer.source.local.ToDoDatabase
 import com.example.todue.di.DatabaseModules
 import com.example.todue.ui.screens.tags.TagsViewModel
 import com.example.todue.ui.screens.overview.OverviewViewModel
 import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import android.content.Context
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 
@@ -34,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return OverviewViewModel(
                         ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
-                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
+                        //TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
             }

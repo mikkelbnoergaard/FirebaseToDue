@@ -39,14 +39,11 @@ class TagsViewModel(
     fun onEvent(tagEvent: TagEvent) {
         when(tagEvent){
             is TagEvent.CreateTag -> {
-                val title = tagState.value.title
-                val toDoAmount = tagState.value.toDoAmount
-
 
                 viewModelScope.launch{
                     tagRepository.createTag(
-                        title,
-                        toDoAmount
+                        tagEvent.title,
+                        toDoAmount = 1
                     )
                 }
 

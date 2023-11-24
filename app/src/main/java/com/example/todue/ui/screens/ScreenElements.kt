@@ -91,9 +91,9 @@ fun GeneralLayout(
 ){
     val tabItems = listOf(
         TabItem(
-            title = "Calendar",
-            unselectedIcon = Icons.Outlined.CalendarMonth,
-            selectedIcon = Icons.Outlined.CalendarMonth
+            title = "Overview",
+            unselectedIcon = Icons.Outlined.Home,
+            selectedIcon = Icons.Outlined.Home
         ),
         TabItem(
             title = "Tags",
@@ -101,9 +101,9 @@ fun GeneralLayout(
             selectedIcon = Icons.Outlined.Tag
         ),
         TabItem(
-            title = "Overview",
-            unselectedIcon = Icons.Outlined.Home,
-            selectedIcon = Icons.Outlined.Home
+            title = "Calendar",
+            unselectedIcon = Icons.Outlined.CalendarMonth,
+            selectedIcon = Icons.Outlined.CalendarMonth
         ),
         TabItem(
             title = "Statistics",
@@ -117,7 +117,7 @@ fun GeneralLayout(
         )
     )
     var selectedTabIndex by remember {
-        mutableIntStateOf(2)
+        mutableIntStateOf(0)
     }
     val pagerState = rememberPagerState {
         tabItems.size
@@ -146,9 +146,9 @@ fun GeneralLayout(
             verticalAlignment = Alignment.Bottom
         ) {index ->
             when(index){
-                0 -> CalendarScreen()
+                0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                2 -> CalendarScreen()
                 3 -> StatisticsScreen()
                 4 -> Settings()
                 else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)

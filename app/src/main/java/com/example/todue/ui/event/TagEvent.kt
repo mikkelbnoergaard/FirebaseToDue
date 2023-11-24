@@ -4,7 +4,7 @@ import com.example.todue.dataLayer.source.local.Tag
 
 
 sealed interface TagEvent {
-    data object CreateTag: TagEvent
+    data class CreateTag(val title: String): TagEvent
 
     data class SetTitle(val title: String): TagEvent
     data class IncreaseToDoAmount(val toDoAmount: Int): TagEvent

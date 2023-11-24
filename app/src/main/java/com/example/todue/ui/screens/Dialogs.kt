@@ -156,8 +156,7 @@ fun CreateToDoDialog(
                     onClick = {
                         onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
                         onToDoEvent(ToDoEvent.CreateToDo)
-                        onTagEvent(TagEvent.CreateTag)
-                        onToDoEvent(ToDoEvent.CreateTag)
+                        onTagEvent(TagEvent.CreateTag(toDoState.tag))
                     },
                     modifier = Modifier
                         .padding(5.dp)) {
