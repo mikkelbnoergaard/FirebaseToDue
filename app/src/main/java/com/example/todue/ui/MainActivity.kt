@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return OverviewViewModel(
                         ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
-                        //TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
             }
