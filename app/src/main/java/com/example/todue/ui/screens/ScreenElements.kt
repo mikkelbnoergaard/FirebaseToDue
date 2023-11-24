@@ -191,7 +191,7 @@ fun AccountButton(
     onClick: () -> Unit
 ) {
     FloatingActionButton(
-        onClick = { onClick },
+        onClick = {},
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier

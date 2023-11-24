@@ -26,7 +26,7 @@ class ToDoRepository @Inject constructor(
     }
 
     suspend fun completeToDo(id : Int) {
-        dataSource.updateFinished(id)
+        dataSource.updateFinished(toDoId = id)
     }
 
     suspend fun deleteToDo(toDo: ToDo){
