@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ToDoTheme {
-                val state by overviewViewModel.toDoState.collectAsState()
+                val toDoState by overviewViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
                 val useDarkIcons = !isSystemInDarkTheme()
@@ -71,7 +71,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
-                    GeneralLayout(toDoState = state, tagState = tagState, onToDoEvent = overviewViewModel::onEvent, onTagEvent = tagsViewModel::onEvent)
+                    GeneralLayout(
+                        toDoState = toDoState,
+                        tagState = tagState,
+                        onToDoEvent = overviewViewModel::onEvent,
+                        onTagEvent = tagsViewModel::onEvent
+                    )
                 }
             }
         }
