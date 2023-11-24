@@ -37,7 +37,7 @@ class ToDoRepository @Inject constructor(
         return dataSource.getToDosOrderedByTitle()
     }
 
-    fun getToDosOrderedByTag(tag : String) : Flow<List<ToDo>> {
+    fun getToDosOrderedByTag(tag: List<String>) : Flow<List<ToDo>> {
         return dataSource.getToDosOrderedByTag(tag)
     }
 

@@ -26,8 +26,8 @@ interface ToDoDao {
     @Query("SELECT * FROM todo WHERE finished = 0 ORDER BY title")
     fun getToDosOrderedByTitle(): Flow<List<ToDo>>
 
-    @Query("SELECT * FROM todo WHERE tag = :tag")
-    fun getToDosOrderedByTag(tag: String): Flow<List<ToDo>>
+    @Query("SELECT * FROM todo WHERE tag IN (:tag)")
+    fun getToDosOrderedByTag(tag: List<String>): Flow<List<ToDo>>
 
     @Query("SELECT * FROM todo ORDER BY description")
     fun getToDosOrderedByDescription(): Flow<List<ToDo>>
@@ -37,5 +37,6 @@ interface ToDoDao {
 
     @Query("UPDATE todo SET finished = 1 WHERE id = :toDoId")
     suspend fun updateFinished(toDoId: Int)
+
 
 }

@@ -462,11 +462,11 @@ fun ScrollableTagRow(
                     if(selected.value){
                         selected.value = !selected.value
                         buttonColor.value = backgroundColor
-                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TITLE, tag.title))
+                        onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
                     }else{
                         selected.value = true
                         buttonColor.value = itemColor
-                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TAG, tag.title))
+                        onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
                     }
                 },
                 modifier = Modifier
