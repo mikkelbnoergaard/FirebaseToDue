@@ -20,5 +20,4 @@ interface TagDao {
 
     @Query("SELECT * FROM tag GROUP BY title")
     fun getTagsOrderedByTitle(): Flow<List<Tag>>
-
 }

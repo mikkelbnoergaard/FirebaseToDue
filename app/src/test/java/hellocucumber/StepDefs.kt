@@ -1,8 +1,5 @@
-
 package hellocucumber
 
-import androidx.room.PrimaryKey
-//import com.example.todue.dataLayer.local.ToDo
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
@@ -18,7 +15,7 @@ class ToDo(
 )
 
 internal object IsItFriday {
-    fun isItFriday(today: String): String? {
+    fun isItFriday(today: String): String {
         return if(today == "Friday") {
             "TGIF"
         } else{
@@ -48,14 +45,14 @@ internal object CreateToDo {
 class Stepdefs {
 
     //##########creating_a_todo##########
-    var title = ""
-    var description = ""
-    var tag = ""
-    var dueDate = ""
-    var finished = false
+    private var title = ""
+    private var description = ""
+    private var tag = ""
+    private var dueDate = ""
+    private var finished = false
 
     //dummy used to store data outside of functions
-    var dummyToDo1 = CreateToDo.createToDo(title, description, tag, dueDate, finished)
+    private var dummyToDo1 = CreateToDo.createToDo(title, description, tag, dueDate, finished)
 
     @Given("The user creates a to-do with title {string}, description {string}, tag {string} and dueDate {string}")
     fun user_creates_a_to_do(toDoTitle: String, toDoDescription: String, toDoTag: String, toDoDueDate: String) {
@@ -90,10 +87,10 @@ class Stepdefs {
 
     //##########editing_a_todo##########
     //dummy used to store data outside of functions
-    var dummyToDo2 = CreateToDo.createToDo("", "", "", "", false)
+    private var dummyToDo2 = CreateToDo.createToDo("", "", "", "", false)
     @Given("The user has already created a to-do")
     fun user_has_created_a_to_do(){
-        var toDo = CreateToDo.createToDo(
+        val toDo = CreateToDo.createToDo(
             title = "UserCreatedTitle",
             description = "UserCreatedDescription",
             tag = "UserCreatedTag",
@@ -125,10 +122,10 @@ class Stepdefs {
 
 
     //##########completing_a_todo##########
-    var dummyToDo3 = CreateToDo.createToDo("", "", "", "", false)
+    private var dummyToDo3 = CreateToDo.createToDo("", "", "", "", false)
     @Given("The user has already created a to-do that needs to be finished")
     fun user_has_created_a_to_do_to_finish(){
-        var toDo = CreateToDo.createToDo(
+        val toDo = CreateToDo.createToDo(
             title = "UserCreatedTitle",
             description = "UserCreatedDescription",
             tag = "UserCreatedTag",
@@ -153,8 +150,8 @@ class Stepdefs {
 
 
     //##########is_it_friday##########
-    var today: String = ""
-    var actualAnswer: String = ""
+    private var today: String = ""
+    private var actualAnswer: String = ""
 
     @Given("today is Friday")
     fun today_is_Friday() {
@@ -166,7 +163,7 @@ class Stepdefs {
     }
     @When("I ask whether it's Friday yet")
     fun i_ask_whether_it_s_friday_yet() {
-        actualAnswer = IsItFriday.isItFriday(today).toString()
+        actualAnswer = IsItFriday.isItFriday(today)
     }
     @Then("I should be told {string}")
     fun i_should_be_told(expectedAnswer: String) {

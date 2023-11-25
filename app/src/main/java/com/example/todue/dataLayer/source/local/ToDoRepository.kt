@@ -6,9 +6,12 @@ import javax.inject.Inject
 class ToDoRepository @Inject constructor(
     private val dataSource: ToDoDao
 ){
+    /*
     fun observeAll() : Flow<List<ToDo>> {
         return dataSource.observeAll()
     }
+
+     */
 
     suspend fun createTodo(title: String,
                            description: String,
@@ -33,7 +36,6 @@ class ToDoRepository @Inject constructor(
         dataSource.unFinishToDo(toDoId = toDo.id)
     }
 
-    //to be used later
     suspend fun deleteToDo(toDo: ToDo){
         dataSource.deleteToDo(toDo)
     }

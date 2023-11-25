@@ -3,9 +3,9 @@ package com.example.todue.ui.screens.tags
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.TagRepository
+import com.example.todue.state.TagState
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.sortType.TagSortType
-import com.example.todue.state.TagState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

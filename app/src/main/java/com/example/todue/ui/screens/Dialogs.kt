@@ -211,7 +211,7 @@ fun CreateToDoDialog(
 @Composable
 fun DeleteToDoToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
+    //onTagEvent: (TagEvent) -> Unit,
     modifier: Modifier = Modifier,
     toDo: ToDo
 ) {
@@ -354,7 +354,7 @@ fun CheckToDoDialog(
 @Composable
 fun DeleteTagDialog(
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
+    //onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier,
     tag: Tag
 ) {

@@ -6,9 +6,12 @@ import javax.inject.Inject
 class TagRepository @Inject constructor (
     private val dataSource: TagDao
 ){
+    /*
     fun observeAll() : Flow<List<Tag>> {
         return dataSource.observeAll()
     }
+
+     */
 
     suspend fun createTag(
         title: String,
@@ -27,6 +30,4 @@ class TagRepository @Inject constructor (
     fun getTagsOrderedByTitle() : Flow<List<Tag>> {
         return dataSource.getTagsOrderedByTitle()
     }
-
-
 }

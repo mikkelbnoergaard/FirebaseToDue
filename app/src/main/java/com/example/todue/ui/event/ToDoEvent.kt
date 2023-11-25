@@ -38,7 +38,5 @@ sealed interface ToDoEvent {
     data class DeleteTagFromTodos(val tag: String) : ToDoEvent
 
 
-    data class DeleteToDosWithGivenTag(val tag: String): ToDoEvent
-
-
+    //data class DeleteToDosWithGivenTag(val tag: String): ToDoEvent
 }

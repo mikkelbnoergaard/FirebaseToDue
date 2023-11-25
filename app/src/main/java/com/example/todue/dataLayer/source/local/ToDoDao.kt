@@ -14,7 +14,7 @@ interface ToDoDao {
     @Insert
     suspend fun createToDo(toDo: ToDo)
 
-    // @Update
+    //@Update
     //suspend fun finishToDo(toDo: ToDo)
 
     @Delete
