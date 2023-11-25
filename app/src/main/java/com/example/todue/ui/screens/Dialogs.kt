@@ -209,7 +209,7 @@ fun CreateToDoDialog(
 }
 
 @Composable
-fun DeleteToDoDialog(
+fun FinishToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier,
     toDo: ToDo
@@ -217,13 +217,13 @@ fun DeleteToDoDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
-            onToDoEvent(ToDoEvent.HideDeleteDialog)
+            onToDoEvent(ToDoEvent.HideFinishDialog)
         },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Do you want to delete this ToDo?")
+                Text(text = "Do you want to finish this ToDo?")
             }
         },
         buttons = {
@@ -233,13 +233,13 @@ fun DeleteToDoDialog(
             ) {
                 Button(
                     onClick = {
-                        onToDoEvent(ToDoEvent.DeleteToDo(toDo = toDo))
-                        onToDoEvent(ToDoEvent.HideDeleteDialog)
+                        onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                        onToDoEvent(ToDoEvent.HideFinishDialog)
                     },
                     modifier = Modifier
                         .padding(5.dp)
                     ) {
-                    Text(text = "Delete")
+                    Text(text = "Finish")
                 }
             }
         }

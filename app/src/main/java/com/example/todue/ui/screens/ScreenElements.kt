@@ -62,7 +62,6 @@ import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.ui.event.ToDoEvent
-import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.navigation.TabItem
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
@@ -294,7 +293,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo){ CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -364,7 +363,7 @@ fun ToDoList(
                         FloatingActionButton(
                             onClick = {
                                 selectedToDo = toDo
-                                onToDoEvent(ToDoEvent.ShowDeleteDialog)
+                                onToDoEvent(ToDoEvent.ShowFinishDialog)
                             },
                             modifier = Modifier
                                 .requiredSize(30.dp),

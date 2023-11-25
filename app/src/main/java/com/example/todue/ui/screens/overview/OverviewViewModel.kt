@@ -107,16 +107,14 @@ class OverviewViewModel(
                 ) }
             }
             is ToDoEvent.FinishToDo -> {
-                _toDoState.update {it.copy(
-                    finished = true
-                ) }
-
+                viewModelScope.launch {
+                    toDoRepository.finishToDo(toDoEvent.toDo)
+                }
             }
             is ToDoEvent.SetFinished -> {
                 _toDoState.update {it.copy(
                     finished = toDoEvent.finished
                 ) }
-
             }
             is ToDoEvent.SetTag -> {
                 _toDoState.update {it.copy(
@@ -133,12 +131,12 @@ class OverviewViewModel(
                     isCreatingToDo = true
                 ) }
             }
-            is ToDoEvent.ShowDeleteDialog -> {
+            is ToDoEvent.ShowFinishDialog -> {
                 _toDoState.update {it.copy(
                     isDeletingToDo = true
                 ) }
             }
-            is ToDoEvent.HideDeleteDialog -> {
+            is ToDoEvent.HideFinishDialog -> {
                 _toDoState.update {it.copy(
                     isDeletingToDo = false
                 ) }

@@ -1,6 +1,5 @@
 package com.example.todue.ui.event
 
-import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
 
 sealed interface ToDoEvent {
@@ -16,8 +15,8 @@ sealed interface ToDoEvent {
 
     data object ShowCreateDialog: ToDoEvent
     data object HideCreateDialog: ToDoEvent
-    data object ShowDeleteDialog: ToDoEvent
-    data object HideDeleteDialog: ToDoEvent
+    data object ShowFinishDialog: ToDoEvent
+    data object HideFinishDialog: ToDoEvent
     data object ShowToDoDialog: ToDoEvent
     data object HideToDoDialog: ToDoEvent
 
