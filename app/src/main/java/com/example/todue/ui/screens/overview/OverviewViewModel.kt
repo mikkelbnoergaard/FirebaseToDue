@@ -166,20 +166,20 @@ class OverviewViewModel(
                 println(tagList.toString())
             }
 
-            is ToDoEvent.SortToDosByFinished -> {
-                toDoSortType.value = ToDoSortType.FINISHED
-            }
-
-            is ToDoEvent.SortToDosByDueDate -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE
-            }
-
             is ToDoEvent.RemoveTagToSortToDos -> {
                 tagList.remove(toDoEvent.tag)
                 if(tagList.isEmpty()){
                     toDoSortType.value = ToDoSortType.DUE_DATE
                 }
                 println(tagList.toString())
+            }
+
+            is ToDoEvent.SortToDosByFinished -> {
+                toDoSortType.value = ToDoSortType.FINISHED
+            }
+
+            is ToDoEvent.SortToDosByDueDate -> {
+                toDoSortType.value = ToDoSortType.DUE_DATE
             }
 
             //does not work yet

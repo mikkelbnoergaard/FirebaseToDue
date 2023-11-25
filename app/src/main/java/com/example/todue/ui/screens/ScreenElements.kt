@@ -244,7 +244,7 @@ fun TagList(
     ){
         items(tagState.tags) { tag ->
 
-            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, tag = selectedTag) }
+            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, tag = selectedTag) }
 
             ElevatedButton(
                 onClick = {
@@ -274,8 +274,7 @@ fun TagList(
 @Composable
 fun ToDoList(
     toDoState: ToDoState,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ){
 
     var selectedToDo by remember {
@@ -296,7 +295,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo, onTagEvent = onTagEvent) }
+            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo){ CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -438,7 +437,7 @@ fun ScrollableToDoColumn(
         if(toDoState.isCreatingToDo){
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
-        ToDoList(toDoState, onToDoEvent, onTagEvent)
+        ToDoList(toDoState, onToDoEvent)
         PlusButtonRow(onToDoEvent)
     }
 }
