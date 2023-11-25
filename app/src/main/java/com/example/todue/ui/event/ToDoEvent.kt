@@ -34,6 +34,10 @@ sealed interface ToDoEvent {
 
     data object SortToDosByDueDate: ToDoEvent
 
+    //does not work yet
+    data class DeleteTagFromTodos(val tag: String) : ToDoEvent
+
+
     data class DeleteToDosWithGivenTag(val tag: String): ToDoEvent
 
 

@@ -181,6 +181,14 @@ class OverviewViewModel(
                 }
                 println(tagList.toString())
             }
+
+            //does not work yet
+            is ToDoEvent.DeleteTagFromTodos -> {
+                viewModelScope.launch {
+                    toDoRepository.deleteTagFromTodos(toDoEvent.tag)
+                }
+            }
+
             /*
             is ToDoEvent.DeleteToDosWithGivenTag -> {
                 dao.deleteToDosWithGivenTag("123")

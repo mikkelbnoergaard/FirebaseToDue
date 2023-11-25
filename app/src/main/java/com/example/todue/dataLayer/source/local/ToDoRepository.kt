@@ -57,4 +57,9 @@ class ToDoRepository @Inject constructor(
     fun getFinishedToDos(): Flow<List<ToDo>> {
         return dataSource.getFinishedToDos()
     }
+
+    //does not work yet
+    suspend fun deleteTagFromTodos(tag: String){
+        dataSource.deleteTagFromTodos(tag)
+    }
 }
