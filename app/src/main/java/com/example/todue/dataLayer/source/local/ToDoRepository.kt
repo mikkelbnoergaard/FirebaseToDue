@@ -29,6 +29,11 @@ class ToDoRepository @Inject constructor(
         dataSource.finishToDo(toDoId = toDo.id)
     }
 
+    suspend fun unFinishToDo(toDo: ToDo) {
+        dataSource.unFinishToDo(toDoId = toDo.id)
+    }
+
+    //to be used later
     suspend fun deleteToDo(toDo: ToDo){
         dataSource.deleteToDo(toDo)
     }

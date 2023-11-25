@@ -295,7 +295,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+            //if (toDoState.isDeletingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo){ CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -365,7 +365,11 @@ fun ToDoList(
                         FloatingActionButton(
                             onClick = {
                                 selectedToDo = toDo
-                                onToDoEvent(ToDoEvent.ShowFinishDialog)
+                                if(toDo.finished){
+                                    onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                                } else{
+                                    onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                                }
                             },
                             modifier = Modifier
                                 .requiredSize(30.dp),

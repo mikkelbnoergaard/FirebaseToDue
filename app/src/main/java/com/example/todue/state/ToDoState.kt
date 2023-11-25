@@ -13,7 +13,7 @@ data class ToDoState(
     val dueDate: String = "",
     val finished: Boolean = false,
     val isCreatingToDo: Boolean = false,
-    val isDeletingToDo: Boolean = false,
+    //val isDeletingToDo: Boolean = false,
     val isCheckingToDo: Boolean = false,
     val toDoSortType: ToDoSortType = ToDoSortType.TITLE
 )

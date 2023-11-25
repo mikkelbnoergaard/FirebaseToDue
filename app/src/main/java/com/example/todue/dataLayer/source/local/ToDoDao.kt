@@ -41,5 +41,7 @@ interface ToDoDao {
     @Query("UPDATE todo SET finished = 1 WHERE id = :toDoId")
     suspend fun finishToDo(toDoId: Int)
 
+    @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
+    suspend fun unFinishToDo(toDoId: Int)
 
 }

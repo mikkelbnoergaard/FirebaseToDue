@@ -208,6 +208,9 @@ fun CreateToDoDialog(
     //use this in database
 }
 
+
+//no longer used, who needs a dialog to complete a todo?!
+/*
 @Composable
 fun FinishToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
@@ -245,6 +248,8 @@ fun FinishToDoDialog(
         }
     )
 }
+
+ */
 
 @Composable
 fun CheckToDoDialog(
