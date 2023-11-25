@@ -10,8 +10,9 @@ class TagRepository @Inject constructor (
         return dataSource.observeAll()
     }
 
-    suspend fun createTag(title: String,
-                          toDoAmount: Int) {
+    suspend fun createTag(
+        title: String,
+        toDoAmount: Int) {
         val tag = Tag(
             title = title,
             toDoAmount = toDoAmount

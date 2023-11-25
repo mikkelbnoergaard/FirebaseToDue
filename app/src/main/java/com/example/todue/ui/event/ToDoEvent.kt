@@ -13,8 +13,10 @@ sealed interface ToDoEvent {
 
     data object ShowCreateDialog: ToDoEvent
     data object HideCreateDialog: ToDoEvent
-    //data object ShowFinishDialog: ToDoEvent
-    //data object HideFinishDialog: ToDoEvent
+
+    data object ShowDeleteToDoDialog: ToDoEvent
+    data object HideDeleteToDoDialog: ToDoEvent
+
     data object ShowToDoDialog: ToDoEvent
     data object HideToDoDialog: ToDoEvent
 
@@ -22,16 +24,15 @@ sealed interface ToDoEvent {
 
     data class UnFinishToDo(val toDo: ToDo): ToDoEvent
 
-    //to be used later
-    //data class DeleteToDo(val toDo: ToDo): ToDoEvent
+    data class DeleteToDo(val toDo: ToDo): ToDoEvent
 
     data class AddTagToSortToDos(val tag: String): ToDoEvent
+
+    data class RemoveTagToSortToDos(val tag: String): ToDoEvent
 
     data object SortToDosByFinished: ToDoEvent
 
     data object SortToDosByDueDate: ToDoEvent
-
-    data class RemoveTagToSortToDos(val tag: String): ToDoEvent
 
     data class DeleteToDosWithGivenTag(val tag: String): ToDoEvent
 

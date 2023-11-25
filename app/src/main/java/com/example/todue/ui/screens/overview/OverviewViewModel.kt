@@ -76,7 +76,7 @@ class OverviewViewModel(
 
                 _toDoState.update { it.copy(
                     isCreatingToDo = false,
-                    //isDeletingToDo = false,
+                    isDeletingToDo = false,
                     title = "",
                     description = "",
                     tag = "",
@@ -85,13 +85,11 @@ class OverviewViewModel(
                 ) }
 
             }
-            /* SKAL IMPLEMENTERES SENERE
             is ToDoEvent.DeleteToDo -> {
                 viewModelScope.launch {
                     toDoRepository.deleteToDo(toDoEvent.toDo)
                 }
             }
-            */
             is ToDoEvent.HideCreateDialog -> {
                 _toDoState.update {it.copy(
                     isCreatingToDo = false
@@ -138,23 +136,20 @@ class OverviewViewModel(
                     isCreatingToDo = true
                 ) }
             }
-            /*
-            is ToDoEvent.ShowFinishDialog -> {
+
+            is ToDoEvent.ShowDeleteToDoDialog -> {
                 _toDoState.update {it.copy(
                     isDeletingToDo = true
                 ) }
+
             }
 
-             */
-
-            /*
-            is ToDoEvent.HideFinishDialog -> {
+            is ToDoEvent.HideDeleteToDoDialog -> {
                 _toDoState.update {it.copy(
                     isDeletingToDo = false
                 ) }
             }
 
-             */
             is ToDoEvent.ShowToDoDialog -> {
                 _toDoState.update {it.copy(
                     isCheckingToDo = true

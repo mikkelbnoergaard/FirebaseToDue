@@ -208,11 +208,8 @@ fun CreateToDoDialog(
     //use this in database
 }
 
-
-//no longer used, who needs a dialog to complete a todo?!
-/*
 @Composable
-fun FinishToDoDialog(
+fun DeleteToDoToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier,
     toDo: ToDo
@@ -220,13 +217,13 @@ fun FinishToDoDialog(
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
-            onToDoEvent(ToDoEvent.HideFinishDialog)
+            onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
         },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Do you want to finish this ToDo?")
+                Text(text = "Do you want to delete this ToDo?\n\nThis cannot be undone.")
             }
         },
         buttons = {
@@ -236,20 +233,19 @@ fun FinishToDoDialog(
             ) {
                 Button(
                     onClick = {
-                        onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
-                        onToDoEvent(ToDoEvent.HideFinishDialog)
+                        onToDoEvent(ToDoEvent.DeleteToDo(toDo = toDo))
+                        onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
+                        onToDoEvent(ToDoEvent.HideToDoDialog)
                     },
                     modifier = Modifier
                         .padding(5.dp)
                     ) {
-                    Text(text = "Finish")
+                    Text(text = "Delete")
                 }
             }
         }
     )
 }
-
- */
 
 @Composable
 fun CheckToDoDialog(
@@ -308,21 +304,35 @@ fun CheckToDoDialog(
         buttons = {
             Row(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(5.dp)
                     .padding(start = 5.dp, end = 5.dp),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Box{
+                Box(
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+                        onClick = {
+                            onToDoEvent(ToDoEvent.ShowDeleteToDoDialog)
+                        }
+                    ) {
+                        Text(text = "Delete")
+                    }
+                }
+                Box (
+                    contentAlignment = Alignment.Center
+                ){
                     Text(
                         text = toDo.dueDate,
                         fontSize = 18.sp,
                         color = textColor,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     Button(
