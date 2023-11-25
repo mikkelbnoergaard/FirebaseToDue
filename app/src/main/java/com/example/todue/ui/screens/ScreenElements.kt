@@ -187,10 +187,11 @@ fun GeneralLayout(
 //Account button, probably going to be deleted
 @Composable
 fun AccountButton(
-    onClick: () -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
     FloatingActionButton(
-        onClick = {},
+        //should not sort by due date, but it's for testing
+        onClick = { onToDoEvent(ToDoEvent.SortToDosByDueDate) },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier
@@ -204,10 +205,11 @@ fun AccountButton(
 //Settings button, probably going to be deleted
 @Composable
 fun SettingsButton(
-    onClick: () -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
     FloatingActionButton(
-        onClick = { onClick() },
+        //should not sort by finished, but it's for testing
+        onClick = { onToDoEvent(ToDoEvent.SortToDosByFinished) },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier

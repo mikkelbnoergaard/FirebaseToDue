@@ -49,4 +49,7 @@ class ToDoRepository @Inject constructor(
         return dataSource.getToDosOrderedByDueDate()
     }
 
+    fun getFinishedToDos(): Flow<List<ToDo>> {
+        return dataSource.getFinishedToDos()
+    }
 }

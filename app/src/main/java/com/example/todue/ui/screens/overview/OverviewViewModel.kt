@@ -31,6 +31,7 @@ class OverviewViewModel(
                 ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTag(tagList)
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate()
+                ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -155,6 +156,14 @@ class OverviewViewModel(
                 tagList.add(toDoEvent.tag)
                 toDoSortType.value = ToDoSortType.TAG
                 println(tagList.toString())
+            }
+
+            is ToDoEvent.SortToDosByFinished -> {
+                toDoSortType.value = ToDoSortType.FINISHED
+            }
+
+            is ToDoEvent.SortToDosByDueDate -> {
+                toDoSortType.value = ToDoSortType.DUE_DATE
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {

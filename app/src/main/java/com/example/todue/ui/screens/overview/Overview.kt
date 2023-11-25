@@ -49,9 +49,9 @@ fun OverviewScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SettingsButton(onClick = {})
+            SettingsButton(onToDoEvent = onToDoEvent)
             Text("OverviewScreen")
-            AccountButton(onClick = {})
+            AccountButton(onToDoEvent = onToDoEvent)
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
