@@ -52,6 +52,7 @@ fun CreateToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     //for date and time pickers
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
@@ -74,8 +75,10 @@ fun CreateToDoDialog(
                 .format(pickedTime)
         }
     }
+
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
@@ -83,7 +86,6 @@ fun CreateToDoDialog(
         },
         title = { Text(text = "Create To Do") },
         text = {
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -208,7 +210,6 @@ fun CreateToDoDialog(
         }
     }
 
-    //use this in database
 }
 
 @Composable
@@ -218,6 +219,7 @@ fun DeleteToDoToDoDialog(
     modifier: Modifier = Modifier,
     toDo: ToDo
 ) {
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
@@ -250,6 +252,7 @@ fun DeleteToDoToDoDialog(
             }
         }
     )
+
 }
 
 @Composable
@@ -257,6 +260,7 @@ fun CheckToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     toDo: ToDo
 ) {
+
     AlertDialog(
         modifier = Modifier,
         onDismissRequest = {
@@ -273,7 +277,7 @@ fun CheckToDoDialog(
                         .padding(bottom = 5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Top
-                ){
+                ) {
                     Text(
                         text = toDo.title,
                         fontWeight = FontWeight.ExtraBold,
@@ -329,7 +333,7 @@ fun CheckToDoDialog(
                 }
                 Box (
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     Text(
                         text = toDo.dueDate + "\n" + toDo.dueTime,
                         fontSize = 18.sp,
@@ -352,6 +356,7 @@ fun CheckToDoDialog(
             }
         }
     )
+
 }
 
 @Composable
@@ -361,6 +366,7 @@ fun DeleteTagDialog(
     modifier: Modifier = Modifier,
     tag: Tag
 ) {
+
     AlertDialog(
         modifier = modifier,
         onDismissRequest = {
@@ -394,4 +400,5 @@ fun DeleteTagDialog(
             }
         }
     )
+
 }

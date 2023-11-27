@@ -44,8 +44,11 @@ class OverviewViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ToDoState())
 
     fun onEvent(toDoEvent: ToDoEvent) {
-        when(toDoEvent){
+
+        when(toDoEvent) {
+
             is ToDoEvent.CreateToDo -> {
+
                 val title = toDoState.value.title
                 val description = toDoState.value.description
                 val tag = toDoState.value.tag
@@ -89,36 +92,43 @@ class OverviewViewModel(
                 ) }
 
             }
+
             is ToDoEvent.DeleteToDo -> {
                 viewModelScope.launch {
                     toDoRepository.deleteToDo(toDoEvent.toDo)
                 }
             }
+
             is ToDoEvent.HideCreateDialog -> {
                 _toDoState.update {it.copy(
                     isCreatingToDo = false
                 ) }
             }
+
             is ToDoEvent.SetDescription -> {
                 _toDoState.update {it.copy(
                     description = toDoEvent.description
                 ) }
             }
+
             is ToDoEvent.SetDueDate -> {
                 _toDoState.update {it.copy(
                     dueDate = toDoEvent.dueDate
                 ) }
             }
+
             is ToDoEvent.SetDueTime -> {
                 _toDoState.update {it.copy(
                     dueTime = toDoEvent.dueTime
                 )}
             }
+
             is ToDoEvent.FinishToDo -> {
                 viewModelScope.launch {
                     toDoRepository.finishToDo(toDoEvent.toDo)
                 }
             }
+
             is ToDoEvent.UnFinishToDo -> {
                 viewModelScope.launch {
                     toDoRepository.unFinishToDo(toDoEvent.toDo)
@@ -130,11 +140,13 @@ class OverviewViewModel(
                     tag = toDoEvent.tag
                 ) }
             }
+
             is ToDoEvent.SetTitle -> {
                 _toDoState.update {it.copy(
                     title = toDoEvent.title
                 ) }
             }
+
             is ToDoEvent.ShowCreateDialog -> {
                 _toDoState.update {it.copy(
                     isCreatingToDo = true
@@ -145,7 +157,6 @@ class OverviewViewModel(
                 _toDoState.update {it.copy(
                     isDeletingToDo = true
                 ) }
-
             }
 
             is ToDoEvent.HideDeleteToDoDialog -> {
@@ -159,6 +170,7 @@ class OverviewViewModel(
                     isCheckingToDo = true
                 ) }
             }
+
             is ToDoEvent.HideToDoDialog -> {
                 _toDoState.update {it.copy(
                     isCheckingToDo = false
@@ -190,11 +202,14 @@ class OverviewViewModel(
             }
 
             //does not work yet
+            /*
             is ToDoEvent.DeleteTagFromTodos -> {
                 viewModelScope.launch {
                     toDoRepository.deleteTagFromTodos(toDoEvent.tag)
                 }
+
             }
+             */
 
         }
     }

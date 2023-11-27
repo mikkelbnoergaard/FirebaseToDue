@@ -18,7 +18,8 @@ import com.example.todue.signIn.SignInState
 fun SignInScreen(
     state: SignInState,
     onSignInClick: () -> Unit
-){
+) {
+
     val context = LocalContext.current
     LaunchedEffect(key1 = state.signInError) {
         state.signInError?.let { error ->
@@ -40,4 +41,5 @@ fun SignInScreen(
             Text(text = "Sign in")
         }
     }
+
 }

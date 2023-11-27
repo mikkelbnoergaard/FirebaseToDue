@@ -21,6 +21,7 @@ fun ProfileScreen(
     userData: UserData?,
     onSignOut: () -> Unit
 ) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -50,4 +51,5 @@ fun ProfileScreen(
             Text(text = "Sign out")
         }
     }
+
 }

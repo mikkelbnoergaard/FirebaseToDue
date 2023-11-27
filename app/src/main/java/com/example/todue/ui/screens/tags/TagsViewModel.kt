@@ -37,7 +37,9 @@ class TagsViewModel(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TagState())
 
     fun onEvent(tagEvent: TagEvent) {
-        when(tagEvent){
+
+        when(tagEvent) {
+
             is TagEvent.CreateTag -> {
 
                 viewModelScope.launch{
@@ -55,46 +57,55 @@ class TagsViewModel(
                 ) }
 
             }
+
             is TagEvent.DeleteTag -> {
                 viewModelScope.launch {
                     tagRepository.deleteTag(tagEvent.tag)
                 }
             }
+
             is TagEvent.ShowDeleteDialog -> {
                 _tagState.update {it.copy(
                     isDeletingTag = true
                 ) }
             }
+
             is TagEvent.HideDeleteDialog -> {
                 _tagState.update {it.copy(
                     isDeletingTag = false
                 ) }
             }
+
             is TagEvent.SetTitle -> {
                 _tagState.update {it.copy(
                     title = tagEvent.title
                 ) }
             }
+
             is TagEvent.IncreaseToDoAmount -> {
                 _tagState.update {it.copy(
                     toDoAmount = it.toDoAmount+1
                 ) }
             }
+
             is TagEvent.DecreaseToDoAmount -> {
                 _tagState.update {it.copy(
                     toDoAmount = it.toDoAmount-1
                 ) }
             }
+
             is TagEvent.SortByThisTag -> {
                 viewModelScope.launch {
                     tagRepository.sortByThisTag(tag = tagEvent.tag)
                 }
             }
+
             is TagEvent.DontSortByThisTag -> {
                 viewModelScope.launch {
                     tagRepository.dontSortByThisTag(tag = tagEvent.tag)
                 }
             }
+
         }
     }
 }

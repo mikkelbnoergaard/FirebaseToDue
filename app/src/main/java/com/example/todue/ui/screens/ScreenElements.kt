@@ -88,6 +88,7 @@ fun GeneralLayout(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ){
+
     val tabItems = listOf(
         TabItem(
             title = "Overview",
@@ -146,7 +147,7 @@ fun GeneralLayout(
         ) {index ->
             when(index){
                 0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent)
                 2 -> CalendarScreen()
                 3 -> StatisticsScreen()
                 4 -> Settings()
@@ -161,7 +162,7 @@ fun GeneralLayout(
             indicator = {
                 Color.Transparent
             }
-        ){
+        ) {
             tabItems.forEachIndexed { index, item ->
                 Tab(
                     selected = index == selectedTabIndex,
@@ -182,6 +183,7 @@ fun GeneralLayout(
             }
         }
     }
+
 }
 
 //Account button, probably going to be deleted
@@ -189,6 +191,7 @@ fun GeneralLayout(
 fun AccountButton(
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     FloatingActionButton(
         //should not sort by due date, but it's for testing
         onClick = { onToDoEvent(ToDoEvent.SortToDosByDueDate) },
@@ -200,6 +203,7 @@ fun AccountButton(
     ) {
         Icon(Icons.Filled.AccountCircle, "Floating account button")
     }
+
 }
 
 //Settings button, probably going to be deleted
@@ -207,6 +211,7 @@ fun AccountButton(
 fun SettingsButton(
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     FloatingActionButton(
         //should not sort by finished, but it's for testing
         onClick = { onToDoEvent(ToDoEvent.SortToDosByFinished) },
@@ -218,6 +223,7 @@ fun SettingsButton(
     ) {
         Icon(Icons.Filled.Settings, "Floating settings button")
     }
+
 }
 
 
@@ -225,9 +231,8 @@ fun SettingsButton(
 @Composable
 fun TagList(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
-){
+    onTagEvent: (TagEvent) -> Unit
+) {
 
     var selectedTag by remember {
         mutableStateOf(
@@ -242,7 +247,7 @@ fun TagList(
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
-    ){
+    ) {
         items(tagState.tags) { tag ->
 
             if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, tag = selectedTag) }
@@ -269,6 +274,7 @@ fun TagList(
             }
         }
     }
+
 }
 
 //List of to-do composables, used in the scrollable to-do column
@@ -276,7 +282,7 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit
-){
+) {
 
     var selectedToDo by remember {
         mutableStateOf(
@@ -389,6 +395,7 @@ fun ToDoList(
             }
         }
     }
+
 }
 
 //Composable for the plus button at the bottom of the screen
@@ -396,7 +403,8 @@ fun ToDoList(
 @Composable
 fun PlusButtonRow(
     onToDoEvent: (ToDoEvent) -> Unit
-){
+) {
+
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -422,6 +430,7 @@ fun PlusButtonRow(
             }
         }
     }
+
 }
 
 //Scrollable column of ToDos
@@ -431,6 +440,7 @@ fun ScrollableToDoColumn(
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -442,6 +452,7 @@ fun ScrollableToDoColumn(
         ToDoList(toDoState, onToDoEvent)
         PlusButtonRow(onToDoEvent)
     }
+
 }
 
 //Row of scrollable tags
@@ -491,4 +502,5 @@ fun ScrollableTagRow(
             }
         }
     }
+
 }

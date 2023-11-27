@@ -8,6 +8,8 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class ToDoDatabase: RoomDatabase() {
+
     abstract val toDoDao: ToDoDao
     abstract val tagDao: TagDao
+
 }

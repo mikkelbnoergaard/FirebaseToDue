@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Settings(){
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(text = "MAOARORAOR!!!!")
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -27,4 +28,5 @@ fun Settings(){
 
         }
     }
+
 }

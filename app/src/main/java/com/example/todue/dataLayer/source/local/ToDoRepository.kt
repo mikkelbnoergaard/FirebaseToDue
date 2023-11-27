@@ -6,6 +6,7 @@ import javax.inject.Inject
 class ToDoRepository @Inject constructor(
     private val dataSource: ToDoDao
 ){
+
     /*
     fun observeAll() : Flow<List<ToDo>> {
         return dataSource.observeAll()
@@ -63,7 +64,10 @@ class ToDoRepository @Inject constructor(
     }
 
     //does not work yet
+    /*
     suspend fun deleteTagFromTodos(tag: String){
         dataSource.deleteTagFromTodos(tag)
     }
+
+     */
 }

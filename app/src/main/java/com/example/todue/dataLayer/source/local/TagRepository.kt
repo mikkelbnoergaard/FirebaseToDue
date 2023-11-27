@@ -6,11 +6,11 @@ import javax.inject.Inject
 class TagRepository @Inject constructor (
     private val dataSource: TagDao
 ){
+
     /*
     fun observeAll() : Flow<List<Tag>> {
         return dataSource.observeAll()
     }
-
      */
 
     suspend fun createTag(

@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun CalendarScreen(){
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(text = "Calendar!!!!")
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -27,4 +28,5 @@ fun CalendarScreen(){
 
         }
     }
+
 }

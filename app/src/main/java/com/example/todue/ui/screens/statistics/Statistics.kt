@@ -11,7 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun StatisticsScreen(){
+fun StatisticsScreen() {
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -27,4 +28,5 @@ fun StatisticsScreen(){
 
         }
     }
+
 }

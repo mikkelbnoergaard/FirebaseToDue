@@ -10,16 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.todue.ui.event.TagEvent
-import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.TagState
 import com.example.todue.ui.screens.TagList
 
 @Composable
 fun TagsScreen(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
-){
+    onTagEvent: (TagEvent) -> Unit
+) {
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -32,7 +31,8 @@ fun TagsScreen(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.End
         ) {
-            TagList(tagState, onTagEvent, onToDoEvent = onToDoEvent)
+            TagList(tagState, onTagEvent)
         }
     }
+
 }

@@ -5,6 +5,7 @@ import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
 
 data class ToDoState(
+
     val toDos: List<ToDo> = emptyList(),
     val tags: List<Tag> = emptyList(),
     val title: String = "",
@@ -17,4 +18,5 @@ data class ToDoState(
     val isDeletingToDo: Boolean = false,
     val isCheckingToDo: Boolean = false,
     val toDoSortType: ToDoSortType = ToDoSortType.TITLE
+
 )
