@@ -151,12 +151,13 @@ fun CreateToDoDialog(
                 }
 
                 val dueDateString: String = pickedDate.toString()
+                onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
+
                 val dueTimeString: String = hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
+                onToDoEvent(ToDoEvent.SetDueTime(dueTimeString))
 
                 Button(
                     onClick = {
-                        onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
-                        onToDoEvent(ToDoEvent.SetDueTime(dueTimeString))
                         onToDoEvent(ToDoEvent.CreateToDo)
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
                     },

@@ -225,8 +225,7 @@ fun SettingsButton(
 @Composable
 fun TagList(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit
 ){
 
     var selectedTag by remember {
@@ -358,7 +357,7 @@ fun ToDoList(
                             .requiredHeight(100.dp)
                     ) {
                         Text(
-                            text = toDo.dueDate,
+                            text = toDo.dueDate + "\n" + toDo.dueTime,
                             fontSize = 15.sp,
                             color = textColor,
                             textAlign = TextAlign.End
