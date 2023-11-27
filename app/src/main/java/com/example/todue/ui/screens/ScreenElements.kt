@@ -225,7 +225,8 @@ fun SettingsButton(
 @Composable
 fun TagList(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit
 ){
 
     var selectedTag by remember {
