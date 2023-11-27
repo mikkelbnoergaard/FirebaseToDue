@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 data class Tag(
     val title: String,
     val toDoAmount: Int,
+    val sort: Boolean,
 
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

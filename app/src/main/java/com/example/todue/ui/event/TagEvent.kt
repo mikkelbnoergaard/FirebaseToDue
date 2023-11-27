@@ -11,6 +11,10 @@ sealed interface TagEvent {
 
     data class DecreaseToDoAmount(val toDoAmount: Int): TagEvent
 
+    data class SortByThisTag(val tag: Tag): TagEvent
+
+    data class DontSortByThisTag(val  tag: Tag): TagEvent
+
     //object ShowDialog: TagEvent
     //object HideDialog: TagEvent
 

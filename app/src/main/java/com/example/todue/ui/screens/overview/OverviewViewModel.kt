@@ -28,7 +28,7 @@ class OverviewViewModel(
         .flatMapLatest { sortType ->
             when(sortType) {
                 ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
-                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTag(tagList)
+                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags()
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate()
                 ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
@@ -125,12 +125,6 @@ class OverviewViewModel(
                 }
             }
 
-            is ToDoEvent.SetFinished -> {
-                _toDoState.update {it.copy(
-                    finished = toDoEvent.finished
-                ) }
-            }
-
             is ToDoEvent.SetTag -> {
                 _toDoState.update {it.copy(
                     tag = toDoEvent.tag
@@ -170,18 +164,29 @@ class OverviewViewModel(
                     isCheckingToDo = false
                 ) }
             }
+
             is ToDoEvent.AddTagToSortToDos -> {
-                tagList.add(toDoEvent.tag)
+                _toDoState.update {it.copy(
+                    isDeletingToDo = false
+                ) }
                 toDoSortType.value = ToDoSortType.TAG
-                println(tagList.toString())
+                _toDoState.update {it.copy(
+                    isDeletingToDo = false
+                ) }
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
+
                 tagList.remove(toDoEvent.tag)
                 if(tagList.isEmpty()){
                     toDoSortType.value = ToDoSortType.DUE_DATE
+                } else {
+                    toDoSortType.value = ToDoSortType.TAG
                 }
                 println(tagList.toString())
+                _toDoState.update {it.copy(
+                    isDeletingToDo = false
+                ) }
             }
 
             is ToDoEvent.SortToDosByFinished -> {

@@ -233,7 +233,8 @@ fun TagList(
         mutableStateOf(
             Tag(
                 title = "",
-                toDoAmount = 0
+                toDoAmount = 0,
+                sort = false
             )
         )
     }
@@ -447,7 +448,8 @@ fun ScrollableToDoColumn(
 @Composable
 fun ScrollableTagRow(
     tagState: TagState,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     LazyRow(
@@ -465,14 +467,16 @@ fun ScrollableTagRow(
 
             OutlinedButton(
                 onClick = {
-                    if(selected.value){
+                    if(selected.value) {
                         selected.value = !selected.value
                         buttonColor.value = backgroundColor
                         onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
-                    }else{
+                        onTagEvent(TagEvent.DontSortByThisTag(tag))
+                    } else {
                         selected.value = true
                         buttonColor.value = itemColor
                         onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
+                        onTagEvent(TagEvent.SortByThisTag(tag))
                     }
                 },
                 modifier = Modifier

@@ -53,7 +53,7 @@ fun OverviewScreen(
             Text("OverviewScreen")
             AccountButton(onToDoEvent = onToDoEvent)
         }
-        ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent)
+        ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
     }
 }

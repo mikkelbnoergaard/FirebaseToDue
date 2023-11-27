@@ -10,7 +10,6 @@ sealed interface ToDoEvent {
     data class SetTag(val tag: String): ToDoEvent
     data class SetDueDate(val dueDate: String): ToDoEvent
     data class SetDueTime(val dueTime: String): ToDoEvent
-    data class SetFinished(val finished: Boolean): ToDoEvent
 
     data object ShowCreateDialog: ToDoEvent
     data object HideCreateDialog: ToDoEvent
@@ -26,6 +25,7 @@ sealed interface ToDoEvent {
     data class UnFinishToDo(val toDo: ToDo): ToDoEvent
 
     data class DeleteToDo(val toDo: ToDo): ToDoEvent
+
 
     data class AddTagToSortToDos(val tag: String): ToDoEvent
 

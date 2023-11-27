@@ -43,13 +43,15 @@ class TagsViewModel(
                 viewModelScope.launch{
                     tagRepository.createTag(
                         tagEvent.title,
-                        toDoAmount = 1
+                        toDoAmount = 1,
+                        sort = false
                     )
                 }
 
                 _tagState.update { it.copy(
                     title = "",
-                    toDoAmount = 0
+                    toDoAmount = 0,
+                    sort = false,
                 ) }
 
             }
@@ -82,6 +84,16 @@ class TagsViewModel(
                 _tagState.update {it.copy(
                     toDoAmount = it.toDoAmount-1
                 ) }
+            }
+            is TagEvent.SortByThisTag -> {
+                viewModelScope.launch {
+                    tagRepository.sortByThisTag(tag = tagEvent.tag)
+                }
+            }
+            is TagEvent.DontSortByThisTag -> {
+                viewModelScope.launch {
+                    tagRepository.dontSortByThisTag(tag = tagEvent.tag)
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ data class TagState(
     val tagsToSort: List<String> = emptyList(),
     val title: String = "",
     val toDoAmount: Int = 0,
+    val sort: Boolean = false,
     val isDeletingTag: Boolean = false,
     val tagSortType: TagSortType = TagSortType.TITLE
 )

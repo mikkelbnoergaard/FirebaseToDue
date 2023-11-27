@@ -26,8 +26,13 @@ interface ToDoDao {
     @Query("SELECT * FROM todo WHERE finished IS 0 ORDER BY title")
     fun getToDosOrderedByTitle(): Flow<List<ToDo>>
 
-    @Query("SELECT * FROM todo WHERE tag IN (:tag) AND finished = 0 ORDER BY dueDate")
-    fun getToDosOrderedByTag(tag: List<String>): Flow<List<ToDo>>
+    @Query("SELECT * FROM todo t WHERE EXISTS (SELECT title FROM tag tag WHERE tag.sort = 1 AND tag.title = t.tag) AND t.finished = 0 ORDER BY t.dueDate, t.DueTime")
+    fun getToDosOrderedByTags(): Flow<List<ToDo>>
+    /*
+    @Query("SELECT * FROM todo WHERE tag IN (SELECT title FROM tag WHERE sort = 1) AND finished = 0 ORDER BY dueDate, DueTime")
+    fun getToDosOrderedByTags(): Flow<List<ToDo>>
+
+     */
 
     @Query("SELECT * FROM todo ORDER BY description")
     fun getToDosOrderedByDescription(): Flow<List<ToDo>>

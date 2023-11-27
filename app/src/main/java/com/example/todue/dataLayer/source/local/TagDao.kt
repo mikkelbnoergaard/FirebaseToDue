@@ -20,4 +20,10 @@ interface TagDao {
 
     @Query("SELECT * FROM tag GROUP BY title")
     fun getTagsOrderedByTitle(): Flow<List<Tag>>
+
+    @Query("UPDATE tag SET sort = 1 WHERE id = :tagId")
+    suspend fun sortByThisTag(tagId: Int)
+
+    @Query("UPDATE tag SET sort = 0 WHERE id = :tagId")
+    suspend fun dontSortByThisTag(tagId: Int)
 }

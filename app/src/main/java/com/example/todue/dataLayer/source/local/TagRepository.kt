@@ -15,10 +15,13 @@ class TagRepository @Inject constructor (
 
     suspend fun createTag(
         title: String,
-        toDoAmount: Int) {
+        toDoAmount: Int,
+        sort: Boolean
+        ) {
         val tag = Tag(
             title = title,
-            toDoAmount = toDoAmount
+            toDoAmount = toDoAmount,
+            sort = sort
         )
         dataSource.createTag(tag)
     }
@@ -29,5 +32,13 @@ class TagRepository @Inject constructor (
 
     fun getTagsOrderedByTitle() : Flow<List<Tag>> {
         return dataSource.getTagsOrderedByTitle()
+    }
+
+    suspend fun sortByThisTag(tag: Tag) {
+        dataSource.sortByThisTag(tagId = tag.id)
+    }
+
+    suspend fun dontSortByThisTag(tag: Tag) {
+        dataSource.dontSortByThisTag(tagId = tag.id)
     }
 }
