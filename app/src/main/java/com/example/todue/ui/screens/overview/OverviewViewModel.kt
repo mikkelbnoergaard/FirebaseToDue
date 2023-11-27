@@ -166,27 +166,19 @@ class OverviewViewModel(
             }
 
             is ToDoEvent.AddTagToSortToDos -> {
-                _toDoState.update {it.copy(
-                    isDeletingToDo = false
-                ) }
+                tagList.add(toDoEvent.tag)
+                toDoSortType.value = ToDoSortType.DUE_DATE
                 toDoSortType.value = ToDoSortType.TAG
-                _toDoState.update {it.copy(
-                    isDeletingToDo = false
-                ) }
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-
                 tagList.remove(toDoEvent.tag)
                 if(tagList.isEmpty()){
                     toDoSortType.value = ToDoSortType.DUE_DATE
                 } else {
+                    toDoSortType.value = ToDoSortType.DUE_DATE
                     toDoSortType.value = ToDoSortType.TAG
                 }
-                println(tagList.toString())
-                _toDoState.update {it.copy(
-                    isDeletingToDo = false
-                ) }
             }
 
             is ToDoEvent.SortToDosByFinished -> {
@@ -204,15 +196,6 @@ class OverviewViewModel(
                 }
             }
 
-            /*
-            is ToDoEvent.DeleteToDosWithGivenTag -> {
-                dao.deleteToDosWithGivenTag("123")
-            }
-
-             */
-            else -> {
-                return
-            }
         }
     }
 }
