@@ -11,6 +11,7 @@ data class ToDoState(
     val description: String = "",
     val tag: String = "",
     val dueDate: String = "",
+    val dueTime: String = "",
     val finished: Boolean = false,
     val isCreatingToDo: Boolean = false,
     val isDeletingToDo: Boolean = false,

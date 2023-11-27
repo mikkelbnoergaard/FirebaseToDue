@@ -150,11 +150,13 @@ fun CreateToDoDialog(
                     minuteZero = "0"
                 }
 
-                val dueDateString: String = pickedDate.toString() + "\n" + hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
+                val dueDateString: String = pickedDate.toString()
+                val dueTimeString: String = hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
 
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
+                        onToDoEvent(ToDoEvent.SetDueTime(dueTimeString))
                         onToDoEvent(ToDoEvent.CreateToDo)
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
                     },
@@ -328,7 +330,7 @@ fun CheckToDoDialog(
                     contentAlignment = Alignment.Center
                 ){
                     Text(
-                        text = toDo.dueDate,
+                        text = toDo.dueDate + "\n" + toDo.dueTime,
                         fontSize = 18.sp,
                         color = textColor,
                         textAlign = TextAlign.Center,

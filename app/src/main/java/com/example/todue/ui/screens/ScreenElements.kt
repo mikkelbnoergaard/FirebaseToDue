@@ -283,7 +283,8 @@ fun ToDoList(
                 title = "",
                 description = "",
                 tag = "",
-                dueDate = "dueDate",
+                dueDate = "",
+                dueTime = "",
                 finished = false
             ) )
     }

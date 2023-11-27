@@ -9,6 +9,7 @@ sealed interface ToDoEvent {
     data class SetDescription(val description: String): ToDoEvent
     data class SetTag(val tag: String): ToDoEvent
     data class SetDueDate(val dueDate: String): ToDoEvent
+    data class SetDueTime(val dueTime: String): ToDoEvent
     data class SetFinished(val finished: Boolean): ToDoEvent
 
     data object ShowCreateDialog: ToDoEvent

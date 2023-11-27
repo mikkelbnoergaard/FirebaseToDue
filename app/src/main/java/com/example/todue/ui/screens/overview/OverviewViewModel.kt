@@ -50,6 +50,7 @@ class OverviewViewModel(
                 val description = toDoState.value.description
                 val tag = toDoState.value.tag
                 val dueDate = toDoState.value.dueDate
+                val dueTime = toDoState.value.dueTime
                 val finished = toDoState.value.finished
 
                 if(title.isBlank() || description.isBlank() || tag.isBlank() || dueDate.isBlank()) {
@@ -61,6 +62,7 @@ class OverviewViewModel(
                     description = description,
                     tag = tag,
                     dueDate = dueDate,
+                    dueTime = dueTime,
                     finished = finished
                 )
 
@@ -70,6 +72,7 @@ class OverviewViewModel(
                         toDoObject.description,
                         toDoObject.tag,
                         toDoObject.dueDate,
+                        toDoObject.dueTime,
                         toDoObject.finished
                     )
                 }
@@ -81,6 +84,7 @@ class OverviewViewModel(
                     description = "",
                     tag = "",
                     dueDate = "",
+                    dueTime = "",
                     finished = false
                 ) }
 
@@ -105,6 +109,11 @@ class OverviewViewModel(
                     dueDate = toDoEvent.dueDate
                 ) }
             }
+            is ToDoEvent.SetDueTime -> {
+                _toDoState.update {it.copy(
+                    dueTime = toDoEvent.dueTime
+                )}
+            }
             is ToDoEvent.FinishToDo -> {
                 viewModelScope.launch {
                     toDoRepository.finishToDo(toDoEvent.toDo)
@@ -121,6 +130,7 @@ class OverviewViewModel(
                     finished = toDoEvent.finished
                 ) }
             }
+
             is ToDoEvent.SetTag -> {
                 _toDoState.update {it.copy(
                     tag = toDoEvent.tag

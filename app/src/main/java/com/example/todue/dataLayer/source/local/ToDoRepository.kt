@@ -17,12 +17,14 @@ class ToDoRepository @Inject constructor(
                            description: String,
                            tag: String,
                            dueDate: String,
+                           dueTime: String,
                            finished: Boolean) {
         val toDo = ToDo(
             title = title,
             description = description,
             tag = tag,
             dueDate = dueDate,
+            dueTime = dueTime,
             finished = finished
         )
         dataSource.createToDo(toDo)
