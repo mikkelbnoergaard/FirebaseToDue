@@ -474,18 +474,15 @@ fun ScrollableTagRow(
         items(tagState.tags) { tag ->
 
             val buttonColor = remember { mutableStateOf(backgroundColor) }
-            val selected = remember{ mutableStateOf(false) }
+            if(!tag.sort) { buttonColor.value = backgroundColor}
+            else { buttonColor.value = itemColor }
 
             OutlinedButton(
                 onClick = {
-                    if(selected.value) {
-                        selected.value = !selected.value
-                        buttonColor.value = backgroundColor
+                    if(tag.sort) {
                         onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
                         onTagEvent(TagEvent.DontSortByThisTag(tag))
                     } else {
-                        selected.value = true
-                        buttonColor.value = itemColor
                         onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
                         onTagEvent(TagEvent.SortByThisTag(tag))
                     }

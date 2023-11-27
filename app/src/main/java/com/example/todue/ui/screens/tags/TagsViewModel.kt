@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class TagsViewModel(
     private val tagRepository: TagRepository
 ): ViewModel() {
+
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -103,6 +104,12 @@ class TagsViewModel(
             is TagEvent.DontSortByThisTag -> {
                 viewModelScope.launch {
                     tagRepository.dontSortByThisTag(tag = tagEvent.tag)
+                }
+            }
+
+            is TagEvent.ResetTagSort -> {
+                viewModelScope.launch {
+                    tagRepository.resetTagSort()
                 }
             }
 

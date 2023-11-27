@@ -6,6 +6,7 @@ sealed interface TagEvent {
 
     data object ShowDeleteDialog: TagEvent
     data object HideDeleteDialog: TagEvent
+    data object ResetTagSort: TagEvent
 
     data class CreateTag(val title: String): TagEvent
     data class SetTitle(val title: String): TagEvent

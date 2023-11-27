@@ -41,4 +41,8 @@ class TagRepository @Inject constructor (
     suspend fun dontSortByThisTag(tag: Tag) {
         dataSource.dontSortByThisTag(tagId = tag.id)
     }
+
+    suspend fun resetTagSort() {
+        dataSource.resetTagSort()
+    }
 }

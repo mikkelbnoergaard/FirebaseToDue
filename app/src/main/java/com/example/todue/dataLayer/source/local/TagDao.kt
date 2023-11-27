@@ -26,4 +26,7 @@ interface TagDao {
 
     @Query("UPDATE tag SET sort = 0 WHERE id = :tagId")
     suspend fun dontSortByThisTag(tagId: Int)
+
+    @Query("UPDATE tag SET sort = 0")
+    suspend fun resetTagSort()
 }
