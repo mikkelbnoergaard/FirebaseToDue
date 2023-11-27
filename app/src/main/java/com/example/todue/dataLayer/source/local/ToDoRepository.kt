@@ -9,7 +9,6 @@ class ToDoRepository @Inject constructor(
     fun observeAll() : Flow<List<ToDo>> {
         return dataSource.observeAll()
     }
-
     suspend fun createTodo(title: String,
                            description: String,
                            tag: String,

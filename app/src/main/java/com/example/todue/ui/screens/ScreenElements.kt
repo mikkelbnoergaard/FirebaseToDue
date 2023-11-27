@@ -68,6 +68,7 @@ import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.screens.calendar.CalendarScreen
+import com.example.todue.ui.screens.calendar.CalendarViewModel
 import com.example.todue.ui.screens.overview.OverviewScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
@@ -87,7 +88,8 @@ fun GeneralLayout(
     toDoState: ToDoState,
     tagState: TagState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    calendarViewModel:CalendarViewModel
 ){
     val tabItems = listOf(
         TabItem(
@@ -148,7 +150,13 @@ fun GeneralLayout(
             when(index){
                 0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> CalendarScreen()
+                2 -> CalendarScreen(
+                    onDateChanged = { calendar, year, month, dayOfMonth ->
+                    },
+                    calendarViewModel = calendarViewModel,
+                            toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent
+
+                )
                 3 -> StatisticsScreen()
                 4 -> Settings()
                 else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
@@ -430,6 +438,7 @@ fun ScrollableToDoColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
+            System.out.println(toDoState)
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
         ToDoList(toDoState, onToDoEvent)
