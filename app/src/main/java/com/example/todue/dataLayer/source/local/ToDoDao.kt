@@ -47,4 +47,23 @@ interface ToDoDao {
     //does not work yet
     @Query("UPDATE todo SET tag = null WHERE tag = :tag")
     suspend fun deleteTagFromTodos(tag: String)
+
+
+
+
+
+    @Query("SELECT title FROM todo WHERE id = :toDoId")
+    fun getTestToDoTitle(toDoId: Int): String
+
+    @Query("SELECT description FROM todo WHERE id = :toDoId")
+    fun getTestToDoDescription(toDoId: Int): String
+
+    @Query("SELECT tag FROM todo WHERE id = :toDoId")
+    fun getTestToDoTag(toDoId: Int): String
+
+    @Query("SELECT dueDate FROM todo WHERE id = :toDoId")
+    fun getTestToDoDueDate(toDoId: Int): String
+
+    @Query("SELECT dueTime FROM todo WHERE id = :toDoId")
+    fun getTestToDoDueTime(toDoId: Int): String
 }
