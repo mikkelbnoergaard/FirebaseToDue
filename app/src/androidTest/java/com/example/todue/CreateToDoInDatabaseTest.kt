@@ -18,6 +18,7 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 
+//run test twice, it does not run correctly on first run
 @RewriteQueriesToDropUnusedColumns
 @RunWith(AndroidJUnit4::class)
 class CreateToDoInDatabaseTest {
