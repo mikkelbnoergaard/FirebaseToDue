@@ -21,13 +21,16 @@ import org.junit.Assert.*
 @RewriteQueriesToDropUnusedColumns
 @RunWith(AndroidJUnit4::class)
 class CreateToDoInDatabaseTest {
-
     @Test
     fun createToDo() {
 
-
-        val toDoRepository = ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(getApplicationContext())))
-
+        val toDoRepository = ToDoRepository(
+            DatabaseModules.provideToDoDao(
+                DatabaseModules.provideDataBase(
+                    getApplicationContext()
+                )
+            )
+        )
 
         val title = "Test title"
         val description = "Test description"
@@ -35,7 +38,6 @@ class CreateToDoInDatabaseTest {
         val dueDate = "19-11-2022"
         val dueTime = "22:00"
         val finished = false
-
 
         val toDoObject = ToDo(
             title = title,
