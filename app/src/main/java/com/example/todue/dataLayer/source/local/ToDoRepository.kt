@@ -70,4 +70,24 @@ class ToDoRepository @Inject constructor(
     }
 
      */
+
+    fun getTestToDoTitle(toDoId: Int): String {
+        return dataSource.getTestToDoTitle(toDoId = toDoId)
+    }
+
+    fun getTestToDoDescription(toDoId: Int): String {
+        return dataSource.getTestToDoDescription(toDoId = toDoId)
+    }
+
+    fun getTestToDoTag(toDoId: Int): String {
+        return dataSource.getTestToDoTag(toDoId = toDoId)
+    }
+
+    fun getTestToDoDueDate(toDoId: Int): String {
+        return dataSource.getTestToDoDueDate(toDoId = toDoId)
+    }
+
+    fun getTestToDoDueTime(toDoId: Int): String {
+        return dataSource.getTestToDoDueTime(toDoId = toDoId)
+    }
 }
