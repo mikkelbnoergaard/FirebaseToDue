@@ -19,7 +19,7 @@ fun Settings(){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "MAOARORAOR!!!!")
+        Text(text = "Settings")
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,

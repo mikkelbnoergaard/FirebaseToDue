@@ -19,7 +19,7 @@ fun StatisticsScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "StatIStICS!!!!")
+        Text(text = "Statistics")
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,

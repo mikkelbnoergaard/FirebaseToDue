@@ -49,7 +49,7 @@ fun OverviewScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             SettingsButton(onToDoEvent = onToDoEvent)
-            Text("OverviewScreen")
+            Text("Overview")
             AccountButton(onToDoEvent = onToDoEvent)
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
