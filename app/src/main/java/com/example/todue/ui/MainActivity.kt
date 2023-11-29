@@ -2,6 +2,7 @@
 
 package com.example.todue.ui
 
+import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
+import com.example.todue.ui.screens.calendar.CalendarViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -45,6 +47,18 @@ class MainActivity : ComponentActivity() {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return TagsViewModel(
                         TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
+                }
+            }
+        }
+    )
+
+    private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the calendar
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return CalendarViewModel(
+                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
                     ) as T
                 }
             }
@@ -73,11 +87,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
+                    val onDateChanged =
                     GeneralLayout(
                         toDoState = toDoState,
                         tagState = tagState,
                         onToDoEvent = overviewViewModel::onEvent,
-                        onTagEvent = tagsViewModel::onEvent
+                        onTagEvent = tagsViewModel::onEvent,
+                        //calendarViewModel = calendarViewModel,
+                        //onDateChanged = calendarViewModel.
                     )
                 }
             }

@@ -1,20 +1,27 @@
 package com.example.todue.ui.screens.calendar
 
+import android.icu.util.Calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.dataLayer.source.local.ToDoRepository
+import com.example.todue.state.ToDoState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+
 
 class CalendarViewModel(
     private val toDoRepository: ToDoRepository
@@ -32,9 +39,10 @@ class CalendarViewModel(
         // Fetch todos for the selected date when it changes
         getToDosForDate(date)
     }
+
     fun getToDosForDate(selectedDate: Date) {
         viewModelScope.launch {
-            toDoRepository.observeAll()
+            toDoRepository.getToDosOrderedByTitle()
                 .map { toDos ->
                     toDos.filter {
                         val toDoDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.dueDate)
@@ -47,3 +55,4 @@ class CalendarViewModel(
         }
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -62,13 +63,13 @@ import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.ui.event.ToDoEvent
-import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.navigation.TabItem
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
-import com.example.todue.ui.screens.calendar.CalendarScreen
+//import com.example.todue.ui.screens.calendar.CalendarScreen
 import com.example.todue.ui.screens.calendar.CalendarViewModel
+//import com.example.todue.ui.screens.calendar.CalendarScreen
 import com.example.todue.ui.screens.overview.OverviewScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
@@ -89,8 +90,10 @@ fun GeneralLayout(
     tagState: TagState,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    calendarViewModel:CalendarViewModel
+    //onDateChanged: (Calendar, Int, Int, Int) -> Unit,
+    //calendarViewModel: CalendarViewModel
 ){
+
     val tabItems = listOf(
         TabItem(
             title = "Overview",
@@ -149,14 +152,8 @@ fun GeneralLayout(
         ) {index ->
             when(index){
                 0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> CalendarScreen(
-                    onDateChanged = { calendar, year, month, dayOfMonth ->
-                    },
-                    calendarViewModel = calendarViewModel,
-                            toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent
-
-                )
+                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent)
+                2 -> Settings()//CalendarScreen(calendarViewModel = calendarViewModel, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onDateChanged = onDateChanged, toDoState = toDoState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
                 else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
@@ -170,7 +167,7 @@ fun GeneralLayout(
             indicator = {
                 Color.Transparent
             }
-        ){
+        ) {
             tabItems.forEachIndexed { index, item ->
                 Tab(
                     selected = index == selectedTabIndex,
@@ -191,15 +188,18 @@ fun GeneralLayout(
             }
         }
     }
+
 }
 
 //Account button, probably going to be deleted
 @Composable
 fun AccountButton(
-    onClick: () -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     FloatingActionButton(
-        onClick = { onClick() },
+        //should not sort by due date, but it's for testing
+        onClick = { onToDoEvent(ToDoEvent.SortToDosByDueDate) },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier
@@ -208,15 +208,18 @@ fun AccountButton(
     ) {
         Icon(Icons.Filled.AccountCircle, "Floating account button")
     }
+
 }
 
 //Settings button, probably going to be deleted
 @Composable
 fun SettingsButton(
-    onClick: () -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     FloatingActionButton(
-        onClick = { onClick() },
+        //should not sort by finished, but it's for testing
+        onClick = { onToDoEvent(ToDoEvent.SortToDosByFinished) },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier
@@ -225,22 +228,21 @@ fun SettingsButton(
     ) {
         Icon(Icons.Filled.Settings, "Floating settings button")
     }
+
 }
-
-
 
 @Composable
 fun TagList(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
-){
+    onTagEvent: (TagEvent) -> Unit
+) {
 
     var selectedTag by remember {
         mutableStateOf(
             Tag(
                 title = "",
-                toDoAmount = 0
+                toDoAmount = 0,
+                sort = false
             )
         )
     }
@@ -248,10 +250,10 @@ fun TagList(
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
-    ){
+    ) {
         items(tagState.tags) { tag ->
 
-            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, tag = selectedTag) }
+            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, tag = selectedTag) }
 
             ElevatedButton(
                 onClick = {
@@ -275,6 +277,7 @@ fun TagList(
             }
         }
     }
+
 }
 
 //List of to-do composables, used in the scrollable to-do column
@@ -282,7 +285,7 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit
-){
+) {
 
     var selectedToDo by remember {
         mutableStateOf(
@@ -290,7 +293,8 @@ fun ToDoList(
                 title = "",
                 description = "",
                 tag = "",
-                dueDate = "dueDate",
+                dueDate = "",
+                dueTime = "",
                 finished = false
             ) )
     }
@@ -302,7 +306,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo){ CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -364,7 +368,7 @@ fun ToDoList(
                             .requiredHeight(100.dp)
                     ) {
                         Text(
-                            text = toDo.dueDate,
+                            text = toDo.dueDate + "\n" + toDo.dueTime,
                             fontSize = 15.sp,
                             color = textColor,
                             textAlign = TextAlign.End
@@ -372,7 +376,11 @@ fun ToDoList(
                         FloatingActionButton(
                             onClick = {
                                 selectedToDo = toDo
-                                onToDoEvent(ToDoEvent.ShowDeleteDialog)
+                                if(toDo.finished){
+                                    onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                                } else{
+                                    onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                                }
                             },
                             modifier = Modifier
                                 .requiredSize(30.dp),
@@ -390,6 +398,7 @@ fun ToDoList(
             }
         }
     }
+
 }
 
 //Composable for the plus button at the bottom of the screen
@@ -397,7 +406,8 @@ fun ToDoList(
 @Composable
 fun PlusButtonRow(
     onToDoEvent: (ToDoEvent) -> Unit
-){
+) {
+
     Box(
         modifier = Modifier
             .fillMaxHeight()
@@ -423,6 +433,7 @@ fun PlusButtonRow(
             }
         }
     }
+
 }
 
 //Scrollable column of ToDos
@@ -432,25 +443,27 @@ fun ScrollableToDoColumn(
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxHeight()
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            System.out.println(toDoState)
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
         ToDoList(toDoState, onToDoEvent)
         PlusButtonRow(onToDoEvent)
     }
+
 }
 
 //Row of scrollable tags
 @Composable
 fun ScrollableTagRow(
     tagState: TagState,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     LazyRow(
@@ -468,14 +481,14 @@ fun ScrollableTagRow(
 
             OutlinedButton(
                 onClick = {
-                    if(selected.value){
-                        selected.value = !selected.value
+                    if(tag.sort) {
                         buttonColor.value = backgroundColor
-                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TITLE, tag.title))
-                    }else{
-                        selected.value = true
+                        onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
+                        onTagEvent(TagEvent.DontSortByThisTag(tag))
+                    } else {
                         buttonColor.value = itemColor
-                        onToDoEvent(ToDoEvent.SortToDos(ToDoSortType.TAG, tag.title))
+                        onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
+                        onTagEvent(TagEvent.SortByThisTag(tag))
                     }
                 },
                 modifier = Modifier
@@ -490,4 +503,5 @@ fun ScrollableTagRow(
             }
         }
     }
+
 }
