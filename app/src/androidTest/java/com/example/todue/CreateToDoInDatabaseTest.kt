@@ -1,6 +1,5 @@
 package com.example.todue
 
-
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,8 +18,6 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 
-//does not run
-
 @RewriteQueriesToDropUnusedColumns
 @RunWith(AndroidJUnit4::class)
 class CreateToDoInDatabaseTest {
@@ -28,7 +25,9 @@ class CreateToDoInDatabaseTest {
     @Test
     fun createToDo() {
 
+
         val toDoRepository = ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(getApplicationContext())))
+
 
         val title = "Test title"
         val description = "Test description"
@@ -47,7 +46,8 @@ class CreateToDoInDatabaseTest {
             finished = finished,
             id = 1
         )
-        toDoRepository.createTodo(
+
+        toDoRepository.createTestToDoInDB(
             toDoObject.title,
             toDoObject.description,
             toDoObject.tag,

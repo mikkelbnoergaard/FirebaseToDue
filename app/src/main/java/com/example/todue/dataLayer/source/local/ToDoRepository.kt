@@ -14,7 +14,7 @@ class ToDoRepository @Inject constructor(
 
      */
 
-    suspend fun createTodo(title: String,
+    suspend fun createToDo(title: String,
                            description: String,
                            tag: String,
                            dueDate: String,
@@ -70,6 +70,25 @@ class ToDoRepository @Inject constructor(
     }
 
      */
+
+
+    //for testing:
+    fun createTestToDoInDB(title: String,
+                           description: String,
+                           tag: String,
+                           dueDate: String,
+                           dueTime: String,
+                           finished: Boolean) {
+        val toDo = ToDo(
+            title = title,
+            description = description,
+            tag = tag,
+            dueDate = dueDate,
+            dueTime = dueTime,
+            finished = finished
+        )
+        dataSource.createTestToDoInDB(toDo)
+    }
 
     fun getTestToDoTitle(toDoId: Int): String {
         return dataSource.getTestToDoTitle(toDoId = toDoId)

@@ -50,7 +50,9 @@ interface ToDoDao {
 
 
 
-
+    //for testing
+    @Insert
+    fun createTestToDoInDB(toDo: ToDo)
 
     @Query("SELECT title FROM todo WHERE id = :toDoId")
     fun getTestToDoTitle(toDoId: Int): String

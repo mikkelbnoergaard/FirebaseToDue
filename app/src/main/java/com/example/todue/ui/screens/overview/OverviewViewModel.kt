@@ -43,6 +43,7 @@ class OverviewViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ToDoState())
 
+
     fun onEvent(toDoEvent: ToDoEvent) {
 
         when(toDoEvent) {
@@ -70,7 +71,7 @@ class OverviewViewModel(
                 )
 
                 viewModelScope.launch{
-                    toDoRepository.createTodo(
+                    toDoRepository.createToDo(
                         toDoObject.title,
                         toDoObject.description,
                         toDoObject.tag,
