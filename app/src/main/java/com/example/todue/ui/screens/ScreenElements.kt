@@ -349,7 +349,7 @@ fun ToDoList(
                             overflow = TextOverflow.Ellipsis,
                         )
                         var hashtag = ""
-                        if(toDo.tag != "") {
+                        if(toDo.tag.isNotBlank()) {
                             hashtag = "#"
                         }
                         Text(

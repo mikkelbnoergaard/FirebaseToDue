@@ -53,6 +53,7 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+
     private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the calendar
         factoryProducer = {
             object : ViewModelProvider.Factory {

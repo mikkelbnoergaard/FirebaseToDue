@@ -299,8 +299,12 @@ fun CheckToDoDialog(
                         .fillMaxWidth()
                         .padding(bottom = 5.dp)
                 )
+                var hashtag = ""
+                if(toDo.tag.isNotBlank()) {
+                    hashtag = "#"
+                }
                 Text(
-                    text = "\n#" + toDo.tag,
+                    text = hashtag + toDo.tag,
                     fontStyle = FontStyle.Italic,
                     fontSize = 15.sp,
                     color = unselectedItemColor,
