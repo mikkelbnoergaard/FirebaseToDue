@@ -23,7 +23,11 @@ class TagRepository @Inject constructor (
             toDoAmount = toDoAmount,
             sort = sort
         )
-        dataSource.createTag(tag)
+        if(tag.title == "") {
+            return
+        } else {
+            dataSource.createTag(tag)
+        }
     }
 
     suspend fun deleteTag(tag: Tag){

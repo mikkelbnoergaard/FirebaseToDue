@@ -117,6 +117,7 @@ fun CreateToDoDialog(
                     }
                 )
 
+
                 //date button
                 Button(onClick = {
                     dateDialogState.show()
@@ -127,7 +128,6 @@ fun CreateToDoDialog(
 
                 //time button
                 Button(onClick = {
-                    timeDialogState.show()
                 }) {
                     Text(text = "Pick time")
                 }
@@ -161,7 +161,9 @@ fun CreateToDoDialog(
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.CreateToDo)
-                        onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                        if(toDoState.title.isNotBlank()) {
+                            onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                        }
                     },
                     modifier = Modifier
                         .padding(5.dp)) {
@@ -170,7 +172,6 @@ fun CreateToDoDialog(
             }
         }
     )
-
     MaterialDialog(
         dialogState = dateDialogState,
         properties = DialogProperties(

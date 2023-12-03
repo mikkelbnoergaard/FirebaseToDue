@@ -3,6 +3,7 @@ package com.example.todue.ui.screens.tags
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.TagRepository
+import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.state.TagState
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.sortType.TagSortType
@@ -16,7 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TagsViewModel(
-    private val tagRepository: TagRepository
+    private val tagRepository: TagRepository,
+    private val toDoRepository: ToDoRepository
 ): ViewModel() {
 
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
@@ -62,6 +64,7 @@ class TagsViewModel(
             is TagEvent.DeleteTag -> {
                 viewModelScope.launch {
                     tagRepository.deleteTag(tagEvent.tag)
+                    toDoRepository.deleteTagFromToDos(tagEvent.tag.title)
                 }
             }
 

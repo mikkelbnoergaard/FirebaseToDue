@@ -57,7 +57,7 @@ class OverviewViewModel(
                 val dueTime = toDoState.value.dueTime
                 val finished = toDoState.value.finished
 
-                if(title.isBlank() || description.isBlank() || tag.isBlank() || dueDate.isBlank()) {
+                if (title.isEmpty()) {
                     return
                 }
 

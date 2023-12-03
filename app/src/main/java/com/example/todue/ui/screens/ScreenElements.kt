@@ -1,6 +1,5 @@
 package com.example.todue.ui.screens
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -349,8 +348,12 @@ fun ToDoList(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                         )
+                        var hashtag = ""
+                        if(toDo.tag != "") {
+                            hashtag = "#"
+                        }
                         Text(
-                            text = "#" + toDo.tag,
+                            text = hashtag + toDo.tag,
                             fontStyle = FontStyle.Italic,
                             fontSize = 15.sp,
                             color = unselectedItemColor,
@@ -477,7 +480,6 @@ fun ScrollableTagRow(
         items(tagState.tags) { tag ->
 
             val buttonColor = remember { mutableStateOf(backgroundColor) }
-            val selected = remember{ mutableStateOf(false) }
 
             OutlinedButton(
                 onClick = {

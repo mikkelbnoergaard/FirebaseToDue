@@ -64,12 +64,10 @@ class ToDoRepository @Inject constructor(
     }
 
     //does not work yet
-    /*
-    suspend fun deleteTagFromTodos(tag: String){
-        dataSource.deleteTagFromTodos(tag)
+    suspend fun deleteTagFromToDos(tag: String){
+        dataSource.deleteTagFromToDos(tag)
     }
 
-     */
 
 
     //for testing:
