@@ -151,7 +151,7 @@ fun GeneralLayout(
         ) {index ->
             when(index){
                 0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent)
+                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> Settings()//CalendarScreen(calendarViewModel = calendarViewModel, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onDateChanged = onDateChanged, toDoState = toDoState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
@@ -193,12 +193,16 @@ fun GeneralLayout(
 //Account button, probably going to be deleted
 @Composable
 fun AccountButton(
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     FloatingActionButton(
         //should not sort by due date, but it's for testing
-        onClick = { onToDoEvent(ToDoEvent.SortToDosByDueDate) },
+        onClick = {
+            onToDoEvent(ToDoEvent.SortToDosByDueDate)
+            onTagEvent(TagEvent.ResetTagSort)
+                  },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
         modifier = Modifier
@@ -233,7 +237,8 @@ fun SettingsButton(
 @Composable
 fun TagList(
     tagState: TagState,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
 
     var selectedTag by remember {
@@ -252,7 +257,7 @@ fun TagList(
     ) {
         items(tagState.tags) { tag ->
 
-            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, tag = selectedTag) }
+            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, tag = selectedTag) }
 
             ElevatedButton(
                 onClick = {
@@ -283,7 +288,8 @@ fun TagList(
 @Composable
 fun ToDoList(
     toDoState: ToDoState,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     var selectedToDo by remember {
@@ -305,7 +311,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo){ CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -455,7 +461,7 @@ fun ScrollableToDoColumn(
         if(toDoState.isCreatingToDo){
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
-        ToDoList(toDoState, onToDoEvent)
+        ToDoList(toDoState, onToDoEvent, onTagEvent)
         PlusButtonRow(onToDoEvent)
     }
 
@@ -486,7 +492,7 @@ fun ScrollableTagRow(
                     if(tag.sort) {
                         buttonColor.value = backgroundColor
                         onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
-                        onTagEvent(TagEvent.DontSortByThisTag(tag))
+                        onTagEvent(TagEvent.DontSortByThisTag(tag.title))
                     } else {
                         buttonColor.value = itemColor
                         onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))

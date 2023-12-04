@@ -50,7 +50,7 @@ fun OverviewScreen(
         ) {
             SettingsButton(onToDoEvent = onToDoEvent)
             Text("Overview")
-            AccountButton(onToDoEvent = onToDoEvent)
+            AccountButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)

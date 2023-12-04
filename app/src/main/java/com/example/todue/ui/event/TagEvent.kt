@@ -11,9 +11,9 @@ sealed interface TagEvent {
     data class CreateTag(val title: String): TagEvent
     data class SetTitle(val title: String): TagEvent
     data class IncreaseToDoAmount(val toDoAmount: Int): TagEvent
-    data class DecreaseToDoAmount(val toDoAmount: Int): TagEvent
+    data class DecreaseToDoAmount(val title: String): TagEvent
     data class SortByThisTag(val tag: Tag): TagEvent
-    data class DontSortByThisTag(val  tag: Tag): TagEvent
-    data class DeleteTag(val tag: Tag): TagEvent
+    data class DontSortByThisTag(val title: String): TagEvent
+    data class DeleteTag(val title: String): TagEvent
 
 }

@@ -3,7 +3,6 @@ package com.example.todue.ui.screens.tags
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.TagRepository
-import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.state.TagState
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.sortType.TagSortType
@@ -17,9 +16,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TagsViewModel(
-    private val tagRepository: TagRepository,
-    private val toDoRepository: ToDoRepository
+    private val tagRepository: TagRepository
 ): ViewModel() {
+
 
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
 
@@ -63,11 +62,9 @@ class TagsViewModel(
 
             is TagEvent.DeleteTag -> {
                 viewModelScope.launch {
-                    tagRepository.deleteTag(tagEvent.tag)
-                    toDoRepository.deleteTagFromToDos(tagEvent.tag.title)
-
+                    tagRepository.dontSortByThisTag(tagEvent.title)
+                    tagRepository.deleteTag(tagEvent.title)
                 }
-                tagSortType.value = TagSortType.TITLE
             }
 
             is TagEvent.ShowDeleteDialog -> {
@@ -95,9 +92,10 @@ class TagsViewModel(
             }
 
             is TagEvent.DecreaseToDoAmount -> {
-                _tagState.update {it.copy(
-                    toDoAmount = it.toDoAmount-1
-                ) }
+                viewModelScope.launch {
+                    tagRepository.decreaseToDoAmount(tagEvent.title)
+                    tagRepository.deleteUnusedTags()
+                }
             }
 
             is TagEvent.SortByThisTag -> {
@@ -108,16 +106,16 @@ class TagsViewModel(
 
             is TagEvent.DontSortByThisTag -> {
                 viewModelScope.launch {
-                    tagRepository.dontSortByThisTag(tag = tagEvent.tag)
+                    tagRepository.dontSortByThisTag(tagTitle = tagEvent.title)
                 }
             }
+
 
             is TagEvent.ResetTagSort -> {
                 viewModelScope.launch {
                     tagRepository.resetTagSort()
                 }
             }
-
         }
     }
 }

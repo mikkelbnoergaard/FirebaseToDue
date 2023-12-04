@@ -24,6 +24,7 @@ sealed interface ToDoEvent {
     data class DeleteToDo(val toDo: ToDo): ToDoEvent
     data class AddTagToSortToDos(val tag: String): ToDoEvent
     data class RemoveTagToSortToDos(val tag: String): ToDoEvent
+    data class DeleteTagFromToDos(val tag: String): ToDoEvent
 
     //does not work yet
     //data class DeleteTagFromTodos(val tag: String) : ToDoEvent

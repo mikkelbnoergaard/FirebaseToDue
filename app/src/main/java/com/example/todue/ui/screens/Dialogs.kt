@@ -216,7 +216,7 @@ fun CreateToDoDialog(
 @Composable
 fun DeleteToDoToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
-    //onTagEvent: (TagEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
     modifier: Modifier = Modifier,
     toDo: ToDo
 ) {
@@ -241,7 +241,7 @@ fun DeleteToDoToDoDialog(
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.DeleteToDo(toDo = toDo))
-                        //should delete associated tag if it has no other todos attached
+                        onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
                         onToDoEvent(ToDoEvent.HideToDoDialog)
                     },
@@ -367,7 +367,7 @@ fun CheckToDoDialog(
 @Composable
 fun DeleteTagDialog(
     onTagEvent: (TagEvent) -> Unit,
-    //onToDoEvent: (ToDoEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit,
     modifier: Modifier = Modifier,
     tag: Tag
 ) {
@@ -391,10 +391,8 @@ fun DeleteTagDialog(
             ) {
                 Button(
                     onClick = {
-                        onTagEvent(TagEvent.DeleteTag(tag = tag))
-                        //does not work yet
-                        //onToDoEvent(ToDoEvent.DeleteTagFromTodos("$tag"))
-                        //onToDoEvent(ToDoEvent.DeleteToDosWithGivenTag("$tag"))
+                        onTagEvent(TagEvent.DeleteTag(title = tag.title))
+                        onToDoEvent(ToDoEvent.DeleteTagFromToDos(tag = tag.title))
                         onTagEvent(TagEvent.HideDeleteDialog)
                     },
                     modifier = Modifier
