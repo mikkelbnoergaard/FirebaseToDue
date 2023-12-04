@@ -2,6 +2,7 @@ package com.example.todue.ui.screens.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.dataLayer.source.local.ToDoRepository
@@ -17,7 +18,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class OverviewViewModel(
-    private val toDoRepository: ToDoRepository
+    private val toDoRepository: ToDoRepository,
+    private val tagRepository: TagRepository
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
@@ -97,6 +99,8 @@ class OverviewViewModel(
             is ToDoEvent.DeleteToDo -> {
                 viewModelScope.launch {
                     toDoRepository.deleteToDo(toDoEvent.toDo)
+                    tagRepository.decreaseToDoAmount(toDoEvent.toDo.tag)
+                    tagRepository.deleteUnusedTags()
                 }
             }
 

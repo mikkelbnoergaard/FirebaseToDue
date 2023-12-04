@@ -24,7 +24,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
-import com.example.todue.ui.screens.calendar.CalendarViewModel
+//import com.example.todue.ui.screens.calendar.CalendarViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -33,7 +33,8 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return OverviewViewModel(
-                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext)))
+                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
+                        TagRepository(DatabaseModules.provideTagDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
             }
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-
+/*
     private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the calendar
         factoryProducer = {
             object : ViewModelProvider.Factory {
@@ -65,6 +66,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+
+ */
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)

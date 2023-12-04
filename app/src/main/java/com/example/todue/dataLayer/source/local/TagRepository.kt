@@ -11,6 +11,7 @@ class TagRepository @Inject constructor (
     fun observeAll() : Flow<List<Tag>> {
         return dataSource.observeAll()
     }
+
      */
 
     suspend fun createTag(
@@ -23,10 +24,14 @@ class TagRepository @Inject constructor (
             toDoAmount = toDoAmount,
             sort = sort
         )
-        if(tag.title == "") {
-            return
+        if (checkIfTagExists(tag)) {
+            increaseToDoAmount(tag)
         } else {
-            dataSource.createTag(tag)
+            if (tag.title == "") {
+                return
+            } else {
+                dataSource.createTag(tag)
+            }
         }
     }
 
@@ -34,7 +39,7 @@ class TagRepository @Inject constructor (
         dataSource.deleteTag(tag)
     }
 
-    fun getTagsOrderedByTitle() : Flow<List<Tag>> {
+    fun getTagsOrderedByTitle(): Flow<List<Tag>> {
         return dataSource.getTagsOrderedByTitle()
     }
 
@@ -48,5 +53,21 @@ class TagRepository @Inject constructor (
 
     suspend fun resetTagSort() {
         dataSource.resetTagSort()
+    }
+
+    private suspend fun checkIfTagExists(tag: Tag): Boolean {
+        return dataSource.checkIfTagExists(tagTitle = tag.title)
+    }
+
+    private suspend fun increaseToDoAmount(tag: Tag) {
+        dataSource.increaseToDoAmount(tagTitle = tag.title)
+    }
+
+    suspend fun decreaseToDoAmount(tagTitle: String) {
+        dataSource.decreaseToDoAmount(tagTitle = tagTitle)
+    }
+
+    suspend fun deleteUnusedTags() {
+        dataSource.deleteUnusedTags()
     }
 }
