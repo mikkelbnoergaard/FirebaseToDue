@@ -65,6 +65,7 @@ class TagsViewModel(
                 viewModelScope.launch {
                     tagRepository.deleteTag(tagEvent.tag)
                     toDoRepository.deleteTagFromToDos(tagEvent.tag.title)
+
                 }
                 tagSortType.value = TagSortType.TITLE
             }
