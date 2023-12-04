@@ -63,6 +63,10 @@ class ToDoRepository @Inject constructor(
         return dataSource.getFinishedToDos()
     }
 
+    fun getToDosByGivenDate(date: String): Flow<List<ToDo>> {
+        return dataSource.getToDosByGivenDate(date = date)
+    }
+
     suspend fun deleteTagFromToDos(tag: String){
         dataSource.deleteTagFromToDos(tag)
     }

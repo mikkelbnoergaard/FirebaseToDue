@@ -47,6 +47,10 @@ interface ToDoDao {
     @Query("SELECT (EXISTS (SELECT * FROM tag WHERE sort = 1))")
     suspend fun checkIfSortByTags(): Boolean
 
+    @Query("SELECT * FROM todo WHERE dueDate = :date")
+    fun getToDosByGivenDate(date: String): Flow<List<ToDo>>
+
+
 
 
 

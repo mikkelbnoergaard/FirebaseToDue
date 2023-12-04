@@ -19,7 +19,6 @@ class TagsViewModel(
     private val tagRepository: TagRepository
 ): ViewModel() {
 
-
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
 
     @OptIn(ExperimentalCoroutinesApi::class)

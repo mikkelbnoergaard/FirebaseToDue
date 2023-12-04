@@ -66,10 +66,11 @@ import com.example.todue.navigation.TabItem
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarViewModel
 //import com.example.todue.ui.screens.calendar.CalendarScreen
-import com.example.todue.ui.screens.overview.OverviewScreen
+import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
@@ -150,12 +151,12 @@ fun GeneralLayout(
             verticalAlignment = Alignment.Bottom
         ) {index ->
             when(index){
-                0 -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> Settings()//CalendarScreen(calendarViewModel = calendarViewModel, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onDateChanged = onDateChanged, toDoState = toDoState)
+                2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
-                else -> OverviewScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
             }
         }
         TabRow(

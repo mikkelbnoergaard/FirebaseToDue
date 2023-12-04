@@ -16,15 +16,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OverviewViewModel(
+class ToDosViewModel(
     private val toDoRepository: ToDoRepository
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _toDos = toDoSortType
-        .flatMapLatest { sortType ->
-            when(sortType) {
+        .flatMapLatest { toDoSortType ->
+            when(toDoSortType) {
                 ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
                 ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags()
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
