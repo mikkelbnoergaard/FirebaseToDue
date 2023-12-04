@@ -28,6 +28,7 @@ class TagsViewModel(
         .flatMapLatest { tagSortType ->
             when(tagSortType) {
                 TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle()
+                TagSortType.ID -> tagRepository.getTagsOrderedByID()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -65,12 +66,8 @@ class TagsViewModel(
                 viewModelScope.launch {
                     tagRepository.deleteTag(tagEvent.tag)
                     toDoRepository.deleteTagFromToDos(tagEvent.tag.title)
-                    _tagState.update { it.copy(
-                        title = "",
-                        toDoAmount = 0,
-                        sort = false,
-                    ) }
                 }
+                tagSortType.value = TagSortType.TITLE
             }
 
             is TagEvent.ShowDeleteDialog -> {
