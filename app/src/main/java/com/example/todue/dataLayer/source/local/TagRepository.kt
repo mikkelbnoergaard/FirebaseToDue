@@ -43,10 +43,6 @@ class TagRepository @Inject constructor (
         return dataSource.getTagsOrderedByTitle()
     }
 
-    fun getTagsOrderedByID():Flow<List<Tag>> {
-        return dataSource.getTagsOrderedByID()
-    }
-
     suspend fun sortByThisTag(tag: Tag) {
         dataSource.sortByThisTag(tagId = tag.id)
     }

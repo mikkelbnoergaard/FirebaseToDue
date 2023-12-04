@@ -28,7 +28,6 @@ class TagsViewModel(
         .flatMapLatest { tagSortType ->
             when(tagSortType) {
                 TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle()
-                TagSortType.ID -> tagRepository.getTagsOrderedByID()
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
