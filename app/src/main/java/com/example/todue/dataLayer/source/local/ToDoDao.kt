@@ -44,10 +44,17 @@ interface ToDoDao {
     @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
     suspend fun unFinishToDo(toDoId: Int)
 
+    @Query("SELECT (EXISTS (SELECT * FROM tag WHERE sort = 1))")
+    suspend fun checkIfSortByTags(): Boolean
+
+
+
 
     //does not work yet
     @Query("UPDATE todo SET tag = '' WHERE tag = :tag")
     suspend fun deleteTagFromToDos(tag: String)
+
+
 
 
 

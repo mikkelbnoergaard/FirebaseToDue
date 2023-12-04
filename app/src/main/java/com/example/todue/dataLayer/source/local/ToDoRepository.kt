@@ -63,9 +63,12 @@ class ToDoRepository @Inject constructor(
         return dataSource.getFinishedToDos()
     }
 
-    //does not work yet
     suspend fun deleteTagFromToDos(tag: String){
         dataSource.deleteTagFromToDos(tag)
+    }
+
+    suspend fun checkIfSortByTags(): Boolean {
+        return dataSource.checkIfSortByTags()
     }
 
 

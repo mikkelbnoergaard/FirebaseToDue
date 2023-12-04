@@ -21,8 +21,6 @@ class OverviewViewModel(
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
-    private var tagList = mutableListOf<String>()
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _toDos = toDoSortType
         .flatMapLatest { sortType ->
@@ -179,18 +177,20 @@ class OverviewViewModel(
             }
 
             is ToDoEvent.AddTagToSortToDos -> {
-                tagList.add(toDoEvent.tag)
-                toDoSortType.value = ToDoSortType.DUE_DATE
                 toDoSortType.value = ToDoSortType.TAG
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-                tagList.remove(toDoEvent.tag)
-                if(tagList.isEmpty()){
-                    toDoSortType.value = ToDoSortType.DUE_DATE
+                var sortByTags = false
+
+                viewModelScope.launch {
+                    sortByTags = toDoRepository.checkIfSortByTags()
+                }
+
+                if(sortByTags){
+                    toDoSortType.value = ToDoSortType.TAG
                 } else {
                     toDoSortType.value = ToDoSortType.DUE_DATE
-                    toDoSortType.value = ToDoSortType.TAG
                 }
             }
 
@@ -207,17 +207,6 @@ class OverviewViewModel(
                     toDoRepository.deleteTagFromToDos(toDoEvent.tag)
                 }
             }
-
-            //does not work yet
-            /*
-            is ToDoEvent.DeleteTagFromTodos -> {
-                viewModelScope.launch {
-                    toDoRepository.deleteTagFromTodos(toDoEvent.tag)
-                }
-
-            }
-             */
-
         }
     }
 }
