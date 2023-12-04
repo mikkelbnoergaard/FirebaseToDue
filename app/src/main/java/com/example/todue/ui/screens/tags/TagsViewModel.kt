@@ -65,6 +65,11 @@ class TagsViewModel(
                 viewModelScope.launch {
                     tagRepository.deleteTag(tagEvent.tag)
                     toDoRepository.deleteTagFromToDos(tagEvent.tag.title)
+                    _tagState.update { it.copy(
+                        title = "",
+                        toDoAmount = 0,
+                        sort = false,
+                    ) }
                 }
             }
 

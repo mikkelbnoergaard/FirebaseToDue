@@ -67,7 +67,7 @@ import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 //import com.example.todue.ui.screens.calendar.CalendarScreen
-import com.example.todue.ui.screens.calendar.CalendarViewModel
+//import com.example.todue.ui.screens.calendar.CalendarViewModel
 //import com.example.todue.ui.screens.calendar.CalendarScreen
 import com.example.todue.ui.screens.overview.OverviewScreen
 import com.example.todue.ui.screens.settings.Settings

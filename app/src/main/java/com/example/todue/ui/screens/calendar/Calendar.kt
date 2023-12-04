@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens.calendar
 
+/*
 import android.icu.util.Calendar
 import android.widget.CalendarView
 import androidx.compose.foundation.background
@@ -35,7 +36,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/*
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,

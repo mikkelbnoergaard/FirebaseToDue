@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens.calendar
 
+/*
 import android.icu.util.Calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,8 +21,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
-
 
 class CalendarViewModel(
     private val toDoRepository: ToDoRepository
@@ -55,4 +54,6 @@ class CalendarViewModel(
         }
     }
 }
+
+ */
 
