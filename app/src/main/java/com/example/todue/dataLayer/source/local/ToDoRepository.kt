@@ -75,6 +75,10 @@ class ToDoRepository @Inject constructor(
         return dataSource.checkIfSortByTags()
     }
 
+    suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int) {
+        dataSource.editToDo(newTitle = newTitle, newDescription = newDescription, newTag = newTag, newDueDate = newDueDate, newDueTime = newDueTime, toDoId = toDoId)
+    }
+
 
 
     //for testing:

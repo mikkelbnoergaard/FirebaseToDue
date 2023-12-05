@@ -51,6 +51,9 @@ interface ToDoDao {
     fun getToDosByGivenDate(date: String): Flow<List<ToDo>>
 
 
+    @Query("UPDATE todo SET title = :newTitle, description = :newDescription, tag = :newTag, dueDate = :newDueDate, dueTime = :newDueTime WHERE id = :toDoId")
+    suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int)
+
 
 
 

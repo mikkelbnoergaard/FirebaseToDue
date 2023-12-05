@@ -5,13 +5,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -35,6 +42,7 @@ import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.theme.buttonColor
+import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.unselectedItemColor
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -64,7 +72,7 @@ fun CreateToDoDialog(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("MMM dd yyyy")
+                .ofPattern("dd MM yyyy")
                 .format(pickedDate)
         }
     }
@@ -128,6 +136,7 @@ fun CreateToDoDialog(
 
                 //time button
                 Button(onClick = {
+                    timeDialogState.show()
                 }) {
                     Text(text = "Pick time")
                 }
@@ -210,7 +219,6 @@ fun CreateToDoDialog(
             pickedTime = it
         }
     }
-
 }
 
 @Composable
@@ -274,10 +282,10 @@ fun CheckToDoDialog(
                 Row(
                     modifier = Modifier
                         .border(width = 3.dp, color = Color.LightGray, shape = getBottomLineShape())
-                        .fillMaxWidth()
-                        .padding(bottom = 5.dp),
+                        .padding(bottom = 5.dp)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = toDo.title,
@@ -285,10 +293,27 @@ fun CheckToDoDialog(
                         fontSize = 30.sp,
                         color = textColor,
                         modifier = Modifier
-                            .fillMaxWidth(1f),
+                            .padding(end = 20.dp)
+                            .fillMaxWidth(),
                         textAlign = TextAlign.Start,
                         overflow = TextOverflow.Visible
                     )
+                    FloatingActionButton(
+                        onClick = {
+                            onToDoEvent(ToDoEvent.ShowEditToDoDialog)
+                        },
+                        modifier = Modifier
+                            .requiredSize(30.dp),
+                        containerColor = buttonColor,
+                        contentColor = selectedItemColor,
+                        shape = RoundedCornerShape(5.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Edit, "Edit to-do button",
+                            modifier = Modifier
+                                .fillMaxSize(0.8f)
+                        )
+                    }
                 }
                 Text(
                     text = toDo.description,
@@ -403,5 +428,161 @@ fun DeleteTagDialog(
             }
         }
     )
+}
 
+@Composable
+fun EditToDoDialog(
+    toDo: ToDo,
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
+    toDoState: ToDoState
+) {
+
+    val dateDialogState = rememberMaterialDialogState()
+    val timeDialogState = rememberMaterialDialogState()
+
+    var newTitle by remember {
+        mutableStateOf(toDo.title)
+    }
+    var newDescription by remember {
+        mutableStateOf(toDo.description)
+    }
+    var newTag by remember {
+        mutableStateOf(toDo.tag)
+    }
+    var newDueDate by remember {
+        mutableStateOf(LocalDate.parse(toDo.dueDate))
+    }
+    var newDueTime by remember {
+        mutableStateOf(LocalTime.parse(toDo.dueTime))
+    }
+
+    AlertDialog(
+        onDismissRequest = {
+            onToDoEvent(ToDoEvent.HideEditToDoDialog)
+        },
+        title = { Text(text = "Edit To Do") },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TextField(
+                    value = newTitle,
+                    onValueChange = {
+                        newTitle = it
+                    },
+                    placeholder = {
+                        Text(text = "New title")
+                    }
+                )
+                TextField(
+                    value = newDescription,
+                    onValueChange = {
+                        newDescription = it
+                    },
+                    placeholder = {
+                        Text(text = "New description")
+                    }
+                )
+                TextField(
+                    value = newTag,
+                    onValueChange = {
+                        newTag = it
+                    },
+                    placeholder = {
+                        Text(text = "New tag")
+                    }
+                )
+
+
+                //date button
+                Button(onClick = {
+                    dateDialogState.show()
+                }) {
+                    Text(text = "Pick date")
+                }
+                Text(text = newDueDate.toString())
+
+                //time button
+                Button(onClick = {
+                    timeDialogState.show()
+                }) {
+                    Text(text = "Pick time")
+                }
+                Text(text = newDueTime.toString())
+
+            }
+        },
+
+        buttons = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                //these variables are a quick fix for hour and minute not being saved correctly in database
+                //previously, the first 0 was left out of hh and mm
+                var hourZero = ""
+                var minuteZero = ""
+                if(newDueTime.hour < 10){
+                    hourZero = "0"
+                }
+                if(newDueTime.minute < 10){
+                    minuteZero = "0"
+                }
+
+                val editedDueTimeString: String = hourZero + newDueTime.hour.toString() + ":" + minuteZero + newDueTime.minute.toString()
+                onToDoEvent(ToDoEvent.SetDueTime(editedDueTimeString))
+
+                Button(
+                    onClick = {
+                        onToDoEvent(ToDoEvent.EditToDo(newTitle, newDescription, newTag, newDueDate.toString(), editedDueTimeString, toDo.id))
+                        if(toDoState.title.isNotBlank()) {
+                            onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(5.dp)) {
+                    Text(text = "Edit")
+                }
+            }
+        }
+    )
+    MaterialDialog(
+        dialogState = dateDialogState,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        ),
+        buttons = {
+            positiveButton(text = "OK")
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        this.datepicker(
+            initialDate = LocalDate.parse(toDo.dueDate),
+            title = "Pick a date",
+        ) {
+            newDueDate = it
+        }
+    }
+
+    MaterialDialog(
+        dialogState = timeDialogState,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        ),
+        buttons = {
+            positiveButton(text = "OK")
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        this.timepicker(
+            initialTime = LocalTime.parse(toDo.dueTime),
+            title = "Pick a date",
+            is24HourClock = true,
+        ) {
+            newDueTime = it
+        }
+    }
 }
