@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +50,6 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun CreateToDoDialog(
@@ -69,23 +67,23 @@ fun CreateToDoDialog(
         mutableStateOf(LocalTime.now())
     }
 
-    val formattedDate by remember {
-        derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("dd MM yyyy")
-                .format(pickedDate)
-        }
-    }
-    val formattedTime by remember {
-        derivedStateOf {
-            DateTimeFormatter
-                .ofPattern("HH:mm")
-                .format(pickedTime)
-        }
-    }
-
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
+
+    var hourZero = ""
+    var minuteZero = ""
+    if(pickedTime.hour < 10){
+        hourZero = "0"
+    }
+    if(pickedTime.minute < 10){
+        minuteZero = "0"
+    }
+
+    val dueDateString: String = pickedDate.toString()
+    onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
+
+    val dueTimeString: String = hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
+    onToDoEvent(ToDoEvent.SetDueTime(dueTimeString))
 
     AlertDialog(
         modifier = modifier,
@@ -132,7 +130,7 @@ fun CreateToDoDialog(
                 }) {
                     Text(text = "Pick date")
                 }
-                Text(text = formattedDate)
+                Text(text = dueDateString)
 
                 //time button
                 Button(onClick = {
@@ -140,7 +138,7 @@ fun CreateToDoDialog(
                 }) {
                     Text(text = "Pick time")
                 }
-                Text(text = formattedTime)
+                Text(text = dueTimeString)
 
             }
         },
@@ -152,25 +150,12 @@ fun CreateToDoDialog(
             ) {
                 //these variables are a quick fix for hour and minute not being saved correctly in database
                 //previously, the first 0 was left out of hh and mm
-                var hourZero = ""
-                var minuteZero = ""
-                if(pickedTime.hour < 10){
-                    hourZero = "0"
-                }
-                if(pickedTime.minute < 10){
-                    minuteZero = "0"
-                }
 
-                val dueDateString: String = pickedDate.toString()
-                onToDoEvent(ToDoEvent.SetDueDate(dueDateString))
-
-                val dueTimeString: String = hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()
-                onToDoEvent(ToDoEvent.SetDueTime(dueTimeString))
 
                 Button(
                     onClick = {
-                        onToDoEvent(ToDoEvent.CreateToDo)
                         if(toDoState.title.isNotBlank()) {
+                            onToDoEvent(ToDoEvent.CreateToDo)
                             onTagEvent(TagEvent.CreateTag(toDoState.tag))
                         }
                     },
@@ -434,8 +419,7 @@ fun DeleteTagDialog(
 fun EditToDoDialog(
     toDo: ToDo,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
-    toDoState: ToDoState
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     val dateDialogState = rememberMaterialDialogState()
@@ -456,6 +440,18 @@ fun EditToDoDialog(
     var newDueTime by remember {
         mutableStateOf(LocalTime.parse(toDo.dueTime))
     }
+
+    var hourZero = ""
+    var minuteZero = ""
+    if(newDueTime.hour < 10){
+        hourZero = "0"
+    }
+    if(newDueTime.minute < 10){
+        minuteZero = "0"
+    }
+
+    val editedDueTimeString: String = hourZero + newDueTime.hour.toString() + ":" + minuteZero + newDueTime.minute.toString()
+    onToDoEvent(ToDoEvent.SetDueTime(editedDueTimeString))
 
     AlertDialog(
         onDismissRequest = {
@@ -519,26 +515,12 @@ fun EditToDoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                //these variables are a quick fix for hour and minute not being saved correctly in database
-                //previously, the first 0 was left out of hh and mm
-                var hourZero = ""
-                var minuteZero = ""
-                if(newDueTime.hour < 10){
-                    hourZero = "0"
-                }
-                if(newDueTime.minute < 10){
-                    minuteZero = "0"
-                }
-
-                val editedDueTimeString: String = hourZero + newDueTime.hour.toString() + ":" + minuteZero + newDueTime.minute.toString()
-                onToDoEvent(ToDoEvent.SetDueTime(editedDueTimeString))
 
                 Button(
                     onClick = {
                         onToDoEvent(ToDoEvent.EditToDo(newTitle, newDescription, newTag, newDueDate.toString(), editedDueTimeString, toDo.id))
-                        if(toDoState.title.isNotBlank()) {
-                            onTagEvent(TagEvent.CreateTag(toDoState.tag))
-                        }
+                        onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
+                        onTagEvent(TagEvent.CreateTag(newTag))
                     },
                     modifier = Modifier
                         .padding(5.dp)) {
