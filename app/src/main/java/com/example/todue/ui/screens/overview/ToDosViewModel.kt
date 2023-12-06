@@ -229,10 +229,41 @@ class ToDosViewModel(
 
                 _toDoState.update {
                     it.copy(
+                        title = "",
+                        description = "",
+                        tag = "",
+                        dueDate = "",
+                        dueTime = "",
                         isEditingToDo = false,
-                        isCheckingToDo = false,
+                        isCheckingToDo = false
                     )
                 }
+            }
+
+            is ToDoEvent.SetToDoStateForEdit -> {
+                _toDoState.update {
+                    it.copy(
+                        title = toDoEvent.toDo.title,
+                        description = toDoEvent.toDo.description,
+                        tag = toDoEvent.toDo.tag,
+                        dueDate = toDoEvent.toDo.dueDate,
+                        dueTime = toDoEvent.toDo.dueTime
+                    )
+                }
+            }
+
+            is ToDoEvent.ResetToDoState -> {
+                _toDoState.update { it.copy(
+                    isCreatingToDo = false,
+                    isDeletingToDo = false,
+                    isEditingToDo = false,
+                    title = "",
+                    description = "",
+                    tag = "",
+                    dueDate = "",
+                    dueTime = "",
+                    finished = false
+                ) }
             }
         }
     }

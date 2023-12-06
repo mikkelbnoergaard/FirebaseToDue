@@ -285,6 +285,7 @@ fun CheckToDoDialog(
                     )
                     FloatingActionButton(
                         onClick = {
+                            onToDoEvent(ToDoEvent.SetToDoStateForEdit(toDo))
                             onToDoEvent(ToDoEvent.ShowEditToDoDialog)
                         },
                         modifier = Modifier
@@ -419,42 +420,17 @@ fun DeleteTagDialog(
 fun EditToDoDialog(
     toDo: ToDo,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    toDoState: ToDoState
 ) {
 
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
-    var newTitle by remember {
-        mutableStateOf(toDo.title)
-    }
-    var newDescription by remember {
-        mutableStateOf(toDo.description)
-    }
-    var newTag by remember {
-        mutableStateOf(toDo.tag)
-    }
-    var newDueDate by remember {
-        mutableStateOf(LocalDate.parse(toDo.dueDate))
-    }
-    var newDueTime by remember {
-        mutableStateOf(LocalTime.parse(toDo.dueTime))
-    }
-
-    var hourZero = ""
-    var minuteZero = ""
-    if(newDueTime.hour < 10){
-        hourZero = "0"
-    }
-    if(newDueTime.minute < 10){
-        minuteZero = "0"
-    }
-
-    val editedDueTimeString: String = hourZero + newDueTime.hour.toString() + ":" + minuteZero + newDueTime.minute.toString()
-
     AlertDialog(
         onDismissRequest = {
             onToDoEvent(ToDoEvent.HideEditToDoDialog)
+            onToDoEvent(ToDoEvent.ResetToDoState)
         },
         title = { Text(text = "Edit To Do") },
         text = {
@@ -462,33 +438,32 @@ fun EditToDoDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TextField(
-                    value = newTitle,
+                    value = toDoState.title,
                     onValueChange = {
-                        newTitle = it
+                        onToDoEvent(ToDoEvent.SetTitle(it))
                     },
                     placeholder = {
                         Text(text = "New title")
                     }
                 )
                 TextField(
-                    value = newDescription,
+                    value = toDoState.description,
                     onValueChange = {
-                        newDescription = it
+                        onToDoEvent(ToDoEvent.SetDescription(it))
                     },
                     placeholder = {
                         Text(text = "New description")
                     }
                 )
                 TextField(
-                    value = newTag,
+                    value = toDoState.tag,
                     onValueChange = {
-                        newTag = it
+                        onToDoEvent(ToDoEvent.SetTag(it))
                     },
                     placeholder = {
                         Text(text = "New tag")
                     }
                 )
-
 
                 //date button
                 Button(onClick = {
@@ -496,7 +471,7 @@ fun EditToDoDialog(
                 }) {
                     Text(text = "Pick date")
                 }
-                Text(text = newDueDate.toString())
+                Text(text = toDoState.dueDate)
 
                 //time button
                 Button(onClick = {
@@ -504,7 +479,7 @@ fun EditToDoDialog(
                 }) {
                     Text(text = "Pick time")
                 }
-                Text(text = newDueTime.toString())
+                Text(text = toDoState.dueTime)
 
             }
         },
@@ -517,13 +492,13 @@ fun EditToDoDialog(
 
                 Button(
                     onClick = {
-                        onToDoEvent(ToDoEvent.EditToDo(newTitle, newDescription, newTag, newDueDate.toString(), editedDueTimeString, toDo.id))
+                        onToDoEvent(ToDoEvent.EditToDo(toDoState.title, toDoState.description, toDoState.tag, toDoState.dueDate, toDoState.dueTime, toDo.id))
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
-                        onTagEvent(TagEvent.CreateTag(newTag))
+                        onTagEvent(TagEvent.CreateTag(toDoState.tag))
                     },
                     modifier = Modifier
                         .padding(5.dp)) {
-                    Text(text = "Edit")
+                    Text(text = "Save")
                 }
             }
         }
@@ -540,10 +515,10 @@ fun EditToDoDialog(
         }
     ) {
         this.datepicker(
-            initialDate = LocalDate.parse(toDo.dueDate),
+            initialDate = LocalDate.parse(toDoState.dueDate),
             title = "Pick a date",
         ) {
-            newDueDate = it
+            onToDoEvent(ToDoEvent.SetDueDate(it.toString()))
         }
     }
 
@@ -559,11 +534,11 @@ fun EditToDoDialog(
         }
     ) {
         this.timepicker(
-            initialTime = LocalTime.parse(toDo.dueTime),
+            initialTime = LocalTime.parse(toDoState.dueTime),
             title = "Pick a date",
             is24HourClock = true,
         ) {
-            newDueTime = it
+            onToDoEvent(ToDoEvent.SetDueTime(it.toString()))
         }
     }
 }
