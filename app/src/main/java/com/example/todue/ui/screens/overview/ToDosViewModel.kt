@@ -227,19 +227,12 @@ class ToDosViewModel(
                     toDoRepository.editToDo(newTitle = toDoEvent.newTitle, newDescription = toDoEvent.newDescription, newTag = toDoEvent.newTag, newDueDate = toDoEvent.newDueDate, newDueTime = toDoEvent.newDueTime, toDoId = toDoEvent.toDoId)
                 }
 
-                _toDoState.update { it.copy(
-                    isCreatingToDo = false,
-                    isDeletingToDo = false,
-                    isEditingToDo = false,
-                    isCheckingToDo = false,
-                    title = "",
-                    description = "",
-                    tag = "",
-                    dueDate = "",
-                    dueTime = "",
-                    finished = false
-                ) }
-
+                _toDoState.update {
+                    it.copy(
+                        isEditingToDo = false,
+                        isCheckingToDo = false,
+                    )
+                }
             }
         }
     }

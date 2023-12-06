@@ -316,7 +316,7 @@ fun ToDoList(
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
-            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState, toDo = selectedToDo) }
+            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
             ElevatedButton(
                 onClick = {
