@@ -22,6 +22,7 @@ import org.junit.Assert.*
 @RewriteQueriesToDropUnusedColumns
 @RunWith(AndroidJUnit4::class)
 class CreateToDoInDatabaseTest {
+
     @Test
     fun createToDo() {
 
