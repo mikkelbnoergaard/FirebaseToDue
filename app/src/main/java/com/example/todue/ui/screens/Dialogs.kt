@@ -451,7 +451,6 @@ fun EditToDoDialog(
     }
 
     val editedDueTimeString: String = hourZero + newDueTime.hour.toString() + ":" + minuteZero + newDueTime.minute.toString()
-    onToDoEvent(ToDoEvent.SetDueTime(editedDueTimeString))
 
     AlertDialog(
         onDismissRequest = {
