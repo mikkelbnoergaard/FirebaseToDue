@@ -59,11 +59,11 @@ class CreateToDoInDatabaseTest {
             toDoObject.finished
         )
 
-        assertEquals(toDoRepository.getTestToDoTitle(toDoObject.id), toDoObject.title)
-        assertEquals(toDoRepository.getTestToDoDescription(toDoObject.id), toDoObject.description)
-        assertEquals(toDoRepository.getTestToDoTag(toDoObject.id), toDoObject.tag)
-        assertEquals(toDoRepository.getTestToDoDueDate(toDoObject.id), toDoObject.dueDate)
-        assertEquals(toDoRepository.getTestToDoDueTime(toDoObject.id), toDoObject.dueTime)
+        assertEquals("title was not inserted or fetched correctly", toDoRepository.getTestToDoTitle(toDoObject.id), toDoObject.title)
+        assertEquals("description was not inserted or fetched correctly",toDoRepository.getTestToDoDescription(toDoObject.id), toDoObject.description)
+        assertEquals("tag was not inserted or fetched correctly",toDoRepository.getTestToDoTag(toDoObject.id), toDoObject.tag)
+        assertEquals("dueDate was not inserted or fetched correctly",toDoRepository.getTestToDoDueDate(toDoObject.id), toDoObject.dueDate)
+        assertEquals("dueTime was not inserted or fetched correctly",toDoRepository.getTestToDoDueTime(toDoObject.id), toDoObject.dueTime)
 
     }
 
