@@ -24,6 +24,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
+import com.example.todue.ui.event.TagEvent
 
 //import com.example.todue.ui.screens.calendar.CalendarViewModel
 
@@ -76,6 +77,9 @@ class MainActivity : ComponentActivity() {
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
                 val useDarkIcons = !isSystemInDarkTheme()
+                val onTagEvent = tagsViewModel::onEvent
+
+                onTagEvent(TagEvent.ResetTagSort)
 
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent,
@@ -94,7 +98,7 @@ class MainActivity : ComponentActivity() {
                         toDoState = toDoState,
                         tagState = tagState,
                         onToDoEvent = overviewViewModel::onEvent,
-                        onTagEvent = tagsViewModel::onEvent,
+                        onTagEvent = onTagEvent
                         //calendarViewModel = calendarViewModel,
                         //onDateChanged = calendarViewModel.
                     )

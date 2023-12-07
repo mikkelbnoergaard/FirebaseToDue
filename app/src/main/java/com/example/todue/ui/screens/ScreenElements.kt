@@ -390,8 +390,10 @@ fun ToDoList(
                                 selectedToDo = toDo
                                 if(toDo.finished){
                                     onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                                    onTagEvent(TagEvent.CreateTag(title = toDo.tag))
                                 } else{
                                     onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                                    onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
                                 }
                             },
                             modifier = Modifier
