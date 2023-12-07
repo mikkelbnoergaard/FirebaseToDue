@@ -128,6 +128,7 @@ fun CreateToDoDialog(
 
                 //time button
                 Button(onClick = {
+                    timeDialogState.show()
                 }) {
                     Text(text = "Pick time")
                 }
