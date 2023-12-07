@@ -183,7 +183,7 @@ class ToDosViewModel(
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only ehre to update view, it doesn't update without it
+                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only here to update view, it doesn't update without it
                 viewModelScope.launch {
                     if(toDoRepository.checkIfSortByTags()){
                         toDoSortType.value = ToDoSortType.TAG
