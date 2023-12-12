@@ -21,6 +21,8 @@ class ToDosViewModel(
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
+    private var sortInt = 0
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _toDos = toDoSortType
         .flatMapLatest { toDoSortType ->
@@ -178,19 +180,16 @@ class ToDosViewModel(
             }
 
             is ToDoEvent.AddTagToSortToDos -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only here to update view, it doesn't update without it
+                sortInt++
+                toDoSortType.value = ToDoSortType.DUE_DATE
                 toDoSortType.value = ToDoSortType.TAG
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only here to update view, it doesn't update without it
-                viewModelScope.launch {
-                    if(toDoRepository.checkIfSortByTags()){
-                        toDoSortType.value = ToDoSortType.TAG
-                    }
-                    if (!toDoRepository.checkIfSortByTags()){
-                        toDoSortType.value = ToDoSortType.DUE_DATE
-                    }
+                sortInt--
+                toDoSortType.value = ToDoSortType.DUE_DATE
+                if (sortInt > 0) {
+                    toDoSortType.value = ToDoSortType.TAG
                 }
             }
 

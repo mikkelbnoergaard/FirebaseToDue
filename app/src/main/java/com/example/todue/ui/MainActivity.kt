@@ -30,7 +30,7 @@ import com.example.todue.ui.event.TagEvent
 
 class MainActivity : ComponentActivity() {
 
-    private val overviewViewModel by viewModels<ToDosViewModel>( // ViewModels to manage the state of the to-do lists.
+    private val toDosViewModel by viewModels<ToDosViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -73,11 +73,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ToDoTheme {
-                val toDoState by overviewViewModel.toDoState.collectAsState()
+                val toDoState by toDosViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
                 val useDarkIcons = !isSystemInDarkTheme()
                 val onTagEvent = tagsViewModel::onEvent
+                val onToDoEvent = toDosViewModel::onEvent
 
                 onTagEvent(TagEvent.ResetTagSort)
 
@@ -97,7 +98,7 @@ class MainActivity : ComponentActivity() {
                     GeneralLayout(
                         toDoState = toDoState,
                         tagState = tagState,
-                        onToDoEvent = overviewViewModel::onEvent,
+                        onToDoEvent = onToDoEvent,
                         onTagEvent = onTagEvent
                         //calendarViewModel = calendarViewModel,
                         //onDateChanged = calendarViewModel.
