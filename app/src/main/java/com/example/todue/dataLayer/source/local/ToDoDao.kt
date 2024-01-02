@@ -44,8 +44,13 @@ interface ToDoDao {
     @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
     suspend fun unFinishToDo(toDoId: Int)
 
-    @Query("SELECT (EXISTS (SELECT * FROM tag WHERE sort = 1))")
-    suspend fun checkIfSortByTags(): Boolean
+    @Query("SELECT * FROM todo WHERE dueDate = :date")
+    fun getToDosByGivenDate(date: String): Flow<List<ToDo>>
+
+
+
+    @Query("UPDATE todo SET title = :newTitle, description = :newDescription, tag = :newTag, dueDate = :newDueDate, dueTime = :newDueTime WHERE id = :toDoId")
+    suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int)
 
 
 

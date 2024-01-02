@@ -1,6 +1,5 @@
 package com.example.todue.ui.screens.calendar
 
-/*
 import android.icu.util.Calendar
 import android.widget.CalendarView
 import androidx.compose.foundation.background
@@ -16,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,21 +33,24 @@ import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.screens.ScrollableToDoColumn
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    onDateChanged: (Calendar, Int, Int, Int) -> Unit,
-    calendarViewModel: CalendarViewModel,
+    //onDateChanged: (Calendar, Int, Int, Int) -> Unit,
+    //calendarViewModel: CalendarViewModel,
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
     // Use remember to store the selected date locally
-    var selectedDate by remember { mutableStateOf<Date?>(null) }
+    var selectedDate by remember { mutableStateOf(LocalDate.now())}
 
+    /*
     // Observe the LiveData to get the selected date
     LaunchedEffect(calendarViewModel.selectedDate) {
         selectedDate = calendarViewModel.selectedDate.value
@@ -67,6 +70,7 @@ fun CalendarScreen(
         } ?: emptyList())
     }
 
+     */
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -74,6 +78,7 @@ fun CalendarScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Other Compose UI elements can be added here
+
 
         // AndroidView to integrate CalendarView into Compose
         AndroidView(
@@ -84,7 +89,7 @@ fun CalendarScreen(
                         val selectedCalendar = Calendar.getInstance().apply {
                             set(year, month, dayOfMonth)
                         }
-                        onDateChanged(selectedCalendar, year, month, dayOfMonth)
+                       // onDateChanged(selectedCalendar, year, month, dayOfMonth)
                     }
                 }
             },
@@ -92,19 +97,21 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .background(androidx.compose.ui.graphics.Color.White) // Set background color if needed
         )
+
+
+
         // Section to display todos for the selected date
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(Color.Gray) // Set background color if needed
+                //.background(Color.Gray) // Set background color if needed
         ) {
             ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-
+            onToDoEvent(ToDoEvent.SortToDosByDueDate)
         }
     }
 
 }
 
- */
 

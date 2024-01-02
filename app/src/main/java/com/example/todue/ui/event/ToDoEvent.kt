@@ -11,8 +11,11 @@ sealed interface ToDoEvent {
     data object HideDeleteToDoDialog: ToDoEvent
     data object ShowToDoDialog: ToDoEvent
     data object HideToDoDialog: ToDoEvent
+    data object ShowEditToDoDialog: ToDoEvent
+    data object HideEditToDoDialog: ToDoEvent
     data object SortToDosByFinished: ToDoEvent
     data object SortToDosByDueDate: ToDoEvent
+    data object ResetToDoState: ToDoEvent
 
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent
@@ -25,10 +28,7 @@ sealed interface ToDoEvent {
     data class AddTagToSortToDos(val tag: String): ToDoEvent
     data class RemoveTagToSortToDos(val tag: String): ToDoEvent
     data class DeleteTagFromToDos(val tag: String): ToDoEvent
+    data class EditToDo(val newTitle: String, val newDescription: String, val newTag: String, val newDueDate: String, val newDueTime: String, val toDoId: Int): ToDoEvent
+    data class SetToDoStateForEdit(val toDo: ToDo): ToDoEvent
 
-    //does not work yet
-    //data class DeleteTagFromTodos(val tag: String) : ToDoEvent
-
-    //does not work yet
-    //data class DeleteToDosWithGivenTag(val tag: String): ToDoEvent
 }

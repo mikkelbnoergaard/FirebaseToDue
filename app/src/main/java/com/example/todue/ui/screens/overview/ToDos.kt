@@ -26,7 +26,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.barColor
 
 @Composable
-fun OverviewScreen(
+fun ToDosScreen(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,

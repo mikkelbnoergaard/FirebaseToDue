@@ -16,15 +16,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OverviewViewModel(
+class ToDosViewModel(
     private val toDoRepository: ToDoRepository
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
 
+    private var sortInt = 0
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _toDos = toDoSortType
-        .flatMapLatest { sortType ->
-            when(sortType) {
+        .flatMapLatest { toDoSortType ->
+            when(toDoSortType) {
                 ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
                 ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags()
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
@@ -82,6 +84,7 @@ class OverviewViewModel(
                 _toDoState.update { it.copy(
                     isCreatingToDo = false,
                     isDeletingToDo = false,
+                    isEditingToDo = false,
                     title = "",
                     description = "",
                     tag = "",
@@ -177,19 +180,16 @@ class OverviewViewModel(
             }
 
             is ToDoEvent.AddTagToSortToDos -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only here to update view, it doesn't update without it
+                sortInt++
+                toDoSortType.value = ToDoSortType.DUE_DATE
                 toDoSortType.value = ToDoSortType.TAG
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE      //this line is only here to update view, it doesn't update without it
-                viewModelScope.launch {
-                    if(toDoRepository.checkIfSortByTags()){
-                        toDoSortType.value = ToDoSortType.TAG
-                    }
-                    if (!toDoRepository.checkIfSortByTags()){
-                        toDoSortType.value = ToDoSortType.DUE_DATE
-                    }
+                sortInt--
+                toDoSortType.value = ToDoSortType.DUE_DATE
+                if (sortInt > 0) {
+                    toDoSortType.value = ToDoSortType.TAG
                 }
             }
 
@@ -205,6 +205,63 @@ class OverviewViewModel(
                 viewModelScope.launch {
                     toDoRepository.deleteTagFromToDos(toDoEvent.tag)
                 }
+            }
+
+            is ToDoEvent.ShowEditToDoDialog -> {
+                _toDoState.update {it.copy(
+                    isEditingToDo = true
+                )}
+            }
+
+            is ToDoEvent.HideEditToDoDialog -> {
+                _toDoState.update {it.copy(
+                    isEditingToDo = false
+                )}
+            }
+
+            is ToDoEvent.EditToDo -> {
+
+                viewModelScope.launch {
+                    toDoRepository.editToDo(newTitle = toDoEvent.newTitle, newDescription = toDoEvent.newDescription, newTag = toDoEvent.newTag, newDueDate = toDoEvent.newDueDate, newDueTime = toDoEvent.newDueTime, toDoId = toDoEvent.toDoId)
+                }
+
+                _toDoState.update {
+                    it.copy(
+                        title = "",
+                        description = "",
+                        tag = "",
+                        dueDate = "",
+                        dueTime = "",
+                        isEditingToDo = false,
+                        isCheckingToDo = false
+                    )
+                }
+            }
+
+            is ToDoEvent.SetToDoStateForEdit -> {
+                _toDoState.update {
+                    it.copy(
+                        title = toDoEvent.toDo.title,
+                        description = toDoEvent.toDo.description,
+                        tag = toDoEvent.toDo.tag,
+                        dueDate = toDoEvent.toDo.dueDate,
+                        dueTime = toDoEvent.toDo.dueTime
+                    )
+                }
+            }
+
+            is ToDoEvent.ResetToDoState -> {
+                _toDoState.update { it.copy(
+                    isCreatingToDo = false,
+                    isDeletingToDo = false,
+                    isEditingToDo = false,
+                    title = "",
+                    description = "",
+                    tag = "",
+                    dueDate = "",
+                    dueTime = "",
+                    finished = false
+                ) }
             }
         }
     }

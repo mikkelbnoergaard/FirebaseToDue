@@ -18,21 +18,23 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.todue.ui.theme.ToDoTheme
 import com.example.todue.di.DatabaseModules
 import com.example.todue.ui.screens.tags.TagsViewModel
-import com.example.todue.ui.screens.overview.OverviewViewModel
+import com.example.todue.ui.screens.overview.ToDosViewModel
 import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
+import com.example.todue.ui.event.TagEvent
+
 //import com.example.todue.ui.screens.calendar.CalendarViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val overviewViewModel by viewModels<OverviewViewModel>( // ViewModels to manage the state of the to-do lists.
+    private val toDosViewModel by viewModels<ToDosViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return OverviewViewModel(
+                    return ToDosViewModel(
                         ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
@@ -52,7 +54,7 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-/*
+    /*
     private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the calendar
         factoryProducer = {
             object : ViewModelProvider.Factory {
@@ -65,16 +67,20 @@ class MainActivity : ComponentActivity() {
         }
     )
 
- */
+     */
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
         setContent {
             ToDoTheme {
-                val toDoState by overviewViewModel.toDoState.collectAsState()
+                val toDoState by toDosViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
                 val useDarkIcons = !isSystemInDarkTheme()
+                val onTagEvent = tagsViewModel::onEvent
+                val onToDoEvent = toDosViewModel::onEvent
+
+                onTagEvent(TagEvent.ResetTagSort)
 
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent,
@@ -92,8 +98,8 @@ class MainActivity : ComponentActivity() {
                     GeneralLayout(
                         toDoState = toDoState,
                         tagState = tagState,
-                        onToDoEvent = overviewViewModel::onEvent,
-                        onTagEvent = tagsViewModel::onEvent,
+                        onToDoEvent = onToDoEvent,
+                        onTagEvent = onTagEvent
                         //calendarViewModel = calendarViewModel,
                         //onDateChanged = calendarViewModel.
                     )
