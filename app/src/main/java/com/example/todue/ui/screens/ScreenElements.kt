@@ -23,10 +23,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.Home
@@ -191,6 +189,7 @@ fun GeneralLayout(
 
 }
 
+/*
 //Account button, probably going to be deleted
 @Composable
 fun AccountButton(
@@ -215,6 +214,9 @@ fun AccountButton(
 
 }
 
+*/
+
+/*
 //Settings button, probably going to be deleted
 @Composable
 fun SettingsButton(
@@ -234,6 +236,8 @@ fun SettingsButton(
     }
 
 }
+
+*/
 
 @Composable
 fun TagList(

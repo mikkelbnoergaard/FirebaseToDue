@@ -32,8 +32,12 @@ interface ToDoDao {
     @Query("SELECT * FROM todo ORDER BY description")
     fun getToDosOrderedByDescription(): Flow<List<ToDo>>
 
-    @Query("SELECT * FROM todo WHERE finished = 0 ORDER BY dueDate, dueTime")
-    fun getToDosOrderedByDueDate(): Flow<List<ToDo>>
+    @Query("SELECT * FROM todo WHERE finished = 0 AND (" +
+            "title LIKE '%' || :search || '%'" +
+            "OR description LIKE '%' || :search || '%'" +
+            "OR tag LIKE '%' || :search || '%'" +
+            ") ORDER BY dueDate, dueTime")
+    fun getToDosOrderedByDueDate(search: String): Flow<List<ToDo>>
 
     @Query("SELECT * FROM todo WHERE finished = 1 ORDER BY dueDate, dueTime")
     fun getFinishedToDos(): Flow<List<ToDo>>

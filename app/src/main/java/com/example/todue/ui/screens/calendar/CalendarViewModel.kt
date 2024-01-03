@@ -43,7 +43,7 @@ class CalendarViewModel(
         viewModelScope.launch {
             toDoRepository.getToDosOrderedByTitle()
                 .map { toDos ->
-                    toDos.filter {
+                    toDos.filter {1
                         val toDoDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.dueDate)
                         toDoDate == selectedDate
                     }

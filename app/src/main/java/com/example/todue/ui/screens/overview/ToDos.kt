@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.material.TextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,12 +21,13 @@ import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.TagEvent
-import com.example.todue.ui.screens.AccountButton
+//import com.example.todue.ui.screens.AccountButton
 import com.example.todue.ui.screens.ScrollableTagRow
 import com.example.todue.ui.screens.ScrollableToDoColumn
-import com.example.todue.ui.screens.SettingsButton
+//import com.example.todue.ui.screens.SettingsButton
 import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.barColor
+import java.time.LocalDate
 
 @Composable
 fun ToDosScreen(
@@ -48,9 +52,25 @@ fun ToDosScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            SettingsButton(onToDoEvent = onToDoEvent)
-            Text("Overview")
-            AccountButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+            //SettingsButton(onToDoEvent = onToDoEvent)
+            Text(
+                LocalDate.now().toString(),
+                modifier = Modifier
+                    .requiredWidth(120.dp)
+                    .padding(start = 15.dp, end = 15.dp)
+            )
+            TextField(
+                value = toDoState.searchInToDos,
+                onValueChange = {
+                    onToDoEvent(ToDoEvent.SetSearchInToDos(it))
+                },
+                placeholder = {
+                    androidx.compose.material.Text(text = "search...")
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+            )
+            //AccountButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
