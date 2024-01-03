@@ -29,7 +29,7 @@ class ToDosViewModel(
         .flatMapLatest { toDoSortType ->
             when(toDoSortType) {
                 ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
-                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags()
+                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value)
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value)
                 ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
@@ -268,8 +268,13 @@ class ToDosViewModel(
                 _toDoState.update { it.copy(
                     searchInToDos = toDoEvent.searchInToDos
                 )}
-                toDoSortType.value = ToDoSortType.TAG
-                toDoSortType.value = ToDoSortType.DUE_DATE
+                if(toDoSortType.value == ToDoSortType.TAG) {
+                    toDoSortType.value = ToDoSortType.DUE_DATE
+                    toDoSortType.value = ToDoSortType.TAG
+                } else {
+                    toDoSortType.value = ToDoSortType.TAG
+                    toDoSortType.value = ToDoSortType.DUE_DATE
+                }
                 search.value = toDoEvent.searchInToDos
             }
         }

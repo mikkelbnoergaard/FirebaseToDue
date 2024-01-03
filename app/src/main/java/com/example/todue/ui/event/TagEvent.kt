@@ -15,5 +15,6 @@ sealed interface TagEvent {
     data class SortByThisTag(val tag: Tag): TagEvent
     data class DontSortByThisTag(val title: String): TagEvent
     data class DeleteTag(val title: String): TagEvent
+    data class SetSearchInTags(val searchInTags: String): TagEvent
 
 }

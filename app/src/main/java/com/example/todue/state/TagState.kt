@@ -11,6 +11,7 @@ data class TagState(
     val toDoAmount: Int = 0,
     val sort: Boolean = false,
     val isDeletingTag: Boolean = false,
-    val tagSortType: TagSortType = TagSortType.TITLE
+    val tagSortType: TagSortType = TagSortType.TITLE,
+    val searchInTags: String = ""
 
 )

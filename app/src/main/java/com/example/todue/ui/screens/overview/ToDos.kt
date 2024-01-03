@@ -78,6 +78,7 @@ fun ToDosScreen(
                 value = toDoState.searchInToDos,
                 onValueChange = {
                     onToDoEvent(ToDoEvent.SetSearchInToDos(it))
+                    onTagEvent(TagEvent.SetSearchInTags(it))
                 },
                 placeholder = {
                     androidx.compose.material.Text(text = "search...")

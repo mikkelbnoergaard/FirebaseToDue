@@ -18,14 +18,15 @@ import kotlinx.coroutines.launch
 class TagsViewModel(
     private val tagRepository: TagRepository
 ): ViewModel() {
-
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
+    private val search = MutableStateFlow("")
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _tags = tagSortType
         .flatMapLatest { tagSortType ->
             when(tagSortType) {
-                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle()
+                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search.value)
+                TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -109,11 +110,19 @@ class TagsViewModel(
                 }
             }
 
-
             is TagEvent.ResetTagSort -> {
                 viewModelScope.launch {
                     tagRepository.resetTagSort()
                 }
+            }
+
+            is TagEvent.SetSearchInTags -> {
+                _tagState.update { it.copy(
+                    searchInTags = tagEvent.searchInTags
+                )}
+                tagSortType.value = TagSortType.PLACEHOLDER
+                tagSortType.value = TagSortType.TITLE
+                search.value = tagEvent.searchInTags
             }
         }
     }
