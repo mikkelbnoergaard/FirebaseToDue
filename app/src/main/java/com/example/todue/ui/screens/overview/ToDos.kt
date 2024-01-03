@@ -19,6 +19,7 @@ import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.screens.AccountButton
+import com.example.todue.ui.screens.FilterButton
 import com.example.todue.ui.screens.ScrollableTagRow
 import com.example.todue.ui.screens.ScrollableToDoColumn
 import com.example.todue.ui.screens.SettingsButton
@@ -46,14 +47,16 @@ fun ToDosScreen(
                 .background(backgroundColor)
                 .border(width = 3.dp, color = barColor, shape = getBottomLineShape()),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Center
         ) {
-            SettingsButton(onToDoEvent = onToDoEvent)
+            //SettingsButton(onToDoEvent = onToDoEvent)
             Text("Overview")
-            AccountButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+            // AccountButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         }
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+
     }
 
 }

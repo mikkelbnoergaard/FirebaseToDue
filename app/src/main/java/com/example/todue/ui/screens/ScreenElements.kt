@@ -3,6 +3,7 @@ package com.example.todue.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Equalizer
@@ -47,15 +52,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todue.dataLayer.source.local.Tag
@@ -74,6 +84,7 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
+import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.ui.theme.barColor
 import com.example.todue.ui.theme.itemColor
 import com.example.todue.ui.theme.textColor
@@ -197,7 +208,6 @@ fun AccountButton(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ) {
-
     FloatingActionButton(
         //should not sort by due date, but it's for testing
         onClick = {
@@ -212,7 +222,6 @@ fun AccountButton(
     ) {
         Icon(Icons.Filled.AccountCircle, "Floating account button")
     }
-
 }
 
 //Settings button, probably going to be deleted
@@ -220,9 +229,7 @@ fun AccountButton(
 fun SettingsButton(
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
-
     FloatingActionButton(
-        //should not sort by finished, but it's for testing
         onClick = { onToDoEvent(ToDoEvent.SortToDosByFinished) },
         containerColor = buttonColor,
         contentColor = selectedItemColor,
@@ -230,9 +237,39 @@ fun SettingsButton(
             .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
             .requiredSize(50.dp)
     ) {
-        Icon(Icons.Filled.Settings, "Floating settings button")
     }
+}
 
+@Composable
+fun FilterButton(
+    // Currently only filters for completed todos
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
+) {
+    var clicked by remember { mutableStateOf(false) }
+
+    FloatingActionButton(
+        onClick = {
+            if (!clicked) {
+                onToDoEvent(ToDoEvent.SortToDosByFinished)
+                clicked = true
+            } else {
+                onToDoEvent(ToDoEvent.SortToDosByDueDate)
+                onTagEvent(TagEvent.ResetTagSort)
+                clicked = false
+            }
+        },
+        containerColor = buttonColor,
+        contentColor = selectedItemColor,
+        modifier = Modifier
+            .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
+            .requiredSize(50.dp)
+    ) {
+        when (clicked) {
+            true -> Icon(Icons.Filled.FilterList, "Floating toggled filter button")
+            else -> Icon(Icons.Filled.FilterListOff, "Floating untoggled filter button")
+        }
+    }
 }
 
 @Composable
