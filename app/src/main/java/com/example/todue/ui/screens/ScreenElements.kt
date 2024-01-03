@@ -1,7 +1,9 @@
 package com.example.todue.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,8 +24,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Equalizer
@@ -48,8 +53,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -79,6 +87,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.unselectedItemColor
+import java.time.LocalDate
 
 //The general layout used on all the screens with navigation bar
 @OptIn(ExperimentalFoundationApi::class)
@@ -498,7 +507,7 @@ fun ScrollableTagRow(
 
             if (!tag.sort) {
                 buttonColor.value = backgroundColor
-            } else if (tag.sort) {
+            } else {
                 buttonColor.value = itemColor
             }
 
@@ -524,5 +533,61 @@ fun ScrollableTagRow(
             }
         }
     }
+}
 
+@Composable
+fun TopBar(
+    toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.09f)
+            .background(backgroundColor)
+            .border(width = 3.dp, color = barColor, shape = getBottomLineShape()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            LocalDate.now().toString(),
+            modifier = Modifier
+                .requiredWidth(120.dp)
+                .padding(start = 15.dp, end = 15.dp)
+        )
+
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+
+        //BackHandler does not work yet for some reason
+        BackHandler(enabled = false, onBack = {
+            focusManager.clearFocus()
+        })
+
+        TextField(
+            value = toDoState.searchInToDos,
+            onValueChange = {
+                onToDoEvent(ToDoEvent.SetSearchInToDos(it))
+                onTagEvent(TagEvent.SetSearchInTags(it))
+            },
+            placeholder = {
+                Text(text = "search...")
+            },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .padding(end = 5.dp),
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        println("clicked")
+                    }) {
+                    Icon(Icons.Filled.ArrowBack, "Lose focus button")
+                }
+            }
+        )
+    }
 }
