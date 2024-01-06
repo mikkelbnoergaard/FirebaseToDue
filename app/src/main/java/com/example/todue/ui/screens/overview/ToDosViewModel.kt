@@ -21,6 +21,7 @@ class ToDosViewModel(
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
     private val search = MutableStateFlow("")
+    private val selectedCalendarDate = MutableStateFlow("")
 
     private var sortInt = 0
 
@@ -33,6 +34,7 @@ class ToDosViewModel(
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value)
                 ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
+                ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -276,6 +278,12 @@ class ToDosViewModel(
                     toDoSortType.value = ToDoSortType.DUE_DATE
                 }
                 search.value = toDoEvent.searchInToDos
+            }
+
+            is ToDoEvent.SortToDosByGivenDate -> {
+                toDoSortType.value = ToDoSortType.DUE_DATE
+                selectedCalendarDate.value = toDoEvent.date
+                toDoSortType.value = ToDoSortType.GIVEN_DATE
             }
         }
     }
