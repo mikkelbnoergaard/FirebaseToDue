@@ -23,11 +23,13 @@ import java.time.LocalDate
 
 @Composable
 fun CalendarScreen(
-    modifier: Modifier = Modifier,
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
+    ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, withCalendar = true)
+
+    /*
     var selectedDate by remember { mutableStateOf(LocalDate.now().toString())}
     var monthZero = ""
     var dayZero = ""
@@ -57,11 +59,15 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+            ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, withCalendar = true)
             onToDoEvent(ToDoEvent.SortToDosByGivenDate(selectedDate))
 
         }
     }
+
+
+     */
+
 }
 
 

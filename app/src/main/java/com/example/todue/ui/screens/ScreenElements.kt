@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens
 
+import android.widget.CalendarView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -64,6 +65,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
@@ -303,7 +305,8 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    withCalendar: Boolean
 ) {
 
     var selectedToDo by remember {
@@ -318,10 +321,38 @@ fun ToDoList(
             ) )
     }
 
+    var selectedDate by remember { mutableStateOf(LocalDate.now().toString())}
+    var monthZero = ""
+    var dayZero = ""
+
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
     ) {
+        if(withCalendar) {
+
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AndroidView(factory = { CalendarView(it) }, update = {
+                        it.setOnDateChangeListener { _, year, month, day ->
+                            if (day < 10) {
+                                dayZero = "0"
+                            }
+                            if (month < 10) {
+                                monthZero = "0"
+                            }
+                            selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
+                            onToDoEvent(ToDoEvent.SortToDosByGivenDate(selectedDate))
+                        }
+                    })
+                }
+            }
+        }
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
@@ -468,7 +499,8 @@ fun PlusButtonRow(
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    withCalendar: Boolean
 ) {
 
     Box(
@@ -479,7 +511,7 @@ fun ScrollableToDoColumn(
         if(toDoState.isCreatingToDo){
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
-        ToDoList(toDoState, onToDoEvent, onTagEvent)
+        ToDoList(toDoState, onToDoEvent, onTagEvent, withCalendar)
         PlusButtonRow(onToDoEvent)
     }
 
