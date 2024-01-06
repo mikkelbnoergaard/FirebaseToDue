@@ -160,12 +160,12 @@ fun GeneralLayout(
             verticalAlignment = Alignment.Bottom
         ) {index ->
             when(index){
-                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
-                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }
         TabRow(
@@ -469,7 +469,8 @@ fun PlusButtonRow(
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
 
     Box(
@@ -478,7 +479,7 @@ fun ScrollableToDoColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
         }
         ToDoList(toDoState, onToDoEvent, onTagEvent)
         PlusButtonRow(onToDoEvent)

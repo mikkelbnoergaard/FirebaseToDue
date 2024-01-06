@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.screens.TopBar
 import com.example.todue.ui.screens.ScrollableTagRow
@@ -19,7 +20,8 @@ fun ToDosScreen(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
 
     Column(
@@ -30,7 +32,7 @@ fun ToDosScreen(
     ) {
         TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
     }
 
 }

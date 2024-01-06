@@ -239,7 +239,7 @@ fun ScrollableCalendarColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
         }
         CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
         PlusButtonRow(onToDoEvent)

@@ -40,6 +40,7 @@ import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.textColor
@@ -56,6 +57,7 @@ fun CreateToDoDialog(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent:(CalendarEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -123,7 +125,6 @@ fun CreateToDoDialog(
                     }
                 )
 
-
                 //date button
                 Button(onClick = {
                     dateDialogState.show()
@@ -148,15 +149,13 @@ fun CreateToDoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                //these variables are a quick fix for hour and minute not being saved correctly in database
-                //previously, the first 0 was left out of hh and mm
-
 
                 Button(
                     onClick = {
                         if(toDoState.title.isNotBlank()) {
                             onToDoEvent(ToDoEvent.CreateToDo)
                             onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
                         }
                     },
                     modifier = Modifier
