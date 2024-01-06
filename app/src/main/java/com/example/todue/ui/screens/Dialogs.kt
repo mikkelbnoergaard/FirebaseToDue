@@ -207,7 +207,7 @@ fun CreateToDoDialog(
 }
 
 @Composable
-fun DeleteToDoToDoDialog(
+fun DeleteToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     modifier: Modifier = Modifier,

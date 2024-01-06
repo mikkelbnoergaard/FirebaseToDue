@@ -1,6 +1,5 @@
 package com.example.todue.ui.screens
 
-import android.widget.CalendarView
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -65,15 +64,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.navigation.TabItem
+import com.example.todue.state.CalendarState
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarViewModel
@@ -99,8 +99,8 @@ fun GeneralLayout(
     tagState: TagState,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    //onDateChanged: (Calendar, Int, Int, Int) -> Unit,
-    //calendarViewModel: CalendarViewModel
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    calendarState: CalendarState,
 ){
 
     val tabItems = listOf(
@@ -162,7 +162,7 @@ fun GeneralLayout(
             when(index){
                 0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState)
+                2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
@@ -305,8 +305,7 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
-    withCalendar: Boolean
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     var selectedToDo by remember {
@@ -321,42 +320,14 @@ fun ToDoList(
             ) )
     }
 
-    var selectedDate by remember { mutableStateOf(LocalDate.now().toString())}
-    var monthZero = ""
-    var dayZero = ""
-
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        if(withCalendar) {
-
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AndroidView(factory = { CalendarView(it) }, update = {
-                        it.setOnDateChangeListener { _, year, month, day ->
-                            if (day < 10) {
-                                dayZero = "0"
-                            }
-                            if (month < 10) {
-                                monthZero = "0"
-                            }
-                            selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
-                            onToDoEvent(ToDoEvent.SortToDosByGivenDate(selectedDate))
-                        }
-                    })
-                }
-            }
-        }
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -456,7 +427,6 @@ fun ToDoList(
             }
         }
     }
-
 }
 
 //Composable for the plus button at the bottom of the screen
@@ -499,8 +469,7 @@ fun PlusButtonRow(
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    withCalendar: Boolean
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
 
     Box(
@@ -511,7 +480,7 @@ fun ScrollableToDoColumn(
         if(toDoState.isCreatingToDo){
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
-        ToDoList(toDoState, onToDoEvent, onTagEvent, withCalendar)
+        ToDoList(toDoState, onToDoEvent, onTagEvent)
         PlusButtonRow(onToDoEvent)
     }
 
