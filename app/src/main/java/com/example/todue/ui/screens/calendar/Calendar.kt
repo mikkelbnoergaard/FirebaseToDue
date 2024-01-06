@@ -40,7 +40,7 @@ fun CalendarScreen(
     ) {
 
         AndroidView(factory = { CalendarView(it) }, update = {
-            it.setOnDateChangeListener {calendarView, year, month, day ->
+            it.setOnDateChangeListener {_, year, month, day ->
                 if(day < 10){
                     dayZero = "0"
                 }
