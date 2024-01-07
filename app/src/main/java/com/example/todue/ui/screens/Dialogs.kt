@@ -60,11 +60,10 @@ fun CreateToDoDialog(
     onCalendarEvent:(CalendarEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    //for date and time pickers
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
+
     var pickedTime by remember {
         mutableStateOf(LocalTime.now())
     }
