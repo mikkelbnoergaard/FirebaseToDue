@@ -119,6 +119,7 @@ fun CalendarToDoList(
                 })
             }
         }
+
         items(calendarState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
