@@ -2,11 +2,11 @@ package com.example.todue.ui.screens.overview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.dataLayer.source.local.ToDoRepository
-import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.ToDoEvent
+import com.example.todue.ui.sortType.ToDoSortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,6 +21,7 @@ class ToDosViewModel(
 ): ViewModel() {
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
     private val search = MutableStateFlow("")
+    private val selectedCalendarDate = MutableStateFlow("")
 
     private var sortInt = 0
 
@@ -33,6 +34,7 @@ class ToDosViewModel(
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value)
                 ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
+                ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -280,6 +282,12 @@ class ToDosViewModel(
                     toDoSortType.value = ToDoSortType.DUE_DATE
                 }
                 search.value = toDoEvent.searchInToDos
+            }
+
+            is ToDoEvent.SortToDosByGivenDate -> {
+                toDoSortType.value = ToDoSortType.DUE_DATE
+                selectedCalendarDate.value = toDoEvent.date
+                toDoSortType.value = ToDoSortType.GIVEN_DATE
             }
         }
     }

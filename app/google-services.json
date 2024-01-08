@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "372759378719",
+    "project_id": "todue-be85d",
+    "storage_bucket": "todue-be85d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372759378719:android:f4bd7eb39c26fd34fc4e2a",
+        "android_client_info": {
+          "package_name": "com.example.todue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXJi4UEpmiYc0tWumgJ0AhN_k6G5-VZwc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

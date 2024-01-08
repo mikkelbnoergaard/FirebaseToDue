@@ -6,6 +6,7 @@ enum class ToDoSortType {
     TAG,
     DESCRIPTION,
     DUE_DATE,
-    FINISHED
+    FINISHED,
+    GIVEN_DATE
 
 }
