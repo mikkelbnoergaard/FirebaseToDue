@@ -20,8 +20,8 @@ interface TagDao {
     @Query("DELETE FROM tag WHERE title IS :tagTitle")
     suspend fun deleteTag(tagTitle: String)
 
-    @Query("SELECT * FROM tag GROUP BY title")
-    fun getTagsOrderedByTitle(): Flow<List<Tag>>
+    @Query("SELECT * FROM tag WHERE title LIKE '%' || :search || '%' OR sort IS 1 GROUP BY title")
+    fun getTagsOrderedByTitle(search: String): Flow<List<Tag>>
 
     @Query("UPDATE tag SET sort = 1 WHERE id IS :tagId")
     suspend fun sortByThisTag(tagId: Int)

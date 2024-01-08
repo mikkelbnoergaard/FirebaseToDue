@@ -19,14 +19,13 @@ import com.example.todue.ui.theme.ToDoTheme
 import com.example.todue.di.DatabaseModules
 import com.example.todue.ui.screens.tags.TagsViewModel
 import com.example.todue.ui.screens.overview.ToDosViewModel
+import com.example.todue.ui.screens.calendar.CalendarViewModel
 import com.example.todue.ui.screens.GeneralLayout
 import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.TagEvent
-
-//import com.example.todue.ui.screens.calendar.CalendarViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -54,20 +53,17 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-    /*
-    private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the calendar
+    private val calendarViewModel by viewModels<CalendarViewModel>( // ViewModels to manage the state of the tags.
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return CalendarViewModel(
-                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext))),
+                        ToDoRepository(DatabaseModules.provideToDoDao(DatabaseModules.provideDataBase(applicationContext)))
                     ) as T
                 }
             }
         }
     )
-
-     */
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
@@ -79,6 +75,8 @@ class MainActivity : ComponentActivity() {
                 val useDarkIcons = !isSystemInDarkTheme()
                 val onTagEvent = tagsViewModel::onEvent
                 val onToDoEvent = toDosViewModel::onEvent
+                val onCalendarEvent = calendarViewModel::onEvent
+                val calendarState by calendarViewModel.calendarState.collectAsState()
 
                 onTagEvent(TagEvent.ResetTagSort)
 
@@ -99,9 +97,9 @@ class MainActivity : ComponentActivity() {
                         toDoState = toDoState,
                         tagState = tagState,
                         onToDoEvent = onToDoEvent,
-                        onTagEvent = onTagEvent
-                        //calendarViewModel = calendarViewModel,
-                        //onDateChanged = calendarViewModel.
+                        onTagEvent = onTagEvent,
+                        onCalendarEvent = onCalendarEvent,
+                        calendarState = calendarState
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -24,9 +25,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
@@ -56,10 +59,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -73,9 +79,11 @@ import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.navigation.TabItem
+import com.example.todue.state.CalendarState
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarScreen
 //import com.example.todue.ui.screens.calendar.CalendarViewModel
@@ -92,6 +100,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.unselectedItemColor
+import java.time.LocalDate
 
 //The general layout used on all the screens with navigation bar
 @OptIn(ExperimentalFoundationApi::class)
@@ -101,8 +110,8 @@ fun GeneralLayout(
     tagState: TagState,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    //onDateChanged: (Calendar, Int, Int, Int) -> Unit,
-    //calendarViewModel: CalendarViewModel
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    calendarState: CalendarState,
 ){
 
     val tabItems = listOf(
@@ -162,12 +171,12 @@ fun GeneralLayout(
             verticalAlignment = Alignment.Bottom
         ) {index ->
             when(index){
-                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState)
+                2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen()
                 4 -> Settings()
-                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }
         TabRow(
@@ -202,6 +211,7 @@ fun GeneralLayout(
 
 }
 
+/*
 //Account button, probably going to be deleted
 @Composable
 fun AccountButton(
@@ -224,6 +234,9 @@ fun AccountButton(
     }
 }
 
+*/
+
+/*
 //Settings button, probably going to be deleted
 @Composable
 fun SettingsButton(
@@ -271,6 +284,8 @@ fun FilterButton(
         }
     }
 }
+
+*/
 
 @Composable
 fun TagList(
@@ -349,7 +364,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -449,7 +464,6 @@ fun ToDoList(
             }
         }
     }
-
 }
 
 //Composable for the plus button at the bottom of the screen
@@ -492,7 +506,8 @@ fun PlusButtonRow(
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
 
     Box(
@@ -501,7 +516,7 @@ fun ScrollableToDoColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
         }
         ToDoList(toDoState, onToDoEvent, onTagEvent)
         PlusButtonRow(onToDoEvent)
@@ -531,7 +546,7 @@ fun ScrollableTagRow(
 
             if (!tag.sort) {
                 buttonColor.value = backgroundColor
-            } else if (tag.sort) {
+            } else {
                 buttonColor.value = itemColor
             }
 
@@ -557,5 +572,61 @@ fun ScrollableTagRow(
             }
         }
     }
+}
 
+@Composable
+fun TopBar(
+    toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.09f)
+            .background(backgroundColor)
+            .border(width = 3.dp, color = barColor, shape = getBottomLineShape()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            LocalDate.now().toString(),
+            modifier = Modifier
+                .requiredWidth(120.dp)
+                .padding(start = 15.dp, end = 15.dp)
+        )
+
+        val focusRequester = remember { FocusRequester() }
+        val focusManager = LocalFocusManager.current
+
+        //BackHandler does not work yet for some reason
+        BackHandler(enabled = false, onBack = {
+            focusManager.clearFocus()
+        })
+
+        TextField(
+            value = toDoState.searchInToDos,
+            onValueChange = {
+                onToDoEvent(ToDoEvent.SetSearchInToDos(it))
+                onTagEvent(TagEvent.SetSearchInTags(it))
+            },
+            placeholder = {
+                Text(text = "search...")
+            },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester)
+                .padding(end = 5.dp),
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        println("clicked")
+                    }) {
+                    Icon(Icons.Filled.ArrowBack, "Lose focus button")
+                }
+            }
+        )
+    }
 }

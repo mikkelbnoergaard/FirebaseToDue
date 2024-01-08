@@ -30,5 +30,7 @@ sealed interface ToDoEvent {
     data class DeleteTagFromToDos(val tag: String): ToDoEvent
     data class EditToDo(val newTitle: String, val newDescription: String, val newTag: String, val newDueDate: String, val newDueTime: String, val toDoId: Int): ToDoEvent
     data class SetToDoStateForEdit(val toDo: ToDo): ToDoEvent
+    data class SetSearchInToDos(val searchInToDos: String): ToDoEvent
+    data class SortToDosByGivenDate(val date: String): ToDoEvent
 
 }

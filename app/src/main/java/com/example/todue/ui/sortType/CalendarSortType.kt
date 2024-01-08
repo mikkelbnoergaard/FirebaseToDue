@@ -1,8 +1,8 @@
 package com.example.todue.ui.sortType
 
-enum class TagSortType {
+enum class CalendarSortType {
 
-    TITLE,
+    GIVEN_DATE,
     PLACEHOLDER
 
 }

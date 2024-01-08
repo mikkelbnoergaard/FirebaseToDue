@@ -39,8 +39,8 @@ class TagRepository @Inject constructor (
         dataSource.deleteTag(tagTitle)
     }
 
-    fun getTagsOrderedByTitle(): Flow<List<Tag>> {
-        return dataSource.getTagsOrderedByTitle()
+    fun getTagsOrderedByTitle(search: String): Flow<List<Tag>> {
+        return dataSource.getTagsOrderedByTitle(search)
     }
 
     suspend fun sortByThisTag(tag: Tag) {
