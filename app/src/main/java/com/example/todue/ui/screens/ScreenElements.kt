@@ -32,6 +32,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FilterListOff
@@ -241,8 +243,8 @@ fun FilterButton(
             .requiredSize(50.dp)
     ) {
         when (clicked) {
-            true -> Icon(Icons.Filled.FilterList, "Floating toggled filter button")
-            else -> Icon(Icons.Filled.FilterListOff, "Floating untoggled filter button")
+            true -> Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+            else -> Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
         }
     }
 }
@@ -305,6 +307,7 @@ fun ToDoList(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ) {
+    var clickedFinished by remember { mutableStateOf(false) }
 
     var selectedToDo by remember {
         mutableStateOf(
@@ -404,9 +407,11 @@ fun ToDoList(
                                 if(toDo.finished){
                                     onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                                    clickedFinished = false
                                 } else{
                                     onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                                    clickedFinished = true
                                 }
                             },
                             modifier = Modifier
@@ -415,10 +420,12 @@ fun ToDoList(
                             contentColor = selectedItemColor,
                             shape = RoundedCornerShape(5.dp)
                         ) {
-                            Icon(Icons.Filled.Check, "Finish to do button",
-                                modifier = Modifier
-                                    .fillMaxSize(0.8f)
-                            )
+
+                            if(toDo.finished){
+                                Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+                            } else{
+                                Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
+                            }
                         }
                     }
                 }
