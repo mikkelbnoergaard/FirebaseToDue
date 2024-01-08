@@ -578,7 +578,6 @@ fun FinishToDoDialog(toDo: ToDo,
                 .padding(16.dp),
             backgroundColor = Color.Transparent
         ) {
-//            GiphyImageScreen()
             GifScreen()
             /*
             Text(
@@ -588,7 +587,6 @@ fun FinishToDoDialog(toDo: ToDo,
                     .wrapContentSize(Alignment.Center),
                 textAlign = TextAlign.Center,
             )
-
              */
         }
     }
@@ -624,25 +622,19 @@ fun GifScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val rememberedImageUrl = remember(imageUrl) { imageUrl }
-
-        if (rememberedImageUrl.isNotEmpty()) {
-            val view = remember { ImageView(context) }
-
-            // Load Gif with Glide library
-            DisposableEffect(context) {
-                Glide.with(context)
-                    .asGif()
-                    .load(imageUrl)
-                    .into(view)
-                onDispose {
-                    // Cleanup when the composable is disposed
-                    Glide.with(context).clear(view)
-                }
-            }
-
-            // Wrap the ImageView with Compose's View composable
-            AndroidView(factory = { view })
+        if (imageUrl.isNotEmpty()) {
+            AndroidView(
+                factory = { context ->
+                    ImageView(context).apply {
+                        Glide.with(context)
+                            .asGif()
+                            .load(imageUrl)
+                            .into(this)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+            )
         } else {
             Text(text = "Error loading GIF")
         }
