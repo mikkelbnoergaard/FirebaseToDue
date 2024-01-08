@@ -576,7 +576,7 @@ fun FinishToDoDialog(toDo: ToDo,
                 .fillMaxWidth()
                 .height(400.dp)
                 .padding(16.dp),
-            backgroundColor = Color.Magenta
+            backgroundColor = Color.Transparent
         ) {
 //            GiphyImageScreen()
             GifScreen()
@@ -643,6 +643,8 @@ fun GifScreen() {
 
             // Wrap the ImageView with Compose's View composable
             AndroidView(factory = { view })
+        } else {
+            Text(text = "Error loading GIF")
         }
     }
 }
