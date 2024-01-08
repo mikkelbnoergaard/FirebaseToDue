@@ -1,46 +1,64 @@
 package com.example.todue.ui.screens
 
+import android.widget.ImageView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import coil.compose.rememberImagePainter
+import com.bumptech.glide.Glide
 import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
+import com.example.todue.dataLayer.source.remote.ApiService
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.CalendarEvent
+import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.textColor
@@ -49,6 +67,8 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -60,6 +80,8 @@ fun CreateToDoDialog(
     onCalendarEvent:(CalendarEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    //for date and time pickers
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -148,6 +170,9 @@ fun CreateToDoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
+                //these variables are a quick fix for hour and minute not being saved correctly in database
+                //previously, the first 0 was left out of hh and mm
+
 
                 Button(
                     onClick = {
@@ -537,6 +562,81 @@ fun EditToDoDialog(
             is24HourClock = true,
         ) {
             onToDoEvent(ToDoEvent.SetDueTime(it.toString()))
+        }
+    }
+}
+
+@Composable
+fun FinishToDoDialog(toDo: ToDo,
+                     onToDoEvent: (ToDoEvent) -> Unit,
+                     toDoState: ToDoState, ) {
+    Dialog(onDismissRequest = { onToDoEvent(ToDoEvent.ResetToDoState) }) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)
+                .padding(16.dp),
+            backgroundColor = Color.Transparent
+        ) {
+            GifScreen()
+            /*
+            Text(
+                text = "Great Job!",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(Alignment.Center),
+                textAlign = TextAlign.Center,
+            )
+             */
+        }
+    }
+}
+
+@Composable
+fun GifScreen() {
+    // MutableState is used to track Gif URLs
+    val context = LocalContext.current
+
+    val searchTerm by remember { mutableStateOf("celebration") }
+    var imageUrl by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(searchTerm) {
+        scope.launch(Dispatchers.IO) {
+            try {
+                val response = ApiService.RetrofitInstance.giphyApi.getRandomGif(
+                    apiKey = ApiService.RetrofitInstance.API_KEY,
+                    tag = searchTerm
+                )
+                imageUrl = response.data.images.fixed_height.url
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        if (imageUrl.isNotEmpty()) {
+            AndroidView(
+                factory = { context ->
+                    ImageView(context).apply {
+                        Glide.with(context)
+                            .asGif()
+                            .load(imageUrl)
+                            .into(this)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        } else {
+            Text(text = "Error loading GIF")
         }
     }
 }

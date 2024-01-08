@@ -44,11 +44,7 @@ fun ToDosScreen(
         TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-        ScrollableToDoColumn(
-            toDoState = toDoState,
-            onTagEvent = onTagEvent,
-            onToDoEvent = onToDoEvent,
-            onCalendarEvent = onCalendarEvent
-        )
+        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
     }
+
 }

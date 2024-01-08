@@ -130,6 +130,9 @@ class ToDosViewModel(
             is ToDoEvent.FinishToDo -> {
                 viewModelScope.launch {
                     toDoRepository.finishToDo(toDoEvent.toDo)
+                    _toDoState.update { it.copy(
+                        isFinishingToDo = true
+                    ) }
                 }
             }
 
@@ -257,6 +260,7 @@ class ToDosViewModel(
                     isCreatingToDo = false,
                     isDeletingToDo = false,
                     isEditingToDo = false,
+                    isFinishingToDo = false,
                     title = "",
                     description = "",
                     tag = "",

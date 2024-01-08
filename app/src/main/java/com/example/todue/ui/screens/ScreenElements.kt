@@ -334,6 +334,8 @@ fun ToDoList(
 
             if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
 
+            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo, toDoState = toDoState) }
+
             ElevatedButton(
                 onClick = {
                     selectedToDo = toDo
@@ -541,6 +543,7 @@ fun ScrollableTagRow(
         }
     }
 }
+
 
 @Composable
 fun TopBar(
