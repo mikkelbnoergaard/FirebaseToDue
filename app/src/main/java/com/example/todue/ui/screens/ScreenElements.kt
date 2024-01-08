@@ -3,6 +3,7 @@ package com.example.todue.ui.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -211,47 +212,8 @@ fun GeneralLayout(
 
 }
 
-/*
-//Account button, probably going to be deleted
-@Composable
-fun AccountButton(
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
-) {
-    FloatingActionButton(
-        //should not sort by due date, but it's for testing
-        onClick = {
-            onToDoEvent(ToDoEvent.SortToDosByDueDate)
-            onTagEvent(TagEvent.ResetTagSort)
-                  },
-        containerColor = buttonColor,
-        contentColor = selectedItemColor,
-        modifier = Modifier
-            .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
-            .requiredSize(50.dp)
-    ) {
-        Icon(Icons.Filled.AccountCircle, "Floating account button")
-    }
-}
 
-*/
 
-/*
-//Settings button, probably going to be deleted
-@Composable
-fun SettingsButton(
-    onToDoEvent: (ToDoEvent) -> Unit
-) {
-    FloatingActionButton(
-        onClick = { onToDoEvent(ToDoEvent.SortToDosByFinished) },
-        containerColor = buttonColor,
-        contentColor = selectedItemColor,
-        modifier = Modifier
-            .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
-            .requiredSize(50.dp)
-    ) {
-    }
-}
 
 @Composable
 fun FilterButton(
@@ -285,7 +247,6 @@ fun FilterButton(
     }
 }
 
-*/
 
 @Composable
 fun TagList(
@@ -589,13 +550,6 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            LocalDate.now().toString(),
-            modifier = Modifier
-                .requiredWidth(120.dp)
-                .padding(start = 15.dp, end = 15.dp)
-        )
-
         val focusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
@@ -617,7 +571,7 @@ fun TopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
-                .padding(end = 5.dp),
+                .padding(end = 5.dp, start = 5.dp),
             trailingIcon = {
                 IconButton(
                     onClick = {
