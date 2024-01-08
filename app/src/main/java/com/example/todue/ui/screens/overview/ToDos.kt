@@ -14,6 +14,8 @@ import com.example.todue.ui.screens.TopBar
 import com.example.todue.ui.screens.ScrollableTagRow
 import com.example.todue.ui.screens.ScrollableToDoColumn
 
+
+
 @Composable
 fun ToDosScreen(
     toDoState: ToDoState,
@@ -31,6 +33,6 @@ fun ToDosScreen(
         TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
         ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-    }
 
+    }
 }
