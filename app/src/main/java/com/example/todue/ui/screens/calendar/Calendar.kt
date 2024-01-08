@@ -60,16 +60,6 @@ import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.unselectedItemColor
 
 @Composable
-fun CalendarScreen(
-    toDoState: ToDoState,
-    onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit,
-    calendarState: CalendarState,
-    ) {
-    ScrollableCalendarColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
-}
-@Composable
 fun CalendarToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
@@ -226,7 +216,7 @@ fun CalendarToDoList(
 }
 
 @Composable
-fun ScrollableCalendarColumn(
+fun CalendarScreen(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
