@@ -67,7 +67,6 @@ fun CalendarToDoList(
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState
 ) {
-
     var selectedToDo by remember {
         mutableStateOf(
             ToDo(
