@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,63 +24,45 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.TextField
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
-import androidx.compose.material.icons.filled.Filter
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.FilterListOff
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Tag
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todue.dataLayer.source.local.Tag
@@ -95,14 +76,10 @@ import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.screens.calendar.CalendarScreen
-//import com.example.todue.ui.screens.calendar.CalendarScreen
-//import com.example.todue.ui.screens.calendar.CalendarViewModel
-//import com.example.todue.ui.screens.calendar.CalendarScreen
 import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
-import com.example.todue.ui.sortType.ToDoSortType
 import com.example.todue.ui.theme.barColor
 import com.example.todue.ui.theme.itemColor
 import com.example.todue.ui.theme.textColor
@@ -110,7 +87,6 @@ import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.unselectedItemColor
-import java.time.LocalDate
 
 //The general layout used on all the screens with navigation bar
 @OptIn(ExperimentalFoundationApi::class)
@@ -235,13 +211,13 @@ fun FilterButton(
 
     FloatingActionButton(
         onClick = {
-            if (!clicked) {
+            clicked = if (!clicked) {
                 onToDoEvent(ToDoEvent.SortToDosByFinished)
-                clicked = true
+                true
             } else {
                 onToDoEvent(ToDoEvent.SortToDosByDueDate)
                 onTagEvent(TagEvent.ResetTagSort)
-                clicked = false
+                false
             }
         },
         containerColor = buttonColor,
@@ -342,7 +318,7 @@ fun ToDoList(
 
             if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
 
-            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo, toDoState = toDoState) }
+            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
             ElevatedButton(
                 onClick = {
@@ -414,14 +390,14 @@ fun ToDoList(
                         FloatingActionButton(
                             onClick = {
                                 selectedToDo = toDo
-                                if(toDo.finished){
+                                clickedFinished = if(toDo.finished){
                                     onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.CreateTag(title = toDo.tag))
-                                    clickedFinished = false
+                                    false
                                 } else{
                                     onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
-                                    clickedFinished = true
+                                    true
                                 }
                             },
                             modifier = Modifier
@@ -476,7 +452,6 @@ fun PlusButtonRow(
             }
         }
     }
-
 }
 
 //Scrollable column of ToDos
@@ -552,8 +527,6 @@ fun ScrollableTagRow(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     toDoState: ToDoState,
@@ -567,7 +540,7 @@ fun TopBar(
             .background(backgroundColor)
             .border(width = 3.dp, color = barColor, shape = getBottomLineShape()),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         val focusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
@@ -588,70 +561,21 @@ fun TopBar(
             },
             singleLine = true,
             modifier = Modifier
-                .fillMaxWidth()
                 .focusRequester(focusRequester)
                 .padding(end = 5.dp, start = 5.dp),
             trailingIcon = {
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
-                        println("clicked")
                     }) {
                     Icon(Icons.Filled.ArrowBack, "Lose focus button")
                 }
+
+
+
             }
         )
-    }
-    @Composable
-    fun ScaffoldExample() {
-        var presses by remember { mutableIntStateOf(0) }
-
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Top app bar"
-                        )
-                    },
-                )
-            },
-            bottomBar = {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = "Bottom app bar",
-                    )
-                }
-            },
-            floatingActionButton = {
-                FloatingActionButton(onClick = { presses++ }) {
-                    Icon(Icons.Default.Add, contentDescription = "Add")
-                }
-            }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text =
-                    """
-                    This is an example of a scaffold. It uses the Scaffold composable's parameters to create a screen with a simple top app bar, bottom app bar, and floating action button.
-
-                    It also contains some basic inner content, such as this text.
-
-                    You have pressed the floating action button $presses times.
-                """.trimIndent(),
-                )
-            }
-        }
+        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
     }
 }
+

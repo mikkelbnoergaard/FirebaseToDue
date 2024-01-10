@@ -94,7 +94,7 @@ fun CalendarToDoList(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AndroidView(factory = { CalendarView(it) } ,update = {
+                AndroidView(factory = { CalendarView(it) } , update = {
                     it.setOnDateChangeListener { _, year, month, day ->
                         if (day < 10) {
                             dayZero = "0"
