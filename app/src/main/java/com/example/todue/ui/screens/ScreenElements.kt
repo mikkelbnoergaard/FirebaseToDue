@@ -162,7 +162,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen()
-                4 -> Settings()
+                4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }
@@ -195,11 +195,7 @@ fun GeneralLayout(
             }
         }
     }
-
 }
-
-
-
 
 @Composable
 fun FilterButton(

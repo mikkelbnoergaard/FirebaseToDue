@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.QuestionMark
@@ -33,21 +35,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todue.ui.event.TagEvent
+import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.*
 
 
 @Composable
-fun Settings(){
+fun Settings(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
+){
 
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ScaffoldSettings()
+        ScaffoldSettings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
     }
 
 
@@ -55,7 +61,10 @@ fun Settings(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldSettings() {
+fun ScaffoldSettings(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
+) {
 
     Scaffold(
         topBar = {
@@ -173,6 +182,25 @@ fun ScaffoldSettings() {
             }
             Spacer(Modifier.size(paddingBetweenRows))
             Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Spacer(Modifier.size(paddingBetweenRows))
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(rowHeight)
+                    .clickable(onClick = {
+                        onToDoEvent(ToDoEvent.PopulateToDoList)
+                        onTagEvent(TagEvent.PopulateTags)
+                    }),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Spacer(Modifier.size(leftSpacerPadding))
+                Icon(Icons.Outlined.Add, "Visibility icon")
+                Spacer(Modifier.size(spaceAfterIcon))
+                Text(text = "Populate ToDo list")
+            }
+            Spacer(Modifier.size(paddingBetweenRows))
+            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
         }
     }
 }
@@ -191,8 +219,13 @@ fun SwitchButton() {
     )
 }
 
-@Preview
+/*
 @Composable
-fun SettingsPreview(){
-    Settings()
+fun SettingsPreview(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit
+){
+    Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
 }
+
+ */

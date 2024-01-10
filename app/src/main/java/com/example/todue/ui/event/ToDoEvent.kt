@@ -17,6 +17,9 @@ sealed interface ToDoEvent {
     data object SortToDosByDueDate: ToDoEvent
     data object ResetToDoState: ToDoEvent
 
+    //used to avoid creating a bunch of todos when testing
+    data object PopulateToDoList: ToDoEvent
+
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent
     data class SetTag(val tag: String): ToDoEvent

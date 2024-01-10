@@ -8,6 +8,9 @@ sealed interface TagEvent {
     data object HideDeleteDialog: TagEvent
     data object ResetTagSort: TagEvent
 
+    //used to avoid creating a bunch of todos when testing
+    data object PopulateTags: TagEvent
+
     data class CreateTag(val title: String): TagEvent
     data class SetTitle(val title: String): TagEvent
     data class IncreaseToDoAmount(val toDoAmount: Int): TagEvent

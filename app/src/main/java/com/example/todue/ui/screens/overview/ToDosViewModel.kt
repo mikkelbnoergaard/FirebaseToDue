@@ -8,6 +8,7 @@ import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.sortType.ToDoSortType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -288,6 +289,91 @@ class ToDosViewModel(
                 toDoSortType.value = ToDoSortType.DUE_DATE
                 selectedCalendarDate.value = toDoEvent.date
                 toDoSortType.value = ToDoSortType.GIVEN_DATE
+            }
+
+            //only to avoid creating a bunch of todos when testing
+            is ToDoEvent.PopulateToDoList -> {
+                viewModelScope.launch{
+                    toDoRepository.createToDo(
+                        "Todo CRUD",
+                        "Todos with title, description, tag, completion status, due date and due time. They " +
+                                "must be editable, deletable and finishable.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Grouping the todos",
+                        "Group todos by due date at the least.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Search",
+                        "Let users search for todos based on title, description and tag.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Filtering",
+                        "Filter todos by completion status and/or tags added.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Use Giphy API",
+                        "Show a 'celebration' gif when a todo is finished.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Calendar",
+                        "Implement a calendar where users can see what todos are due on a given date.",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    delay(10L)
+                    toDoRepository.createToDo(
+                        "Statistics",
+                        "Show the user some statistics for a bit of gamification",
+                        "Final delivery",
+                        "2024-01-17",
+                        "15:00",
+                        false
+                    )
+                    toDoRepository.createToDo(
+                        "Clean the kitchen",
+                        "Oven and fridge are really dirty",
+                        "Cleaning",
+                        "2024-01-18",
+                        "21:00",
+                        false
+                    )
+                    toDoRepository.createToDo(
+                        "Mop the floor",
+                        "It's dirty after someone walked around inside with their shoes on",
+                        "Cleaning",
+                        "2024-01-18",
+                        "21:00",
+                        false
+                    )
+                }
             }
         }
     }
