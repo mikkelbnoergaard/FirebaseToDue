@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
@@ -24,10 +25,14 @@ import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.state.CalendarState
+import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
@@ -55,6 +61,9 @@ import com.example.todue.ui.screens.CreateToDoDialog
 import com.example.todue.ui.screens.DeleteToDoDialog
 import com.example.todue.ui.screens.EditToDoDialog
 import com.example.todue.ui.screens.PlusButtonRow
+import com.example.todue.ui.screens.ScrollableTagRow
+import com.example.todue.ui.screens.ScrollableToDoColumn
+import com.example.todue.ui.screens.TopBar
 import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.itemColor
@@ -230,19 +239,82 @@ fun CalendarScreen(
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState
 ) {
+    ScaffoldCalendar(
+        toDoState = toDoState,
+        onTagEvent = onTagEvent,
+        onToDoEvent = onToDoEvent,
+        onCalendarEvent = onCalendarEvent,
+        calendarState = calendarState
+    )
+}
 
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .padding(top = 5.dp, bottom = 5.dp)
-    ) {
-        if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
-            println(calendarState.givenDate)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ScaffoldCalendar(
+    toDoState: ToDoState,
+    onTagEvent: (TagEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    calendarState: CalendarState
+) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = backgroundColor,
+                    titleContentColor = textColor,
+                ),
+                title = {
+                    Text(
+                        "Calendar",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 30.sp
+                    )
+                },
+            )
         }
-        CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
-        PlusButtonRow(onToDoEvent)
-    }
+    ) { innerPadding ->
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .fillMaxSize(),
 
+            ){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(top = 5.dp, bottom = 5.dp)
+                        ) {
+                            if(toDoState.isCreatingToDo){
+                                CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+                                println(calendarState.givenDate)
+                            }
+                            CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
+                            PlusButtonRow(onToDoEvent)
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
 }
 
