@@ -11,13 +11,14 @@ val Pink40 = Color(0xFF7D5260)
 
 //Light theme
 
-val textColor = Color.Black
-val itemColor = Color(0xFFBDE3FF)
-val backgroundColor = Color.White
-val barColor = Color.LightGray
-val selectedItemColor = Color.Black
-val unselectedItemColor = Color(0xFF888888)
-val buttonColor = Color.LightGray
+val textColor = Color(0xFF212121)
+val itemColor = Color(0xFFFFFFFF)
+val backgroundColor = Color(0xFFFFFFFF)
+val barColor = Color(0xFFF5F5F5)
+val selectedItemColor = Color(0xFF3F51B5)
+val unselectedItemColor = Color(0xFF212121)
+val buttonColor = Color(0xFF3F51B5)
+val tagColor = Color(0xFFC5CAE9)
 
 
 //Dark theme (sucks atm)

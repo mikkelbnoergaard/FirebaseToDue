@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
 import androidx.compose.material3.ElevatedButton
@@ -53,6 +55,7 @@ import com.example.todue.ui.screens.CreateToDoDialog
 import com.example.todue.ui.screens.DeleteToDoDialog
 import com.example.todue.ui.screens.EditToDoDialog
 import com.example.todue.ui.screens.PlusButtonRow
+import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.itemColor
 import com.example.todue.ui.theme.selectedItemColor
@@ -67,6 +70,8 @@ fun CalendarToDoList(
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState
 ) {
+    var clickedFinished by remember { mutableStateOf(false) }
+
     var selectedToDo by remember {
         mutableStateOf(
             ToDo(
@@ -188,24 +193,27 @@ fun CalendarToDoList(
                         FloatingActionButton(
                             onClick = {
                                 selectedToDo = toDo
-                                if(toDo.finished){
+                                clickedFinished = if(toDo.finished){
                                     onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                                    false
                                 } else{
                                     onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                                    true
                                 }
                             },
                             modifier = Modifier
                                 .requiredSize(30.dp),
                             containerColor = buttonColor,
-                            contentColor = selectedItemColor,
+                            contentColor = backgroundColor,
                             shape = RoundedCornerShape(5.dp)
                         ) {
-                            Icon(Icons.Filled.Check, "Finish to do button",
-                                modifier = Modifier
-                                    .fillMaxSize(0.8f)
-                            )
+                            if(toDo.finished){
+                                Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+                            } else{
+                                Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
+                            }
                         }
                     }
                 }

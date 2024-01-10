@@ -48,15 +48,12 @@ fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ){
-
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         ScaffoldSettings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

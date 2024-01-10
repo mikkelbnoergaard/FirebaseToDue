@@ -63,6 +63,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todue.dataLayer.source.local.Tag
@@ -86,6 +87,7 @@ import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
+import com.example.todue.ui.theme.tagColor
 import com.example.todue.ui.theme.unselectedItemColor
 
 //The general layout used on all the screens with navigation bar
@@ -217,7 +219,7 @@ fun FilterButton(
             }
         },
         containerColor = buttonColor,
-        contentColor = selectedItemColor,
+        contentColor = backgroundColor,
         modifier = Modifier
             .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
             .requiredSize(50.dp)
@@ -267,7 +269,7 @@ fun TagList(
                     .fillMaxHeight(),
                 elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(buttonColor)
+                colors = ButtonDefaults.buttonColors(tagColor)
             ) {
 
                 Text(
@@ -328,7 +330,7 @@ fun ToDoList(
                     .fillMaxHeight(),
                 elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(itemColor),
+                colors = ButtonDefaults.buttonColors(backgroundColor),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -399,7 +401,7 @@ fun ToDoList(
                             modifier = Modifier
                                 .requiredSize(30.dp),
                             containerColor = buttonColor,
-                            contentColor = selectedItemColor,
+                            contentColor = backgroundColor,
                             shape = RoundedCornerShape(5.dp)
                         ) {
 
@@ -439,7 +441,7 @@ fun PlusButtonRow(
                     onToDoEvent(ToDoEvent.ShowCreateDialog)
                 },
                 containerColor = buttonColor,
-                contentColor = selectedItemColor,
+                contentColor = backgroundColor,
                 modifier = Modifier
                     .padding(end = 10.dp)
                     .requiredSize(50.dp)
