@@ -52,6 +52,7 @@ import com.example.todue.ui.screens.CheckToDoDialog
 import com.example.todue.ui.screens.CreateToDoDialog
 import com.example.todue.ui.screens.DeleteToDoDialog
 import com.example.todue.ui.screens.EditToDoDialog
+import com.example.todue.ui.screens.FinishToDoDialog
 import com.example.todue.ui.screens.PlusButtonRow
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.itemColor
@@ -116,7 +117,9 @@ fun CalendarToDoList(
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
-            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
+            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+
+            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
             ElevatedButton(
                 onClick = {

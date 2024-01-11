@@ -442,7 +442,8 @@ fun EditToDoDialog(
     toDo: ToDo,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    toDoState: ToDoState
+    toDoState: ToDoState,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
 
     val dateDialogState = rememberMaterialDialogState()
@@ -516,6 +517,7 @@ fun EditToDoDialog(
                         onToDoEvent(ToDoEvent.EditToDo(toDoState.title, toDoState.description, toDoState.tag, toDoState.dueDate, toDoState.dueTime, toDo.id))
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                     },
                     modifier = Modifier
                         .padding(5.dp)) {
