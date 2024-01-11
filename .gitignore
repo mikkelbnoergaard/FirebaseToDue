@@ -28,3 +28,4 @@ coverage/
 .DS_Store
 *.DS_Store
 .gitmodules
+/local.properties
