@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -31,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -565,21 +570,29 @@ fun FinishToDoDialog(//toDo: ToDo,
     Dialog(onDismissRequest = { onToDoEvent(ToDoEvent.ResetToDoState) }) {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp)
+                .width(400.dp)
+                .height(300.dp)
                 .padding(16.dp),
-            backgroundColor = Color.Transparent
+            backgroundColor = Color.White,
+            shape = RoundedCornerShape(16.dp),
+            elevation = 10.dp
         ) {
-            GifScreen()
-            /*
-            Text(
-                text = "Great Job!",
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .wrapContentSize(Alignment.Center),
-                textAlign = TextAlign.Center,
-            )
-             */
+                    .padding(25.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "To-do Completed!",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .wrapContentSize(Alignment.Center),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+                GifScreen()
+            }
         }
     }
 }
@@ -589,7 +602,7 @@ fun GifScreen() {
     // MutableState is used to track Gif URLs
     //val context = LocalContext.current
 
-    val searchTerm by remember { mutableStateOf("celebration") }
+    val searchTerm = "Applause @reactions"
     var imageUrl by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
@@ -601,16 +614,17 @@ fun GifScreen() {
                     apiKey = ApiService.RetrofitInstance.API_KEY,
                     tag = searchTerm
                 )
-                imageUrl = response.data.images.fixed_height.url
+                imageUrl = response.data.images.downsized.url
             } catch (e: Exception) {
-                // Handle error
+                imageUrl = "https://giphy.com/gifs/g5games-cat-g5-games-hidden-city-TNkxUEn97iluf7jCsh"
             }
         }
     }
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .width(250.dp)
+            .height(250.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -626,6 +640,7 @@ fun GifScreen() {
                 },
                 modifier = Modifier
                     .fillMaxSize()
+                    .clip(RoundedCornerShape(15.dp))
             )
         } else {
             Text(text = "Loading GIF...")

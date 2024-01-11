@@ -38,6 +38,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -458,7 +459,6 @@ fun ScrollableToDoColumn(
     onToDoEvent: (ToDoEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxHeight()
