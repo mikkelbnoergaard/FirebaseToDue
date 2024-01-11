@@ -225,7 +225,8 @@ fun DeleteToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     modifier: Modifier = Modifier,
-    toDo: ToDo
+    toDo: ToDo,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
 
     AlertDialog(
@@ -251,6 +252,7 @@ fun DeleteToDoDialog(
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
                         onToDoEvent(ToDoEvent.HideToDoDialog)
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                     },
                     modifier = Modifier
                         .padding(5.dp)

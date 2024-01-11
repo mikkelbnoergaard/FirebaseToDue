@@ -50,7 +50,7 @@ class CalendarViewModel(
 
             is CalendarEvent.ResetCalendarSort -> {
                 calendarSortType.value = CalendarSortType.PLACEHOLDER
-
+                calendarSortType.value = CalendarSortType.GIVEN_DATE
             }
         }
     }

@@ -112,7 +112,7 @@ fun CalendarToDoList(
         items(calendarState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -191,9 +191,11 @@ fun CalendarToDoList(
                                 if(toDo.finished){
                                     onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                                    onCalendarEvent(CalendarEvent.ResetCalendarSort)
                                 } else{
                                     onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
                                     onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                                    onCalendarEvent(CalendarEvent.ResetCalendarSort)
                                 }
                             },
                             modifier = Modifier
