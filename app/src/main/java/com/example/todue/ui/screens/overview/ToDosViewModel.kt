@@ -375,6 +375,18 @@ class ToDosViewModel(
                     )
                 }
             }
+
+            is ToDoEvent.GetStatistics -> {
+                viewModelScope.launch {
+                    _toDoState.update {
+                        it.copy(
+                            totalAmountOfCreatedToDos = toDoRepository.getTotalAmountOfCreatedToDos(),
+                            totalAmountOfFinishedToDos = toDoRepository.getTotalAmountOfFinishedToDos(),
+                            totalAmountOfUnfinishedToDos = toDoRepository.getTotalAmountOfUnfinishedToDos()
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-// import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 
@@ -45,18 +44,30 @@ interface ToDoDao {
     @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
     suspend fun unFinishToDo(toDoId: Int)
 
-    @Query("SELECT * FROM todo WHERE dueDate = :date")
+    @Query("SELECT * FROM todo WHERE dueDate = :date AND finished = 0")
     fun getToDosByGivenDate(date: String): Flow<List<ToDo>>
 
     @Query("UPDATE todo SET title = :newTitle, description = :newDescription, tag = :newTag, dueDate = :newDueDate, dueTime = :newDueTime WHERE id = :toDoId")
     suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int)
 
-
-
-
-    //does not work yet
     @Query("UPDATE todo SET tag = '' WHERE tag = :tag")
     suspend fun deleteTagFromToDos(tag: String)
+
+
+
+
+
+    //for statistics
+    @Query("SELECT MAX(id) FROM todo")
+    suspend fun getTotalAmountOfCreatedToDos(): Int
+
+    @Query("SELECT COUNT(*) FROM todo WHERE finished = 1")
+    suspend fun getTotalAmountOfFinishedToDos(): Int
+
+    @Query("SELECT COUNT(*) FROM todo WHERE finished = 0")
+    suspend fun getTotalAmountOfUnfinishedToDos(): Int
+
+
 
 
 

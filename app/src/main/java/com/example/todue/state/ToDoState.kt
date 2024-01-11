@@ -20,6 +20,11 @@ data class ToDoState(
     val isEditingToDo: Boolean = false,
     val isFinishingToDo: Boolean = false,
     val toDoSortType: ToDoSortType = ToDoSortType.TITLE,
-    val searchInToDos: String = ""
+    val searchInToDos: String = "",
+
+    //for statistics
+    val totalAmountOfFinishedToDos: Int = 0,
+    val totalAmountOfCreatedToDos: Int = 0,
+    val totalAmountOfUnfinishedToDos: Int = 0
 
 )

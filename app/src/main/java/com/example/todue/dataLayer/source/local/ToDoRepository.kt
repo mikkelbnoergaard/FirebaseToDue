@@ -77,6 +77,23 @@ class ToDoRepository @Inject constructor(
 
 
 
+    //for statistics:
+    suspend fun getTotalAmountOfCreatedToDos(): Int {
+        return dataSource.getTotalAmountOfCreatedToDos()
+    }
+
+    suspend fun getTotalAmountOfFinishedToDos(): Int {
+        return dataSource.getTotalAmountOfFinishedToDos()
+    }
+
+    suspend fun getTotalAmountOfUnfinishedToDos(): Int {
+        return dataSource.getTotalAmountOfUnfinishedToDos()
+    }
+
+
+
+
+
     //for testing:
     fun createTestToDoInDB(title: String,
                            description: String,
