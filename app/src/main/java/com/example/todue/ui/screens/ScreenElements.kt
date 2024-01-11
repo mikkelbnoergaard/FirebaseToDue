@@ -288,6 +288,24 @@ fun ToDoList(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
+        items(toDoState.toDos) { toDo ->
+            ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, toDo = toDo)
+        }
+    }
+}
+
+@Composable
+fun ToDoItem(
+    toDoState: ToDoState,
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    toDo: ToDo
+){
     var clickedFinished by remember { mutableStateOf(false) }
 
     var selectedToDo by remember {
@@ -302,114 +320,109 @@ fun ToDoList(
             ) )
     }
 
-    LazyColumn(
+    val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
+
+    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
+
+    if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+
+    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+
+    if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
+
+    ElevatedButton(
+        onClick = {
+            selectedToDo = toDo
+            onToDoEvent(ToDoEvent.ShowToDoDialog)
+        },
         modifier = Modifier
-            .fillMaxHeight()
+            .border(border = BorderStroke(10.dp, Color.Transparent))
+            .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+            .requiredWidth(width - 40.dp)
+            .fillMaxHeight(),
+        elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+        shape = RoundedCornerShape(10),
+        colors = ButtonDefaults.buttonColors(itemColor),
     ) {
-        items(toDoState.toDos) { toDo ->
-            val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
-
-            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
-
-            if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
-
-            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
-
-            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
-
-            ElevatedButton(
-                onClick = {
-                    selectedToDo = toDo
-                    onToDoEvent(ToDoEvent.ShowToDoDialog)
-                },
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .border(border = BorderStroke(10.dp, Color.Transparent))
-                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                    .requiredWidth(width - 40.dp)
-                    .fillMaxHeight(),
-                elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-                shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(itemColor),
+                    .requiredHeight(100.dp)
+                    .weight(0.7f)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Text(
+                    text = toDo.title,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 25.sp,
+                    color = textColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = toDo.description,
+                    fontSize = 18.sp,
+                    color = textColor,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                var hashtag = ""
+                if(toDo.tag.isNotBlank()) {
+                    hashtag = "#"
+                }
+                Text(
+                    text = hashtag + toDo.tag,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 15.sp,
+                    color = unselectedItemColor,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Spacer(
+                modifier = Modifier
+                    .size(10.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .requiredHeight(100.dp)
+            ) {
+                Text(
+                    text = toDo.dueDate + "\n" + toDo.dueTime,
+                    fontSize = 15.sp,
+                    color = textColor,
+                    textAlign = TextAlign.End
+                )
+                FloatingActionButton(
+                    onClick = {
+                        selectedToDo = toDo
+                        clickedFinished = if(toDo.finished){
+                            onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                            onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                            false
+                        } else{
+                            onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                            onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                            true
+                        }
+                    },
+                    modifier = Modifier
+                        .requiredSize(30.dp),
+                    containerColor = buttonColor,
+                    contentColor = selectedItemColor,
+                    shape = RoundedCornerShape(5.dp)
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Top,
-                        modifier = Modifier
-                            .requiredHeight(100.dp)
-                            .weight(0.7f)
-                    ) {
-                        Text(
-                            text = toDo.title,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 25.sp,
-                            color = textColor,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        Text(
-                            text = toDo.description,
-                            fontSize = 18.sp,
-                            color = textColor,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                        var hashtag = ""
-                        if(toDo.tag.isNotBlank()) {
-                            hashtag = "#"
-                        }
-                        Text(
-                            text = hashtag + toDo.tag,
-                            fontStyle = FontStyle.Italic,
-                            fontSize = 15.sp,
-                            color = unselectedItemColor,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                    Spacer(
-                        modifier = Modifier
-                            .size(10.dp)
-                    )
-                    Column(
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .requiredHeight(100.dp)
-                    ) {
-                        Text(
-                            text = toDo.dueDate + "\n" + toDo.dueTime,
-                            fontSize = 15.sp,
-                            color = textColor,
-                            textAlign = TextAlign.End
-                        )
-                        FloatingActionButton(
-                            onClick = {
-                                selectedToDo = toDo
-                                clickedFinished = if(toDo.finished){
-                                    onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
-                                    onTagEvent(TagEvent.CreateTag(title = toDo.tag))
-                                    false
-                                } else{
-                                    onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
-                                    onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
-                                    true
-                                }
-                            },
-                            modifier = Modifier
-                                .requiredSize(30.dp),
-                            containerColor = buttonColor,
-                            contentColor = selectedItemColor,
-                            shape = RoundedCornerShape(5.dp)
-                        ) {
 
-                            if(toDo.finished){
-                                Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
-                            } else{
-                                Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
-                            }
-                        }
+                    if(toDo.finished){
+                        Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+                    } else{
+                        Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
                     }
                 }
             }
@@ -470,7 +483,6 @@ fun ScrollableToDoColumn(
         ToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent)
         PlusButtonRow(onToDoEvent)
     }
-
 }
 
 //Row of scrollable tags
@@ -478,7 +490,7 @@ fun ScrollableToDoColumn(
 fun ScrollableTagRow(
     tagState: TagState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
 ) {
 
     LazyRow(
@@ -491,35 +503,45 @@ fun ScrollableTagRow(
     ) {
         items(tagState.tags) { tag ->
 
-            val buttonColor = remember { mutableStateOf(backgroundColor) }
+            TagItem( onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, tag = tag)
 
-            if (!tag.sort) {
-                buttonColor.value = backgroundColor
-            } else {
-                buttonColor.value = itemColor
-            }
-
-            OutlinedButton(
-                onClick = {
-                    if(tag.sort) {
-                        onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
-                        onTagEvent(TagEvent.DontSortByThisTag(tag.title))
-                    } else {
-                        onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
-                        onTagEvent(TagEvent.SortByThisTag(tag))
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(3.dp),
-                colors = ButtonDefaults.buttonColors(buttonColor.value)
-            ) {
-                Text(
-                    text = "#" + tag.title,
-                    color = textColor
-                )
-            }
         }
+    }
+}
+
+@Composable
+fun TagItem(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
+    tag: Tag
+){
+    val buttonColor = remember { mutableStateOf(backgroundColor) }
+
+    if (!tag.sort) {
+        buttonColor.value = backgroundColor
+    } else {
+        buttonColor.value = itemColor
+    }
+
+    OutlinedButton(
+        onClick = {
+            if(tag.sort) {
+                onToDoEvent(ToDoEvent.RemoveTagToSortToDos(tag.title))
+                onTagEvent(TagEvent.DontSortByThisTag(tag.title))
+            } else {
+                onToDoEvent(ToDoEvent.AddTagToSortToDos(tag.title))
+                onTagEvent(TagEvent.SortByThisTag(tag))
+            }
+        },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(3.dp),
+        colors = ButtonDefaults.buttonColors(buttonColor.value)
+    ) {
+        Text(
+            text = "#" + tag.title,
+            color = textColor
+        )
     }
 }
 

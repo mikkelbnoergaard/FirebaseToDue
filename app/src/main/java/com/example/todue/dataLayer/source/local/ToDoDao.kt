@@ -61,7 +61,6 @@ interface ToDoDao {
     @Query("SELECT MAX(id) FROM todo")
     suspend fun getTotalAmountOfCreatedToDos(): Int
 
-
     @Query("SELECT COUNT(*) FROM todo WHERE finished = 1")
     suspend fun getTotalAmountOfFinishedToDos(): Int
 

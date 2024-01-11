@@ -25,12 +25,12 @@ fun StatisticsScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "Created ToDos: " + toDoState.totalAmountOfCreatedToDos.toString())
+        Text(text = "Created ToDos: " + toDoState.totalAmountOfCreatedToDos)
         Spacer(modifier = Modifier
             .height(10.dp))
-        Text(text = "Finished ToDos: " + toDoState.totalAmountOfFinishedToDos.toString())
+        Text(text = "Finished ToDos: " + toDoState.totalAmountOfFinishedToDos)
         Spacer(modifier = Modifier
             .height(10.dp))
-        Text(text = "Unfinished ToDos: " + toDoState.totalAmountOfUnfinishedToDos.toString())
+        Text(text = "Unfinished ToDos: " + toDoState.totalAmountOfUnfinishedToDos)
     }
 }
