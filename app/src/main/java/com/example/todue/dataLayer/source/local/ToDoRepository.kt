@@ -1,5 +1,6 @@
 package com.example.todue.dataLayer.source.local
 
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -74,6 +75,18 @@ class ToDoRepository @Inject constructor(
     suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int) {
         dataSource.editToDo(newTitle = newTitle, newDescription = newDescription, newTag = newTag, newDueDate = newDueDate, newDueTime = newDueTime, toDoId = toDoId)
     }
+
+
+
+    //for statistics:
+    suspend fun getTotalAmountOfFinishedToDos(): Int {
+        println(dataSource.getTotalAmountOfFinishedToDos())
+        return dataSource.getTotalAmountOfFinishedToDos()
+    }
+
+
+
+
 
 
 

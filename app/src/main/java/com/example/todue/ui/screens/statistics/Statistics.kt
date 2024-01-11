@@ -7,11 +7,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.todue.ui.event.ToDoEvent
 
 @Composable
-fun StatisticsScreen() {
+fun StatisticsScreen(
+    onToDoEvent: (ToDoEvent) -> Unit
+) {
+    val totalAmountOfFinishedToDos = remember {mutableIntStateOf(0)}
+    //totalAmountOfFinishedToDos.value = onToDoEvent(ToDoEvent.GetStatistics)
 
     Column(
         modifier = Modifier
@@ -19,7 +26,7 @@ fun StatisticsScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "Statistics")
+        Text(text = onToDoEvent(ToDoEvent.GetStatistics).toString())
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Bottom,

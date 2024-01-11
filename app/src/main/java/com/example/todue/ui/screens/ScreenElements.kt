@@ -38,7 +38,6 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -98,7 +97,7 @@ fun GeneralLayout(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
-    calendarState: CalendarState,
+    calendarState: CalendarState
 ){
 
 
@@ -162,7 +161,7 @@ fun GeneralLayout(
                 0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
-                3 -> StatisticsScreen()
+                3 -> StatisticsScreen(onToDoEvent = onToDoEvent)
                 4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }

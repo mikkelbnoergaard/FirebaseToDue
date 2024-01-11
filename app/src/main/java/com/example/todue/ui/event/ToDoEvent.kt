@@ -17,6 +17,10 @@ sealed interface ToDoEvent {
     data object SortToDosByDueDate: ToDoEvent
     data object ResetToDoState: ToDoEvent
 
+    //for statistics
+    data object GetStatistics: ToDoEvent
+
+
     //used to avoid creating a bunch of todos when testing
     data object PopulateToDoList: ToDoEvent
 

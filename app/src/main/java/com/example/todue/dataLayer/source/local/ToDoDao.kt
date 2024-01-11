@@ -1,5 +1,6 @@
 package com.example.todue.dataLayer.source.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -51,12 +52,32 @@ interface ToDoDao {
     @Query("UPDATE todo SET title = :newTitle, description = :newDescription, tag = :newTag, dueDate = :newDueDate, dueTime = :newDueTime WHERE id = :toDoId")
     suspend fun editToDo(newTitle: String, newDescription: String, newTag: String, newDueDate: String, newDueTime: String, toDoId: Int)
 
-
-
-
-    //does not work yet
     @Query("UPDATE todo SET tag = '' WHERE tag = :tag")
     suspend fun deleteTagFromToDos(tag: String)
+
+
+
+
+/*
+    //for statistics
+    @Query("SELECT COUNT ")
+    fun getTotalAmountOfCreatedToDos(): Int
+
+
+
+ */
+
+    @Query("SELECT COUNT(*) FROM todo WHERE finished = 1")
+    suspend fun getTotalAmountOfFinishedToDos(): Int
+
+
+/*
+    @Query()
+    fun getTotalAmountOfUnfinishedToDos(): Int
+
+
+ */
+
 
 
 
