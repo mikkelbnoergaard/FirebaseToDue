@@ -286,7 +286,8 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
     var clickedFinished by remember { mutableStateOf(false) }
 
@@ -309,7 +310,7 @@ fun ToDoList(
         items(toDoState.toDos) { toDo ->
             val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
+            if (toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
 
             if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
@@ -467,7 +468,7 @@ fun ScrollableToDoColumn(
         if(toDoState.isCreatingToDo){
             CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
         }
-        ToDoList(toDoState, onToDoEvent, onTagEvent)
+        ToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent)
         PlusButtonRow(onToDoEvent)
     }
 

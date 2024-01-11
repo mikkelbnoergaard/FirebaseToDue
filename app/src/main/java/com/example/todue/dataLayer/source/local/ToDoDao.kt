@@ -45,7 +45,7 @@ interface ToDoDao {
     @Query("UPDATE todo SET finished = 0 WHERE id = :toDoId")
     suspend fun unFinishToDo(toDoId: Int)
 
-    @Query("SELECT * FROM todo WHERE dueDate = :date")
+    @Query("SELECT * FROM todo WHERE dueDate = :date AND finished = 0")
     fun getToDosByGivenDate(date: String): Flow<List<ToDo>>
 
     @Query("UPDATE todo SET title = :newTitle, description = :newDescription, tag = :newTag, dueDate = :newDueDate, dueTime = :newDueTime WHERE id = :toDoId")
