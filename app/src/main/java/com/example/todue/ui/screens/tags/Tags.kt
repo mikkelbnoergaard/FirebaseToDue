@@ -1,20 +1,11 @@
 package com.example.todue.ui.screens.tags
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.QuestionMark
 import androidx.compose.material.icons.outlined.Visibility
@@ -35,7 +26,7 @@ import com.example.todue.ui.event.TagEvent
 import com.example.todue.state.TagState
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.screens.TagList
-import com.example.todue.ui.screens.settings.SwitchButton
+import com.example.todue.ui.screens.settings.DarkThemeSwitch
 import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.barColor
 import com.example.todue.ui.theme.textColor

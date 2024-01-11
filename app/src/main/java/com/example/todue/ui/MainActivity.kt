@@ -2,6 +2,7 @@
 
 package com.example.todue.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.todue.dataLayer.source.local.DataStoreUtil
 import com.example.todue.ui.theme.ToDoTheme
 import com.example.todue.di.DatabaseModules
 import com.example.todue.ui.screens.tags.TagsViewModel
@@ -26,6 +28,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.TagEvent
+import com.example.todue.ui.screens.settings.DarkThemeSwitch
+import com.example.todue.ui.theme.ThemeViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -65,10 +69,27 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+    private val themeViewModel: ThemeViewModel by viewModels()
+    private lateinit var dataStoreUtil: DataStoreUtil
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
+
+        dataStoreUtil = DataStoreUtil(applicationContext)
+        val systemTheme = when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> { true }
+            Configuration.UI_MODE_NIGHT_NO -> { false }
+            else -> { false }
+        }
         setContent {
-            ToDoTheme {
+            val theme = dataStoreUtil.getTheme(systemTheme).collectAsState(initial = systemTheme)
+
+
+            ToDoTheme(
+                useDarkTheme = theme.value
+            ) {
                 val toDoState by toDosViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.

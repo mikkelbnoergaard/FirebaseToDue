@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -27,6 +28,8 @@ import com.example.todue.ui.screens.ScrollableToDoColumn
 import com.example.todue.ui.screens.TagList
 import com.example.todue.ui.screens.tags.ScaffoldTags
 import com.example.todue.ui.theme.backgroundColor
+import com.example.todue.ui.theme.md_theme_dark_primaryContainer
+import com.example.todue.ui.theme.md_theme_light_onPrimary
 import com.example.todue.ui.theme.textColor
 @Composable
 fun ToDosScreen(
@@ -52,8 +55,8 @@ fun ScaffoldToDos(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor,
-                    titleContentColor = textColor,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
                     Text(

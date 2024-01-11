@@ -116,4 +116,8 @@ dependencies {
 
     // Handling of GIF via glide
     implementation("com.github.skydoves:landscapist-glide:1.3.7")
+
+    //Date store dependency to handle theme changing
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
 }

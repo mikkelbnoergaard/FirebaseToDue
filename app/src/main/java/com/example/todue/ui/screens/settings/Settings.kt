@@ -1,6 +1,8 @@
 package com.example.todue.ui.screens.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,16 +41,17 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todue.dataLayer.source.local.DataStoreUtil
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.event.ToDoEvent
-import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.*
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
 ){
     Column(
         modifier = Modifier
@@ -60,15 +65,15 @@ fun Settings(
 @Composable
 fun ScaffoldSettings(
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit,
 ) {
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor,
-                    titleContentColor = textColor,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
                     Text(
@@ -106,7 +111,7 @@ fun ScaffoldSettings(
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(text = "Dark Theme")
                 Spacer(Modifier.width(spaceAfterOption))
-                SwitchButton()
+                DarkThemeSwitch()
             }
             // Switch button messes with distance between
             // the options, so this spacer is hard coded
@@ -142,7 +147,7 @@ fun ScaffoldSettings(
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(text = "Notifications")
                 Spacer(Modifier.width(spaceAfterOption))
-                SwitchButton()
+                NotificationSwitch()
 
             }
 
@@ -203,17 +208,34 @@ fun ScaffoldSettings(
 }
 
 @Composable
-fun SwitchButton() {
-    var checked by remember { mutableStateOf(false) }
+fun NotificationSwitch() {
+    TODO("Not yet implemented")
+}
 
+@Composable
+fun DarkThemeSwitch(
+    //dataStoreUtil: DataStoreUtil,
+    //themeViewModel: ThemeViewModel
+) {
+    //var switchState by remember {themeViewModel.isDarkThemeEnabled }
+    //val coroutineScope = rememberCoroutineScope()
+
+
+    /*
     Switch(
-        checked = checked,
+        checked = switchState,
         onCheckedChange = {
-            checked = it
+            switchState = it
+
+            coroutineScope.launch {
+                dataStoreUtil.saveTheme(it)
+            }
         },
         modifier = Modifier
             .scale(0.8f)
     )
+
+     */
 }
 
 /*

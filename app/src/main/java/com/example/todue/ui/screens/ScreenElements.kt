@@ -66,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todue.dataLayer.source.local.DataStoreUtil
 import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
@@ -81,6 +82,7 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
+import com.example.todue.ui.theme.ThemeViewModel
 import com.example.todue.ui.theme.barColor
 import com.example.todue.ui.theme.itemColor
 import com.example.todue.ui.theme.textColor
@@ -101,7 +103,6 @@ fun GeneralLayout(
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState,
 ){
-
 
     val tabItems = listOf(
         TabItem(
