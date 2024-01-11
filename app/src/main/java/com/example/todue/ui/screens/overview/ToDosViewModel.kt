@@ -1,6 +1,5 @@
 package com.example.todue.ui.screens.overview
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todue.dataLayer.source.local.ToDo
@@ -24,8 +23,6 @@ class ToDosViewModel(
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
     private val search = MutableStateFlow("")
     private val selectedCalendarDate = MutableStateFlow("")
-
-    val finishedToDosCountState = mutableStateOf(0)
 
     private var sortInt = 0
 
@@ -381,7 +378,13 @@ class ToDosViewModel(
 
             is ToDoEvent.GetStatistics -> {
                 viewModelScope.launch {
-                    finishedToDosCountState.value = toDoRepository.getTotalAmountOfFinishedToDos()
+                    _toDoState.update {
+                        it.copy(
+                            totalAmountOfCreatedToDos = toDoRepository.getTotalAmountOfCreatedToDos(),
+                            totalAmountOfFinishedToDos = toDoRepository.getTotalAmountOfFinishedToDos(),
+                            totalAmountOfUnfinishedToDos = toDoRepository.getTotalAmountOfUnfinishedToDos()
+                        )
+                    }
                 }
             }
         }

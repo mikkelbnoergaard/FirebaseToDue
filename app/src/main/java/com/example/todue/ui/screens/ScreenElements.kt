@@ -161,7 +161,7 @@ fun GeneralLayout(
                 0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
-                3 -> StatisticsScreen(onToDoEvent = onToDoEvent)
+                3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
                 4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }

@@ -1,11 +1,9 @@
 package com.example.todue.dataLayer.source.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-// import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 
@@ -58,25 +56,18 @@ interface ToDoDao {
 
 
 
-/*
+
     //for statistics
-    @Query("SELECT COUNT ")
-    fun getTotalAmountOfCreatedToDos(): Int
+    @Query("SELECT MAX(id) FROM todo")
+    suspend fun getTotalAmountOfCreatedToDos(): Int
 
-
-
- */
 
     @Query("SELECT COUNT(*) FROM todo WHERE finished = 1")
     suspend fun getTotalAmountOfFinishedToDos(): Int
 
+    @Query("SELECT COUNT(*) FROM todo WHERE finished = 0")
+    suspend fun getTotalAmountOfUnfinishedToDos(): Int
 
-/*
-    @Query()
-    fun getTotalAmountOfUnfinishedToDos(): Int
-
-
- */
 
 
 
