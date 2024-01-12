@@ -568,7 +568,7 @@ fun TagItem(
             if (!tag.sort) {
                 MaterialTheme.colorScheme.onBackground
             } else {
-                MaterialTheme.colorScheme.onSecondary
+                MaterialTheme.colorScheme.onPrimary
             }
         )
     }
@@ -600,13 +600,13 @@ fun TopBar(
             value = toDoState.searchInToDos,
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedIndicatorColor = Color.Transparent,
-                backgroundColor = MaterialTheme.colorScheme.onSecondary,
+                disabledIndicatorColor = MaterialTheme.colorScheme.onSecondary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSecondary,
+                backgroundColor = MaterialTheme.colorScheme.secondary,
                 textColor = MaterialTheme.colorScheme.onSurface,
-                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                placeholderColor =  MaterialTheme.colorScheme.onSurface,
-                cursorColor =  MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                placeholderColor =  MaterialTheme.colorScheme.onSecondary,
+                cursorColor =  MaterialTheme.colorScheme.onSurface,
             ),
             onValueChange = {
                 onToDoEvent(ToDoEvent.SetSearchInToDos(it))

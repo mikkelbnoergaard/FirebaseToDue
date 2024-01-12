@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
@@ -90,22 +92,27 @@ fun CalendarToDoList(
             ElevatedCard(
                 modifier = Modifier
                     .padding(10.dp)
+                    .fillMaxWidth()
                     .fillMaxSize(),
                 elevation = CardDefaults.elevatedCardElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
             ) {
-                AndroidView(factory = { CalendarView(it) } , update = {
-                    it.setOnDateChangeListener { _, year, month, day ->
-                        if (day < 10) {
-                            dayZero = "0"
+                Box(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    AndroidView(factory = { CalendarView(it) } , update = {
+                        it.setOnDateChangeListener { _, year, month, day ->
+                            if (day < 10) {
+                                dayZero = "0"
+                            }
+                            if (month < 10) {
+                                monthZero = "0"
+                            }
+                            selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
+                            onCalendarEvent(CalendarEvent.SortToDosByGivenDate(selectedDate))
                         }
-                        if (month < 10) {
-                            monthZero = "0"
-                        }
-                        selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
-                        onCalendarEvent(CalendarEvent.SortToDosByGivenDate(selectedDate))
-                    }
-                })
+                    })
+                }
             }
         }
 
@@ -116,7 +123,12 @@ fun CalendarToDoList(
                     onToDoEvent(ToDoEvent.ShowToDoDialog)
                 },
                 modifier = Modifier
-                    .border(border = BorderStroke(10.dp, androidx.compose.ui.graphics.Color.Transparent))
+                    .border(
+                        border = BorderStroke(
+                            10.dp,
+                            androidx.compose.ui.graphics.Color.Transparent
+                        )
+                    )
                     .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                     .requiredWidth(width - 40.dp)
                     .fillMaxHeight(),
