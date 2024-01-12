@@ -100,7 +100,7 @@ fun StatisticsScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Text(text = "" + toDoState.totalAmountOfUnfinishedToDos)
+                    Text(text = "" + toDoState.totalAmountOfFinishedToDos)
                     Text(text = "Finished")
                     Text(text = "ToDos")
                 }
