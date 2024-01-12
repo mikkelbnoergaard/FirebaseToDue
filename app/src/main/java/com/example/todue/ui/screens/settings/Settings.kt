@@ -190,6 +190,8 @@ fun ScaffoldSettings(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
+
+            //this row is not meant to be included on release, it's purely for testing and showing the application
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
@@ -230,6 +232,7 @@ fun DarkThemeSwitch(
     darkThemeProvider: DarkThemeProvider
 ) {
     var checked by remember { mutableStateOf(false) }
+
 
     Switch(
         checked = checked,

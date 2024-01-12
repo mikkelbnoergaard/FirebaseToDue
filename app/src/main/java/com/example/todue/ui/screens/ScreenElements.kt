@@ -26,6 +26,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -81,9 +82,9 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
-import com.example.todue.ui.theme.backgroundColor
-import com.example.todue.ui.theme.itemColor
-import com.example.todue.ui.theme.tagColor
+//import com.example.todue.ui.theme.backgroundColor
+//import com.example.todue.ui.theme.itemColor
+//import com.example.todue.ui.theme.tagColor
 
 
 //The general layout used on all the screens with navigation bar
@@ -157,7 +158,7 @@ fun GeneralLayout(
         ) {index ->
             when(index){
                 0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
-                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
                 4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
@@ -197,19 +198,25 @@ fun GeneralLayout(
 
 @Composable
 fun FilterButton(
-    // Currently only filters for completed todos
+    toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ) {
     var clicked by remember { mutableStateOf(false) }
+    if(toDoState.sortByFinished) {
+        clicked = true
+    }
 
     FloatingActionButton(
         onClick = {
             clicked = if (!clicked) {
-                onToDoEvent(ToDoEvent.SortToDosByFinished)
+                onToDoEvent(ToDoEvent.SetSortToDosByFinished(true))
+                onTagEvent(TagEvent.SetSortTagsByFinished(true))
                 true
             } else {
                 onToDoEvent(ToDoEvent.SortToDosByDueDate)
+                onToDoEvent(ToDoEvent.SetSortToDosByFinished(false))
+                onTagEvent(TagEvent.SetSortTagsByFinished(false))
                 onTagEvent(TagEvent.ResetTagSort)
                 false
             }
@@ -232,7 +239,8 @@ fun FilterButton(
 fun TagList(
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    toDoState: ToDoState,
 ) {
 
     var selectedTag by remember {
@@ -244,38 +252,47 @@ fun TagList(
             )
         )
     }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight()
+    Column(
+        horizontalAlignment = Alignment.End
     ) {
-        items(tagState.tags) { tag ->
+        TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            items(tagState.tags) { tag ->
 
-            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, tag = selectedTag) }
+                if (tagState.isDeletingTag) {
+                    DeleteTagDialog(
+                        onTagEvent = onTagEvent,
+                        onToDoEvent = onToDoEvent,
+                        tag = selectedTag
+                    )
+                }
 
-            ElevatedButton(
-                onClick = {
-                    selectedTag = tag
-                    onTagEvent(TagEvent.ShowDeleteDialog)
-                },
-                modifier = Modifier
-                    .border(border = BorderStroke(10.dp, Color.Transparent))
-                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-                shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-            ) {
+                ElevatedButton(
+                    onClick = {
+                        selectedTag = tag
+                        onTagEvent(TagEvent.ShowDeleteDialog)
+                    },
+                    modifier = Modifier
+                        .border(border = BorderStroke(10.dp, Color.Transparent))
+                        .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+                    shape = RoundedCornerShape(10),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
 
-                Text(
-                    text = "#" + tag.title,
-                    color = MaterialTheme.colorScheme.background
-                )
+                    Text(
+                        text = "#" + tag.title,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                }
             }
         }
     }
-
 }
 
 //List of to-do composables, used in the scrollable to-do column
@@ -286,25 +303,6 @@ fun ToDoList(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight()
-    ) {
-        items(toDoState.toDos) { toDo ->
-            ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, toDo = toDo)
-        }
-    }
-}
-
-@Composable
-fun ToDoItem(
-    toDoState: ToDoState,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit,
-    toDo: ToDo
-){
-    var clickedFinished by remember { mutableStateOf(false) }
 
     var selectedToDo by remember {
         mutableStateOf(
@@ -317,7 +315,6 @@ fun ToDoItem(
                 finished = false
             ) )
     }
-
     val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
     if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
@@ -328,100 +325,118 @@ fun ToDoItem(
 
     if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
-    ElevatedButton(
-        onClick = {
-            selectedToDo = toDo
-            onToDoEvent(ToDoEvent.ShowToDoDialog)
-        },
+    LazyColumn(
         modifier = Modifier
-            .border(border = BorderStroke(10.dp, Color.Transparent))
-            .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-            .requiredWidth(width - 40.dp)
-            .fillMaxHeight(),
-        elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-        shape = RoundedCornerShape(10),
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+            .fillMaxHeight()
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top,
-                modifier = Modifier
-                    .requiredHeight(100.dp)
-                    .weight(0.7f)
-            ) {
-                Text(
-                    text = toDo.title,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 23.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = toDo.description,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                var hashtag = ""
-                if(toDo.tag.isNotBlank()) {
-                    hashtag = "#"
-                }
-                Text(
-                    text = hashtag + toDo.tag,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(
-                modifier = Modifier
-                    .size(10.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .requiredHeight(100.dp)
-            ) {
-                Text(
-                    text = toDo.dueDate + "\n" + toDo.dueTime,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.End
-                )
-                FloatingActionButton(
-                    onClick = {
-                        selectedToDo = toDo
-                        clickedFinished = if(toDo.finished){
-                            onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
-                            onTagEvent(TagEvent.CreateTag(title = toDo.tag))
-                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
-                            false
-                        } else{
-                            onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
-                            onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
-                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
-                            true
-                        }
-                    },
-                    modifier = Modifier
-                        .requiredSize(30.dp),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = RoundedCornerShape(5.dp)
-                ) {
+        items(toDoState.toDos) { toDo ->
 
-                    if(toDo.finished){
-                        Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+            ElevatedButton(
+                onClick = {
+                    selectedToDo = toDo
+                    onToDoEvent(ToDoEvent.ShowToDoDialog)
+                },
+                modifier = Modifier
+                    .border(border = BorderStroke(10.dp, Color.Transparent))
+                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                    .requiredWidth(width - 40.dp)
+                    .fillMaxHeight(),
+                elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+                shape = RoundedCornerShape(10),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+            ) {
+                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, toDo = toDo)
+            }
+        }
+    }
+}
+
+@Composable
+fun ToDoItem(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    toDo: ToDo
+){
+    var clickedFinished by remember { mutableStateOf(false) }
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .requiredHeight(100.dp)
+                .weight(0.7f)
+        ) {
+            Text(
+                text = toDo.title,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 23.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = toDo.description,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            var hashtag = ""
+            if(toDo.tag.isNotBlank()) {
+                hashtag = "#"
+            }
+            Text(
+                text = hashtag + toDo.tag,
+                fontStyle = FontStyle.Italic,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.primary,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .size(10.dp)
+        )
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .requiredHeight(100.dp)
+        ) {
+            Text(
+                text = toDo.dueDate + "\n" + toDo.dueTime,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.End
+            )
+            FloatingActionButton(
+                onClick = {
+                    clickedFinished = if(toDo.finished){
+                        onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                        onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                        false
                     } else{
-                        Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
+                        onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                        onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                        true
                     }
+                },
+                modifier = Modifier
+                    .requiredSize(30.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(5.dp)
+            ) {
+
+                if(toDo.finished){
+                    Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+                } else{
+                    Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
                 }
             }
         }
@@ -513,7 +528,7 @@ fun TagItem(
     onTagEvent: (TagEvent) -> Unit,
     tag: Tag
 ){
-    // Need to fix this. Doesnt use the light/dark themes, but instead hardcoded colors
+    // Need to fix this. Doesn't use the light/dark themes, but instead hardcoded colors
     /*
     val buttonColor = remember { mutableStateOf(MaterialTheme.colorScheme.background) }
 
@@ -581,9 +596,18 @@ fun TopBar(
         BackHandler(enabled = false, onBack = {
             focusManager.clearFocus()
         })
-
         TextField(
             value = toDoState.searchInToDos,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedIndicatorColor = Color.Transparent,
+                backgroundColor = MaterialTheme.colorScheme.onSecondary,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                cursorColor =  MaterialTheme.colorScheme.primary,
+            ),
             onValueChange = {
                 onToDoEvent(ToDoEvent.SetSearchInToDos(it))
                 onTagEvent(TagEvent.SetSearchInTags(it))
@@ -599,15 +623,15 @@ fun TopBar(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
+                        onToDoEvent(ToDoEvent.SetSearchInToDos(""))
+                        onTagEvent(TagEvent.SetSearchInTags(""))
                     }) {
                     Icon(Icons.Filled.ArrowBack, "Lose focus button")
                 }
 
-
-
             }
         )
-        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState)
     }
 }
 

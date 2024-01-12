@@ -23,6 +23,7 @@ class ToDosViewModel(
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
     private val search = MutableStateFlow("")
     private val selectedCalendarDate = MutableStateFlow("")
+    private val showFinished = MutableStateFlow(false)
 
     private var sortInt = 0
 
@@ -30,11 +31,9 @@ class ToDosViewModel(
     private val _toDos = toDoSortType
         .flatMapLatest { toDoSortType ->
             when(toDoSortType) {
-                ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
-                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value)
-                ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
-                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value)
-                ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
+                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished.value)
+                ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
+                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
                 ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -187,7 +186,7 @@ class ToDosViewModel(
 
             is ToDoEvent.AddTagToSortToDos -> {
                 sortInt++
-                toDoSortType.value = ToDoSortType.DUE_DATE
+                toDoSortType.value = ToDoSortType.PLACEHOLDER
                 toDoSortType.value = ToDoSortType.TAG
             }
 
@@ -199,8 +198,14 @@ class ToDosViewModel(
                 }
             }
 
-            is ToDoEvent.SortToDosByFinished -> {
-                toDoSortType.value = ToDoSortType.FINISHED
+            is ToDoEvent.SetSortToDosByFinished -> {
+                val temp = toDoSortType.value
+                toDoSortType.value = ToDoSortType.PLACEHOLDER
+                toDoSortType.value = temp
+                showFinished.value = toDoEvent.finished
+                _toDoState.update {it.copy(
+                    sortByFinished = toDoEvent.finished
+                )}
             }
 
             is ToDoEvent.SortToDosByDueDate -> {

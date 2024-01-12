@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.ToDoEvent
 
-
 val defaultMaxHeight = 500.dp
 
 @OptIn(ExperimentalMaterial3Api::class)

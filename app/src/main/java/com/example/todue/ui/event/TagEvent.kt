@@ -11,6 +11,7 @@ sealed interface TagEvent {
     //used to avoid creating a bunch of todos when testing
     data object PopulateTags: TagEvent
 
+    data class SetSortTagsByFinished(val finished: Boolean): TagEvent
     data class CreateTag(val title: String): TagEvent
     data class SetTitle(val title: String): TagEvent
     data class IncreaseToDoAmount(val toDoAmount: Int): TagEvent

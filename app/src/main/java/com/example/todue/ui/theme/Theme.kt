@@ -104,7 +104,7 @@ private val DarkColors = darkColorScheme(
 fun ToDoTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    useDarkTheme: Boolean = false,
+    useDarkTheme: Boolean,
     darkThemeProvider: DarkThemeProvider = DarkThemeProvider.provideDarkTheme(),
             content: @Composable() () -> Unit,
 ) {
