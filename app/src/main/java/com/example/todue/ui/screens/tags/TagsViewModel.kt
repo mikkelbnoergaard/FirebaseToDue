@@ -20,13 +20,14 @@ class TagsViewModel(
 ): ViewModel() {
     private val tagSortType = MutableStateFlow(TagSortType.TITLE)
     private val search = MutableStateFlow("")
+    private val showFinished = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _tags = tagSortType
         .flatMapLatest { tagSortType ->
             when(tagSortType) {
-                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search.value)
-                TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search.value)
+                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search.value, showFinished.value)
+                TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search.value, showFinished.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -94,7 +95,7 @@ class TagsViewModel(
             is TagEvent.DecreaseToDoAmount -> {
                 viewModelScope.launch {
                     tagRepository.decreaseToDoAmount(tagEvent.title)
-                    tagRepository.deleteUnusedTags()
+                    //tagRepository.deleteUnusedTags()
                 }
             }
 
@@ -130,6 +131,12 @@ class TagsViewModel(
                     tagRepository.createTag("Final delivery", 6, false)
                     tagRepository.createTag("Cleaning", 2, false)
                 }
+            }
+
+            is TagEvent.SetSortTagsByFinished -> {
+                tagSortType.value = TagSortType.PLACEHOLDER
+                tagSortType.value = TagSortType.TITLE
+                showFinished.value = tagEvent.finished
             }
         }
     }
