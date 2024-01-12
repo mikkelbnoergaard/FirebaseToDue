@@ -1,6 +1,7 @@
 package com.example.todue.ui.screens
 
 import android.widget.ImageView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,8 +25,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -278,6 +281,7 @@ fun CheckToDoDialog(
 
     AlertDialog(
         modifier = Modifier,
+        backgroundColor = MaterialTheme.colorScheme.onPrimary,
         onDismissRequest = {
             onToDoEvent(ToDoEvent.HideToDoDialog)
         },
@@ -287,7 +291,7 @@ fun CheckToDoDialog(
             ) {
                 Row(
                     modifier = Modifier
-                        .border(width = 3.dp, color = Color.LightGray, shape = getBottomLineShape())
+                        .border(width = 3.dp, color = MaterialTheme.colorScheme.tertiary, shape = getBottomLineShape())
                         .padding(bottom = 5.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -297,7 +301,7 @@ fun CheckToDoDialog(
                         text = toDo.title,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 30.sp,
-                        color = textColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .padding(end = 20.dp)
                             .fillMaxWidth(),
@@ -311,8 +315,8 @@ fun CheckToDoDialog(
                         },
                         modifier = Modifier
                             .requiredSize(30.dp),
-                        containerColor = buttonColor,
-                        contentColor = selectedItemColor,
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
                         shape = RoundedCornerShape(5.dp)
                     ) {
                         Icon(
@@ -325,7 +329,7 @@ fun CheckToDoDialog(
                 Text(
                     text = toDo.description,
                     fontSize = 18.sp,
-                    color = textColor,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .padding(top = 5.dp)
                         .fillMaxWidth()
@@ -339,7 +343,7 @@ fun CheckToDoDialog(
                     text = hashtag + toDo.tag,
                     fontStyle = FontStyle.Italic,
                     fontSize = 15.sp,
-                    color = unselectedItemColor,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .padding(top = 5.dp)
                         .fillMaxWidth()
@@ -360,12 +364,12 @@ fun CheckToDoDialog(
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         onClick = {
                             onToDoEvent(ToDoEvent.ShowDeleteToDoDialog)
                         }
                     ) {
-                        Text(text = "Delete")
+                        Text(text = "Delete", color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
                 Box (
@@ -374,7 +378,7 @@ fun CheckToDoDialog(
                     Text(
                         text = toDo.dueDate + "\n" + toDo.dueTime,
                         fontSize = 18.sp,
-                        color = textColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -382,12 +386,12 @@ fun CheckToDoDialog(
                     contentAlignment = Alignment.CenterEnd
                 ) {
                     Button(
-                        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         onClick = {
                             onToDoEvent(ToDoEvent.HideToDoDialog)
                         }
                     ) {
-                        Text(text = "OK")
+                        Text(text = "OK", color = MaterialTheme.colorScheme.onPrimary)
                     }
                 }
             }
@@ -577,7 +581,7 @@ fun FinishToDoDialog(//toDo: ToDo,
                 .width(400.dp)
                 .height(300.dp)
                 .padding(16.dp),
-            backgroundColor = Color.White,
+            backgroundColor = MaterialTheme.colorScheme.onPrimary,
             shape = RoundedCornerShape(16.dp),
             elevation = 10.dp
         ) {
@@ -588,6 +592,7 @@ fun FinishToDoDialog(//toDo: ToDo,
             ) {
                 Text(
                     text = "To-do Completed!",
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -647,7 +652,7 @@ fun GifScreen() {
                     .clip(RoundedCornerShape(15.dp))
             )
         } else {
-            Text(text = "Loading GIF...")
+            Text(text = "Loading GIF...", color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
