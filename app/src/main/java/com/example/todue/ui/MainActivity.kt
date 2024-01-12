@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
         setContent {
-            ToDoTheme {
+            ToDoTheme(useDarkTheme = isSystemInDarkTheme()) {
                 val toDoState by toDosViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.

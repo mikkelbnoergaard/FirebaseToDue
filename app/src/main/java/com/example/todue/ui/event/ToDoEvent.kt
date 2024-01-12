@@ -13,7 +13,6 @@ sealed interface ToDoEvent {
     data object HideToDoDialog: ToDoEvent
     data object ShowEditToDoDialog: ToDoEvent
     data object HideEditToDoDialog: ToDoEvent
-    data object SortToDosByFinished: ToDoEvent
     data object SortToDosByDueDate: ToDoEvent
     data object ResetToDoState: ToDoEvent
 
@@ -25,6 +24,7 @@ sealed interface ToDoEvent {
     data object PopulateToDoList: ToDoEvent
 
 
+    data class SetSortToDosByFinished(val finished: Boolean): ToDoEvent
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent
     data class SetTag(val tag: String): ToDoEvent

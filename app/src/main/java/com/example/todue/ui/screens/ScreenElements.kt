@@ -206,10 +206,11 @@ fun FilterButton(
     FloatingActionButton(
         onClick = {
             clicked = if (!clicked) {
-                onToDoEvent(ToDoEvent.SortToDosByFinished)
+                onToDoEvent(ToDoEvent.SetSortToDosByFinished(true))
                 true
             } else {
                 onToDoEvent(ToDoEvent.SortToDosByDueDate)
+                onToDoEvent(ToDoEvent.SetSortToDosByFinished(false))
                 onTagEvent(TagEvent.ResetTagSort)
                 false
             }

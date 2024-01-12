@@ -23,6 +23,7 @@ class ToDosViewModel(
     private val toDoSortType = MutableStateFlow(ToDoSortType.DUE_DATE)
     private val search = MutableStateFlow("")
     private val selectedCalendarDate = MutableStateFlow("")
+    private val showFinished = MutableStateFlow(false)
 
     private var sortInt = 0
 
@@ -31,9 +32,9 @@ class ToDosViewModel(
         .flatMapLatest { toDoSortType ->
             when(toDoSortType) {
                 ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
-                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value)
+                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished.value)
                 ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
-                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value)
+                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
                 ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
                 ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
             }
@@ -199,8 +200,11 @@ class ToDosViewModel(
                 }
             }
 
-            is ToDoEvent.SortToDosByFinished -> {
-                toDoSortType.value = ToDoSortType.FINISHED
+            is ToDoEvent.SetSortToDosByFinished -> {
+                val temp = toDoSortType.value
+                toDoSortType.value = ToDoSortType.DESCRIPTION
+                toDoSortType.value = temp
+                showFinished.value = toDoEvent.finished
             }
 
             is ToDoEvent.SortToDosByDueDate -> {
