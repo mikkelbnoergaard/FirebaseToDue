@@ -6,14 +6,6 @@ import javax.inject.Inject
 class ToDoRepository @Inject constructor(
     private val dataSource: ToDoDao
 ){
-
-    /*
-    fun observeAll() : Flow<List<ToDo>> {
-        return dataSource.observeAll()
-    }
-
-     */
-
     suspend fun createToDo(title: String,
                            description: String,
                            tag: String,
@@ -43,24 +35,12 @@ class ToDoRepository @Inject constructor(
         dataSource.deleteToDo(toDo)
     }
 
-    fun getToDosOrderedByTitle() : Flow<List<ToDo>> {
-        return dataSource.getToDosOrderedByTitle()
-    }
-
     fun getToDosOrderedByTags(search: String, finished: Boolean) : Flow<List<ToDo>> {
         return dataSource.getToDosOrderedByTags(search, finished)
     }
 
-    fun getToDosOrderedByDescription(): Flow<List<ToDo>> {
-        return dataSource.getToDosOrderedByDescription()
-    }
-
     fun getToDosOrderedByDueDate(search: String, finished: Boolean): Flow<List<ToDo>> {
         return dataSource.getToDosOrderedByDueDate(search, finished)
-    }
-
-    fun getFinishedToDos(): Flow<List<ToDo>> {
-        return dataSource.getFinishedToDos()
     }
 
     fun getToDosByGivenDate(date: String): Flow<List<ToDo>> {
@@ -77,7 +57,9 @@ class ToDoRepository @Inject constructor(
 
 
 
+
     //for statistics. they have to check for null, if not then app doesn't work when 0 todos are created
+    //warnings are wrong, app doesn't run correctly without if statements
     suspend fun getTotalAmountOfCreatedToDos(): Int {
         return if(dataSource.getTotalAmountOfCreatedToDos() != null) {
             dataSource.getTotalAmountOfCreatedToDos()

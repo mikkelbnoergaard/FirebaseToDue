@@ -19,7 +19,7 @@ data class ToDoState(
     val isCheckingToDo: Boolean = false,
     val isEditingToDo: Boolean = false,
     val isFinishingToDo: Boolean = false,
-    val toDoSortType: ToDoSortType = ToDoSortType.TITLE,
+    val toDoSortType: ToDoSortType = ToDoSortType.DUE_DATE,
     val searchInToDos: String = "",
     val sortByFinished: Boolean = false,
 

@@ -19,14 +19,8 @@ interface ToDoDao {
     @Query("SELECT * FROM todo")
     fun observeAll(): Flow<List<ToDo>>
 
-    @Query("SELECT * FROM todo WHERE finished IS 0 ORDER BY title")
-    fun getToDosOrderedByTitle(): Flow<List<ToDo>>
-
     @Query("SELECT * FROM todo t WHERE (title LIKE '%' || :search || '%' OR description LIKE '%' || :search || '%' OR tag LIKE '%' || :search || '%') AND EXISTS (SELECT title FROM tag tag WHERE tag.sort = 1 AND tag.title = t.tag) AND t.finished = :finished ORDER BY t.dueDate, t.DueTime")
     fun getToDosOrderedByTags(search: String, finished: Boolean): Flow<List<ToDo>>
-
-    @Query("SELECT * FROM todo ORDER BY description")
-    fun getToDosOrderedByDescription(): Flow<List<ToDo>>
 
     @Query("SELECT * FROM todo WHERE finished = :finished AND (" +
             "title LIKE '%' || :search || '%'" +
@@ -34,9 +28,6 @@ interface ToDoDao {
             "OR tag LIKE '%' || :search || '%'" +
             ") ORDER BY dueDate, dueTime")
     fun getToDosOrderedByDueDate(search: String, finished: Boolean): Flow<List<ToDo>>
-
-    @Query("SELECT * FROM todo WHERE finished = 1 ORDER BY dueDate, dueTime")
-    fun getFinishedToDos(): Flow<List<ToDo>>
 
     @Query("UPDATE todo SET finished = 1 WHERE id = :toDoId")
     suspend fun finishToDo(toDoId: Int)

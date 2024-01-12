@@ -600,7 +600,7 @@ fun FinishToDoDialog(
 
 @Composable
 fun GifScreen() {
-    // MutableState is used to track Gif URLs
+    //MutableState is used to track Gif URLs
     //val context = LocalContext.current
 
     val searchTerm = "Applause @reactions"

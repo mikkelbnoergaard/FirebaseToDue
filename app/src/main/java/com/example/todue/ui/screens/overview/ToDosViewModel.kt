@@ -31,11 +31,9 @@ class ToDosViewModel(
     private val _toDos = toDoSortType
         .flatMapLatest { toDoSortType ->
             when(toDoSortType) {
-                ToDoSortType.TITLE -> toDoRepository.getToDosOrderedByTitle()
                 ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished.value)
-                ToDoSortType.DESCRIPTION -> toDoRepository.getToDosOrderedByDescription()
+                ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
                 ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
-                ToDoSortType.FINISHED -> toDoRepository.getFinishedToDos()
                 ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -188,7 +186,7 @@ class ToDosViewModel(
 
             is ToDoEvent.AddTagToSortToDos -> {
                 sortInt++
-                toDoSortType.value = ToDoSortType.DUE_DATE
+                toDoSortType.value = ToDoSortType.PLACEHOLDER
                 toDoSortType.value = ToDoSortType.TAG
             }
 
@@ -202,7 +200,7 @@ class ToDosViewModel(
 
             is ToDoEvent.SetSortToDosByFinished -> {
                 val temp = toDoSortType.value
-                toDoSortType.value = ToDoSortType.DESCRIPTION
+                toDoSortType.value = ToDoSortType.PLACEHOLDER
                 toDoSortType.value = temp
                 showFinished.value = toDoEvent.finished
                 _toDoState.update {it.copy(
