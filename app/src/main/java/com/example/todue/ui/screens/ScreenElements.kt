@@ -157,7 +157,7 @@ fun GeneralLayout(
         ) {index ->
             when(index){
                 0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
-                1 -> TagsScreen(tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+                1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
                 4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
@@ -197,11 +197,14 @@ fun GeneralLayout(
 
 @Composable
 fun FilterButton(
-    // Currently only filters for completed todos
+    toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit
 ) {
     var clicked by remember { mutableStateOf(false) }
+    if(toDoState.sortByFinished) {
+        clicked = true
+    }
 
     FloatingActionButton(
         onClick = {
@@ -235,7 +238,8 @@ fun FilterButton(
 fun TagList(
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    toDoState: ToDoState,
 ) {
 
     var selectedTag by remember {
@@ -247,38 +251,47 @@ fun TagList(
             )
         )
     }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight()
+    Column(
+        horizontalAlignment = Alignment.End
     ) {
-        items(tagState.tags) { tag ->
+        TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            items(tagState.tags) { tag ->
 
-            if (tagState.isDeletingTag) { DeleteTagDialog(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, tag = selectedTag) }
+                if (tagState.isDeletingTag) {
+                    DeleteTagDialog(
+                        onTagEvent = onTagEvent,
+                        onToDoEvent = onToDoEvent,
+                        tag = selectedTag
+                    )
+                }
 
-            ElevatedButton(
-                onClick = {
-                    selectedTag = tag
-                    onTagEvent(TagEvent.ShowDeleteDialog)
-                },
-                modifier = Modifier
-                    .border(border = BorderStroke(10.dp, Color.Transparent))
-                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-                shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-            ) {
+                ElevatedButton(
+                    onClick = {
+                        selectedTag = tag
+                        onTagEvent(TagEvent.ShowDeleteDialog)
+                    },
+                    modifier = Modifier
+                        .border(border = BorderStroke(10.dp, Color.Transparent))
+                        .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+                    shape = RoundedCornerShape(10),
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
 
-                Text(
-                    text = "#" + tag.title,
-                    color = MaterialTheme.colorScheme.background
-                )
+                    Text(
+                        text = "#" + tag.title,
+                        color = MaterialTheme.colorScheme.background
+                    )
+                }
             }
         }
     }
-
 }
 
 //List of to-do composables, used in the scrollable to-do column
@@ -606,11 +619,9 @@ fun TopBar(
                     Icon(Icons.Filled.ArrowBack, "Lose focus button")
                 }
 
-
-
             }
         )
-        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+        FilterButton(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState)
     }
 }
 

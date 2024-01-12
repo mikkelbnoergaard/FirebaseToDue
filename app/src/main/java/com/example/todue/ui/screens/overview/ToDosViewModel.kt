@@ -205,6 +205,9 @@ class ToDosViewModel(
                 toDoSortType.value = ToDoSortType.DESCRIPTION
                 toDoSortType.value = temp
                 showFinished.value = toDoEvent.finished
+                _toDoState.update {it.copy(
+                    sortByFinished = toDoEvent.finished
+                )}
             }
 
             is ToDoEvent.SortToDosByDueDate -> {

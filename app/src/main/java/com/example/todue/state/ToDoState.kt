@@ -21,6 +21,7 @@ data class ToDoState(
     val isFinishingToDo: Boolean = false,
     val toDoSortType: ToDoSortType = ToDoSortType.TITLE,
     val searchInToDos: String = "",
+    val sortByFinished: Boolean = false,
 
     //for statistics
     val totalAmountOfFinishedToDos: Int = 0,
