@@ -1,8 +1,6 @@
 package com.example.todue.ui.screens.settings
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,19 +31,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.todue.dataLayer.source.local.DataStoreUtil
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.theme.*
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -67,13 +61,12 @@ fun ScaffoldSettings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
 ) {
-
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 title = {
                     Text(
@@ -97,7 +90,9 @@ fun ScaffoldSettings(
             val spaceAfterOption = 150.dp
             val rowHeight = 40.dp
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -111,13 +106,15 @@ fun ScaffoldSettings(
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(text = "Dark Theme")
                 Spacer(Modifier.width(spaceAfterOption))
-                DarkThemeSwitch()
+                DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
             }
             // Switch button messes with distance between
             // the options, so this spacer is hard coded
             //Spacer(Modifier.size(18.dp))
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -133,7 +130,9 @@ fun ScaffoldSettings(
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -152,7 +151,9 @@ fun ScaffoldSettings(
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -168,7 +169,9 @@ fun ScaffoldSettings(
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -183,7 +186,9 @@ fun ScaffoldSettings(
                 Text(text = "About")
             }
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
@@ -202,40 +207,36 @@ fun ScaffoldSettings(
                 Text(text = "Populate ToDo list")
             }
             Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier.width(350.dp).align(Alignment.CenterHorizontally), thickness = 1.dp, color = barColor)
+            Divider(modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
         }
     }
 }
 
 @Composable
 fun NotificationSwitch() {
-    TODO("Not yet implemented")
-}
+    var checked by remember { mutableStateOf(false) }
+
+    Switch(
+        checked = checked,
+        onCheckedChange = {
+            checked = it
+        }
+    )}
 
 @Composable
 fun DarkThemeSwitch(
-    //dataStoreUtil: DataStoreUtil,
-    //themeViewModel: ThemeViewModel
+    darkThemeProvider: DarkThemeProvider
 ) {
-    //var switchState by remember {themeViewModel.isDarkThemeEnabled }
-    //val coroutineScope = rememberCoroutineScope()
+    var checked by remember { mutableStateOf(false) }
 
-
-    /*
     Switch(
-        checked = switchState,
+        checked = checked,
         onCheckedChange = {
-            switchState = it
-
-            coroutineScope.launch {
-                dataStoreUtil.saveTheme(it)
-            }
-        },
-        modifier = Modifier
-            .scale(0.8f)
+            checked = it
+        }
     )
-
-     */
 }
 
 /*

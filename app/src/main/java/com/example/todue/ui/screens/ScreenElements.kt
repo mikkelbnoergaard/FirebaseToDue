@@ -41,6 +41,7 @@ import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -80,13 +81,10 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
-import com.example.todue.ui.theme.barColor
-import com.example.todue.ui.theme.itemColor
-import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.backgroundColor
-import com.example.todue.ui.theme.buttonColor
-import com.example.todue.ui.theme.selectedItemColor
-import com.example.todue.ui.theme.unselectedItemColor
+import com.example.todue.ui.theme.itemColor
+import com.example.todue.ui.theme.tagColor
+
 
 //The general layout used on all the screens with navigation bar
 @OptIn(ExperimentalFoundationApi::class)
@@ -168,7 +166,7 @@ fun GeneralLayout(
         }
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            containerColor = barColor,
+            containerColor = MaterialTheme.colorScheme.tertiary,
 
             //indicator to avoid ugly line under selected tab
             indicator = {
@@ -180,8 +178,8 @@ fun GeneralLayout(
                     selected = index == selectedTabIndex,
                     onClick = { selectedTabIndex = index },
                     modifier = Modifier,
-                    unselectedContentColor = unselectedItemColor,
-                    selectedContentColor = selectedItemColor,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSecondary,
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
                     icon = {
                         Icon(
                             modifier = Modifier,
@@ -216,8 +214,8 @@ fun FilterButton(
                 false
             }
         },
-        containerColor = buttonColor,
-        contentColor = selectedItemColor,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
         modifier = Modifier
             .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 5.dp)
             .requiredSize(50.dp)
@@ -267,12 +265,12 @@ fun TagList(
                     .fillMaxHeight(),
                 elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(buttonColor)
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
             ) {
 
                 Text(
                     text = "#" + tag.title,
-                    color = textColor
+                    color = MaterialTheme.colorScheme.background
                 )
             }
         }
@@ -342,7 +340,7 @@ fun ToDoItem(
             .fillMaxHeight(),
         elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
         shape = RoundedCornerShape(10),
-        colors = ButtonDefaults.buttonColors(itemColor),
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -357,15 +355,15 @@ fun ToDoItem(
                 Text(
                     text = toDo.title,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp,
-                    color = textColor,
+                    fontSize = 23.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = toDo.description,
                     fontSize = 18.sp,
-                    color = textColor,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -377,7 +375,7 @@ fun ToDoItem(
                     text = hashtag + toDo.tag,
                     fontStyle = FontStyle.Italic,
                     fontSize = 15.sp,
-                    color = unselectedItemColor,
+                    color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis
                 )
             }
@@ -394,7 +392,7 @@ fun ToDoItem(
                 Text(
                     text = toDo.dueDate + "\n" + toDo.dueTime,
                     fontSize = 15.sp,
-                    color = textColor,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.End
                 )
                 FloatingActionButton(
@@ -414,8 +412,8 @@ fun ToDoItem(
                     },
                     modifier = Modifier
                         .requiredSize(30.dp),
-                    containerColor = buttonColor,
-                    contentColor = selectedItemColor,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     shape = RoundedCornerShape(5.dp)
                 ) {
 
@@ -452,8 +450,8 @@ fun PlusButtonRow(
                 onClick = {
                     onToDoEvent(ToDoEvent.ShowCreateDialog)
                 },
-                containerColor = buttonColor,
-                contentColor = selectedItemColor,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .padding(end = 10.dp)
                     .requiredSize(50.dp)
@@ -497,7 +495,7 @@ fun ScrollableTagRow(
         modifier = Modifier
             .requiredHeight(50.dp)
             .fillMaxWidth()
-            .border(width = 3.dp, color = barColor, shape = getBottomLineShape())
+            .border(width = 3.dp, color = MaterialTheme.colorScheme.onSecondary, shape = getBottomLineShape())
             .padding(start = 10.dp, top = 5.dp, bottom = 5.dp)
 
     ) {
@@ -515,14 +513,18 @@ fun TagItem(
     onTagEvent: (TagEvent) -> Unit,
     tag: Tag
 ){
-    val buttonColor = remember { mutableStateOf(backgroundColor) }
+    // Need to fix this. Doesnt use the light/dark themes, but instead hardcoded colors
+    /*
+    val buttonColor = remember { mutableStateOf(MaterialTheme.colorScheme.background) }
 
     if (!tag.sort) {
-        buttonColor.value = backgroundColor
+        buttonColor.value = MaterialTheme.colorScheme.background
     } else {
-        buttonColor.value = itemColor
+        buttonColor.value = MaterialTheme.colorScheme.primary
     }
 
+
+     */
     OutlinedButton(
         onClick = {
             if(tag.sort) {
@@ -536,11 +538,23 @@ fun TagItem(
         modifier = Modifier
             .fillMaxSize()
             .padding(3.dp),
-        colors = ButtonDefaults.buttonColors(buttonColor.value)
+        colors = ButtonDefaults.buttonColors(
+            if (!tag.sort) {
+                MaterialTheme.colorScheme.background
+            } else {
+                MaterialTheme.colorScheme.primary
+            }
+        )
     ) {
         Text(
             text = "#" + tag.title,
-            color = textColor
+            color =
+
+            if (!tag.sort) {
+                MaterialTheme.colorScheme.onBackground
+            } else {
+                MaterialTheme.colorScheme.onSecondary
+            }
         )
     }
 }
@@ -555,8 +569,8 @@ fun TopBar(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.09f)
-            .background(backgroundColor)
-            .border(width = 3.dp, color = barColor, shape = getBottomLineShape()),
+            .background(MaterialTheme.colorScheme.background)
+            .border(width = 3.dp, color = MaterialTheme.colorScheme.background, shape = getBottomLineShape()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {

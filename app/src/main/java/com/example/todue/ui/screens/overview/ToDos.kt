@@ -31,6 +31,7 @@ import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.md_theme_dark_primaryContainer
 import com.example.todue.ui.theme.md_theme_light_onPrimary
 import com.example.todue.ui.theme.textColor
+
 @Composable
 fun ToDosScreen(
     toDoState: ToDoState,
@@ -55,8 +56,8 @@ fun ScaffoldToDos(
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
                 title = {
                     Text(

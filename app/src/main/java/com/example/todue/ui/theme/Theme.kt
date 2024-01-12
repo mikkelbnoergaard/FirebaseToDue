@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -57,7 +58,6 @@ private val LightColors = lightColorScheme(
     onBackground = md_theme_light_onBackground,
     surface = md_theme_light_surface,
     onSurface = md_theme_light_onSurface,
-    surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
     outline = md_theme_light_outline,
     inverseOnSurface = md_theme_light_inverseOnSurface,
@@ -105,8 +105,9 @@ private val DarkColors = darkColorScheme(
 fun ToDoTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    useDarkTheme: Boolean = false,
+    darkThemeProvider: DarkThemeProvider = DarkThemeProvider.provideDarkTheme(),
+            content: @Composable() () -> Unit,
 ) {
     /*
     val colorScheme = when {
