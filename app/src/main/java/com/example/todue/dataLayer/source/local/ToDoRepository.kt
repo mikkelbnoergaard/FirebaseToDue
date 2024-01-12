@@ -77,7 +77,7 @@ class ToDoRepository @Inject constructor(
 
 
 
-    //for statistics:
+    //for statistics. they have to check for null, if not then app doesn't work when 0 todos are created
     suspend fun getTotalAmountOfCreatedToDos(): Int {
         return if(dataSource.getTotalAmountOfCreatedToDos() != null) {
             dataSource.getTotalAmountOfCreatedToDos()

@@ -286,25 +286,6 @@ fun ToDoList(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight()
-    ) {
-        items(toDoState.toDos) { toDo ->
-            ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, toDo = toDo)
-        }
-    }
-}
-
-@Composable
-fun ToDoItem(
-    toDoState: ToDoState,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit,
-    toDo: ToDo
-){
-    var clickedFinished by remember { mutableStateOf(false) }
 
     var selectedToDo by remember {
         mutableStateOf(
@@ -318,110 +299,128 @@ fun ToDoItem(
             ) )
     }
 
-    val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
-
-    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
-
-    if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
-
-    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
-
-    if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
-
-    ElevatedButton(
-        onClick = {
-            selectedToDo = toDo
-            onToDoEvent(ToDoEvent.ShowToDoDialog)
-        },
+    LazyColumn(
         modifier = Modifier
-            .border(border = BorderStroke(10.dp, Color.Transparent))
-            .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-            .requiredWidth(width - 40.dp)
-            .fillMaxHeight(),
-        elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-        shape = RoundedCornerShape(10),
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+            .fillMaxHeight()
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top,
-                modifier = Modifier
-                    .requiredHeight(100.dp)
-                    .weight(0.7f)
-            ) {
-                Text(
-                    text = toDo.title,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 23.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = toDo.description,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                var hashtag = ""
-                if(toDo.tag.isNotBlank()) {
-                    hashtag = "#"
-                }
-                Text(
-                    text = hashtag + toDo.tag,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(
-                modifier = Modifier
-                    .size(10.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .requiredHeight(100.dp)
-            ) {
-                Text(
-                    text = toDo.dueDate + "\n" + toDo.dueTime,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.End
-                )
-                FloatingActionButton(
-                    onClick = {
-                        selectedToDo = toDo
-                        clickedFinished = if(toDo.finished){
-                            onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
-                            onTagEvent(TagEvent.CreateTag(title = toDo.tag))
-                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
-                            false
-                        } else{
-                            onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
-                            onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
-                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
-                            true
-                        }
-                    },
-                    modifier = Modifier
-                        .requiredSize(30.dp),
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = RoundedCornerShape(5.dp)
-                ) {
+        items(toDoState.toDos) { toDo ->
 
-                    if(toDo.finished){
-                        Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+            val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
+
+            if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
+
+            if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+
+            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+
+            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
+
+            ElevatedButton(
+                onClick = {
+                    selectedToDo = toDo
+                    onToDoEvent(ToDoEvent.ShowToDoDialog)
+                },
+                modifier = Modifier
+                    .border(border = BorderStroke(10.dp, Color.Transparent))
+                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                    .requiredWidth(width - 40.dp)
+                    .fillMaxHeight(),
+                elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+                shape = RoundedCornerShape(10),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+            ) {
+                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, toDo = toDo)
+            }
+        }
+    }
+}
+
+@Composable
+fun ToDoItem(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    toDo: ToDo
+){
+    var clickedFinished by remember { mutableStateOf(false) }
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .requiredHeight(100.dp)
+                .weight(0.7f)
+        ) {
+            Text(
+                text = toDo.title,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 23.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = toDo.description,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            var hashtag = ""
+            if(toDo.tag.isNotBlank()) {
+                hashtag = "#"
+            }
+            Text(
+                text = hashtag + toDo.tag,
+                fontStyle = FontStyle.Italic,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.primary,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .size(10.dp)
+        )
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .requiredHeight(100.dp)
+        ) {
+            Text(
+                text = toDo.dueDate + "\n" + toDo.dueTime,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.End
+            )
+            FloatingActionButton(
+                onClick = {
+                    clickedFinished = if(toDo.finished){
+                        onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
+                        onTagEvent(TagEvent.CreateTag(title = toDo.tag))
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                        false
                     } else{
-                        Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
+                        onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
+                        onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
+                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
+                        true
                     }
+                },
+                modifier = Modifier
+                    .requiredSize(30.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(5.dp)
+            ) {
+
+                if(toDo.finished){
+                    Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
+                } else{
+                    Icon(Icons.Filled.CheckBoxOutlineBlank, "Floating untoggled filter button")
                 }
             }
         }
@@ -513,7 +512,7 @@ fun TagItem(
     onTagEvent: (TagEvent) -> Unit,
     tag: Tag
 ){
-    // Need to fix this. Doesnt use the light/dark themes, but instead hardcoded colors
+    // Need to fix this. Doesn't use the light/dark themes, but instead hardcoded colors
     /*
     val buttonColor = remember { mutableStateOf(MaterialTheme.colorScheme.background) }
 
