@@ -26,6 +26,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -330,8 +331,6 @@ fun ToDoList(
     ) {
         items(toDoState.toDos) { toDo ->
 
-
-
             ElevatedButton(
                 onClick = {
                     selectedToDo = toDo
@@ -597,9 +596,18 @@ fun TopBar(
         BackHandler(enabled = false, onBack = {
             focusManager.clearFocus()
         })
-
         TextField(
             value = toDoState.searchInToDos,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedIndicatorColor = Color.Transparent,
+                backgroundColor = MaterialTheme.colorScheme.onSecondary,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                cursorColor =  MaterialTheme.colorScheme.primary,
+            ),
             onValueChange = {
                 onToDoEvent(ToDoEvent.SetSearchInToDos(it))
                 onTagEvent(TagEvent.SetSearchInTags(it))
@@ -615,6 +623,8 @@ fun TopBar(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
+                        onToDoEvent(ToDoEvent.SetSearchInToDos(""))
+                        onTagEvent(TagEvent.SetSearchInTags(""))
                     }) {
                     Icon(Icons.Filled.ArrowBack, "Lose focus button")
                 }
