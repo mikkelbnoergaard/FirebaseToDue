@@ -3,7 +3,6 @@ package com.example.todue.ui.screens.calendar
 import android.widget.CalendarView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,8 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
@@ -87,11 +87,12 @@ fun CalendarToDoList(
             .fillMaxHeight()
     ) {
         item{
-            Column(
+            ElevatedCard(
                 modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                elevation = CardDefaults.elevatedCardElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
             ) {
                 AndroidView(factory = { CalendarView(it) } , update = {
                     it.setOnDateChangeListener { _, year, month, day ->
@@ -103,13 +104,10 @@ fun CalendarToDoList(
                         }
                         selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
                         onCalendarEvent(CalendarEvent.SortToDosByGivenDate(selectedDate))
-
                     }
                 })
             }
         }
-
-
 
         items(calendarState.toDos) { toDo ->
             ElevatedButton(

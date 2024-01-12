@@ -11,10 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
+//import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -445,7 +444,6 @@ fun EditToDoDialog(
     toDoState: ToDoState,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
 
@@ -567,10 +565,9 @@ fun EditToDoDialog(
 }
 
 @Composable
-fun FinishToDoDialog(//toDo: ToDo,
-                     onToDoEvent: (ToDoEvent) -> Unit,
-                     //toDoState: ToDoState,
-                     ) {
+fun FinishToDoDialog(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    ) {
     Dialog(onDismissRequest = { onToDoEvent(ToDoEvent.ResetToDoState) }) {
         Card(
             modifier = Modifier
@@ -613,14 +610,14 @@ fun GifScreen() {
 
     LaunchedEffect(searchTerm) {
         scope.launch(Dispatchers.IO) {
-            try {
+            imageUrl = try {
                 val response = ApiService.RetrofitInstance.giphyApi.getRandomGif(
                     apiKey = ApiService.RetrofitInstance.API_KEY,
                     tag = searchTerm
                 )
-                imageUrl = response.data.images.downsized.url
+                response.data.images.downsized.url
             } catch (e: Exception) {
-                imageUrl = "https://giphy.com/gifs/g5games-cat-g5-games-hidden-city-TNkxUEn97iluf7jCsh"
+                "https://giphy.com/gifs/g5games-cat-g5-games-hidden-city-TNkxUEn97iluf7jCsh"
             }
         }
     }

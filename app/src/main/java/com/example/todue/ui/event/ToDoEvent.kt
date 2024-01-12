@@ -21,8 +21,9 @@ sealed interface ToDoEvent {
     data object GetStatistics: ToDoEvent
 
 
-    //used to avoid creating a bunch of todos when testing
+    //used to avoid manually creating a bunch of todos when testing
     data object PopulateToDoList: ToDoEvent
+
 
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent

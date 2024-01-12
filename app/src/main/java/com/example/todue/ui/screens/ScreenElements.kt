@@ -81,9 +81,9 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.Settings
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
-import com.example.todue.ui.theme.backgroundColor
-import com.example.todue.ui.theme.itemColor
-import com.example.todue.ui.theme.tagColor
+//import com.example.todue.ui.theme.backgroundColor
+//import com.example.todue.ui.theme.itemColor
+//import com.example.todue.ui.theme.tagColor
 
 
 //The general layout used on all the screens with navigation bar
@@ -298,6 +298,15 @@ fun ToDoList(
                 finished = false
             ) )
     }
+    val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
+
+    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
+
+    if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
+
+    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+
+    if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
     LazyColumn(
         modifier = Modifier
@@ -305,15 +314,7 @@ fun ToDoList(
     ) {
         items(toDoState.toDos) { toDo ->
 
-            val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-            if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
-
-            if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
-
-            if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
-
-            if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
             ElevatedButton(
                 onClick = {
