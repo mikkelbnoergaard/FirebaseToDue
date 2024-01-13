@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -116,7 +117,12 @@ fun CalendarToDoList(
                     state = dateState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.onTertiary)
+                        .background(MaterialTheme.colorScheme.onTertiary),
+                    colors = DatePickerDefaults.colors(
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                        headlineContentColor = MaterialTheme.colorScheme.onBackground,
+                        weekdayContentColor = MaterialTheme.colorScheme.onBackground
+                    )
                 )
             }
         }

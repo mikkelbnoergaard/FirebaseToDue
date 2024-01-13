@@ -246,7 +246,14 @@ fun CreateToDoDialog(
         this.datepicker(
             initialDate = LocalDate.now(),
             title = "Pick date",
-            colors = DatePickerDefaults.colors(MaterialTheme.colorScheme.primary)
+            colors = DatePickerDefaults.colors(
+                headerBackgroundColor = MaterialTheme.colorScheme.primary,
+                headerTextColor = MaterialTheme.colorScheme.onPrimary,
+                calendarHeaderTextColor = MaterialTheme.colorScheme.onBackground,
+                dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
+                dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
+                dateInactiveTextColor = MaterialTheme.colorScheme.onBackground
+            )
         ) {
             pickedDate = it
         }
@@ -274,7 +281,14 @@ fun CreateToDoDialog(
             initialTime = LocalTime.now(),
             title = "Pick time",
             is24HourClock = true,
-            colors = TimePickerDefaults.colors(MaterialTheme.colorScheme.primary)
+            colors = TimePickerDefaults.colors(
+                headerTextColor = MaterialTheme.colorScheme.onBackground,
+                selectorColor = MaterialTheme.colorScheme.primary,
+                selectorTextColor = MaterialTheme.colorScheme.onPrimary,
+                inactiveTextColor = MaterialTheme.colorScheme.onBackground,
+                activeBackgroundColor = MaterialTheme.colorScheme.primary,
+                activeTextColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             pickedTime = it
         }
@@ -612,8 +626,9 @@ fun EditToDoDialog(
 
         buttons = {
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd
+                modifier = Modifier
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd,
             ) {
 
                 Button(
@@ -654,7 +669,15 @@ fun EditToDoDialog(
         this.datepicker(
             initialDate = LocalDate.parse(toDoState.dueDate),
             title = "Pick date",
-            colors = DatePickerDefaults.colors(MaterialTheme.colorScheme.primary)
+            colors = DatePickerDefaults.colors(
+                headerBackgroundColor = MaterialTheme.colorScheme.primary,
+                headerTextColor = MaterialTheme.colorScheme.onPrimary,
+                calendarHeaderTextColor = MaterialTheme.colorScheme.onBackground,
+                dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
+                dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
+                dateInactiveTextColor = MaterialTheme.colorScheme.onBackground
+            )
+
         ) {
             onToDoEvent(ToDoEvent.SetDueDate(it.toString()))
         }
@@ -682,7 +705,14 @@ fun EditToDoDialog(
             initialTime = LocalTime.parse(toDoState.dueTime),
             title = "Pick time",
             is24HourClock = true,
-            colors = TimePickerDefaults.colors(MaterialTheme.colorScheme.primary)
+            colors = TimePickerDefaults.colors(
+                headerTextColor = MaterialTheme.colorScheme.onBackground,
+                selectorColor = MaterialTheme.colorScheme.primary,
+                selectorTextColor = MaterialTheme.colorScheme.onPrimary,
+                inactiveTextColor = MaterialTheme.colorScheme.onBackground,
+                activeBackgroundColor = MaterialTheme.colorScheme.primary,
+                activeTextColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             onToDoEvent(ToDoEvent.SetDueTime(it.toString()))
         }
