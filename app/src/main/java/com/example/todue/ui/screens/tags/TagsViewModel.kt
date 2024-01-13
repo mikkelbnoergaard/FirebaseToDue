@@ -128,7 +128,7 @@ class TagsViewModel(
 
             is TagEvent.PopulateTags -> {
                 viewModelScope.launch {
-                    tagRepository.createTag("Final delivery", 6, false)
+                    tagRepository.createTag("Final delivery", 7, false)
                     tagRepository.createTag("Cleaning", 2, false)
                 }
             }
