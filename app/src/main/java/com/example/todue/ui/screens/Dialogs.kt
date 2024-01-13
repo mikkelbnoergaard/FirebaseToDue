@@ -544,7 +544,7 @@ fun EditToDoDialog(
                 }
                 Text(
                     text = toDoState.dueTime,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onTertiary
                 )
 
             }
