@@ -56,7 +56,6 @@ import com.example.todue.dataLayer.source.remote.ApiService
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
-import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.textColor
@@ -75,7 +74,6 @@ fun CreateToDoDialog(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onCalendarEvent:(CalendarEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -177,7 +175,6 @@ fun CreateToDoDialog(
                         if(toDoState.title.isNotBlank()) {
                             onToDoEvent(ToDoEvent.CreateToDo)
                             onTagEvent(TagEvent.CreateTag(toDoState.tag))
-                            onCalendarEvent(CalendarEvent.ResetCalendarSort)
                         }
                     },
                     modifier = Modifier
@@ -232,8 +229,7 @@ fun DeleteToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     modifier: Modifier = Modifier,
-    toDo: ToDo,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    toDo: ToDo
 ) {
 
     AlertDialog(
@@ -259,7 +255,6 @@ fun DeleteToDoDialog(
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
                         onToDoEvent(ToDoEvent.HideToDoDialog)
-                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                     },
                     modifier = Modifier
                         .padding(5.dp)
@@ -445,8 +440,7 @@ fun EditToDoDialog(
     toDo: ToDo,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    toDoState: ToDoState,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    toDoState: ToDoState
 ) {
     val dateDialogState = rememberMaterialDialogState()
     val timeDialogState = rememberMaterialDialogState()
@@ -519,7 +513,6 @@ fun EditToDoDialog(
                         onToDoEvent(ToDoEvent.EditToDo(toDoState.title, toDoState.description, toDoState.tag, toDoState.dueDate, toDoState.dueTime, toDo.id))
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
-                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                     },
                     modifier = Modifier
                         .padding(5.dp)) {

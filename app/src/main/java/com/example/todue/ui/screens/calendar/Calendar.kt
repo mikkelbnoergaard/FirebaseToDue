@@ -1,40 +1,41 @@
 package com.example.todue.ui.screens.calendar
 
-import android.widget.CalendarView
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.todue.dataLayer.source.local.ToDo
 import com.example.todue.state.CalendarState
 import com.example.todue.state.ToDoState
@@ -48,7 +49,12 @@ import com.example.todue.ui.screens.EditToDoDialog
 import com.example.todue.ui.screens.FinishToDoDialog
 import com.example.todue.ui.screens.PlusButtonRow
 import com.example.todue.ui.screens.ToDoItem
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("RestrictedApi")
 @Composable
 fun CalendarToDoList(
     toDoState: ToDoState,
@@ -72,47 +78,46 @@ fun CalendarToDoList(
 
     val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
+    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
     if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
-    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
 
     if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
     var selectedDate by remember { mutableStateOf(calendarState.givenDate) }
-    var monthZero = ""
-    var dayZero = ""
+
+    val dateState = rememberDatePickerState(
+        initialSelectedDateMillis = LocalDateTime.now().toMillis(),
+    )
+    //check if user is entering date as string; without if statement, app crashes when we
+    //try to convert to our date format in database (substring(0, 10)
+    if(dateState.selectedDateMillis?.let { Instant.ofEpochMilli(it) }.toString().length == 20) {
+        selectedDate = dateState.selectedDateMillis?.let { Instant.ofEpochMilli(it) }.toString()
+            .substring(0, 10)
+    }
+    onCalendarEvent(CalendarEvent.SortToDosByGivenDate(selectedDate))
 
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
     ) {
+        //date picker item
         item{
-            ElevatedCard(
+            Card(
                 modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth()
-                    .fillMaxSize(),
+                    .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
+                    .requiredWidth(width - 40.dp),
                 elevation = CardDefaults.elevatedCardElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
+                shape = RoundedCornerShape(4)
             ) {
-                Box(
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    AndroidView(factory = { CalendarView(it) } , update = {
-                        it.setOnDateChangeListener { _, year, month, day ->
-                            if (day < 10) {
-                                dayZero = "0"
-                            }
-                            if (month < 10) {
-                                monthZero = "0"
-                            }
-                            selectedDate = "$year-$monthZero${month + 1}-$dayZero$day"
-                            onCalendarEvent(CalendarEvent.SortToDosByGivenDate(selectedDate))
-                        }
-                    })
-                }
+                DatePicker(
+                    state = dateState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.onTertiary)
+                )
             }
         }
 
@@ -123,12 +128,7 @@ fun CalendarToDoList(
                     onToDoEvent(ToDoEvent.ShowToDoDialog)
                 },
                 modifier = Modifier
-                    .border(
-                        border = BorderStroke(
-                            10.dp,
-                            androidx.compose.ui.graphics.Color.Transparent
-                        )
-                    )
+                    .border(border = BorderStroke(10.dp, Color.Transparent))
                     .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                     .requiredWidth(width - 40.dp)
                     .fillMaxHeight(),
@@ -136,7 +136,7 @@ fun CalendarToDoList(
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
             ) {
-                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, toDo = toDo)
+                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
             }
         }
     }
@@ -180,7 +180,7 @@ fun CalendarScreen(
                     .padding(top = 5.dp, bottom = 5.dp)
             ) {
                 if(toDoState.isCreatingToDo){
-                    CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+                    CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                     println(calendarState.givenDate)
                 }
                 CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
@@ -189,3 +189,6 @@ fun CalendarScreen(
         }
     }
 }
+
+//function to convert current time to epoch milliseconds, used in date picker in calendar view
+fun LocalDateTime.toMillis() = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

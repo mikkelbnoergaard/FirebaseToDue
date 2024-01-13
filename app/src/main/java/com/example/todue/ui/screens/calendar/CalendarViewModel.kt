@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 class CalendarViewModel(
@@ -43,12 +44,12 @@ class CalendarViewModel(
         when(calendarEvent) {
 
             is CalendarEvent.SortToDosByGivenDate -> {
-                calendarSortType.value = CalendarSortType.PLACEHOLDER
+                _calendarState.update {
+                    it.copy(
+                        givenDate = calendarEvent.date
+                    )
+                }
                 selectedCalendarDate.value = calendarEvent.date
-                calendarSortType.value = CalendarSortType.GIVEN_DATE
-            }
-
-            is CalendarEvent.ResetCalendarSort -> {
                 calendarSortType.value = CalendarSortType.PLACEHOLDER
                 calendarSortType.value = CalendarSortType.GIVEN_DATE
             }
