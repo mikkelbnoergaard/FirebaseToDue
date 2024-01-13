@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.ToDoEvent
 
-val defaultMaxHeight = 500.dp
+val defaultMaxHeight = 600.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,11 +39,17 @@ fun StatisticsScreen(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit
 ) {
-    val barChartItems = listOf(
+    val barChartValues = listOf(
         toDoState.totalAmountOfCreatedToDos,
         toDoState.totalAmountOfFinishedToDos,
         toDoState.totalAmountOfUnfinishedToDos
     )
+    val barChartLabelsUpper = listOf(
+        "Created",
+        "Finished",
+        "Unfinished"
+    )
+    val barCharLabelsLower = "Todos"
 
     Scaffold(
         topBar = {
@@ -78,41 +84,54 @@ fun StatisticsScreen(
             ){
 
             }
-            BarChart(values = barChartItems)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
+            BarChart(values = barChartValues)
+            BarChartValue(modifier = Modifier, values = barChartValues)
+            BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
 
-                Column (
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Text(text = "" + toDoState.totalAmountOfCreatedToDos)
-                    Text(text = "Created")
-                    Text(text = "ToDos")
-                }
-                Column (
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Text(text = "" + toDoState.totalAmountOfFinishedToDos)
-                    Text(text = "Finished")
-                    Text(text = "ToDos")
-                }
-                Column (
-                    modifier = Modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Text(text = "" + toDoState.totalAmountOfUnfinishedToDos)
-                    Text(text = "Unfinished")
-                    Text(text = "ToDos")
-                }
-            }
+        }
+    }
+}
+
+@Composable
+fun BarChartLabel(modifier: Modifier = Modifier,
+                  labelsUpper: List<String>,
+                  labelLower: String
+
+) {
+
+    Row(
+        modifier = modifier.then(
+            modifier.fillMaxWidth()
+        ),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        labelsUpper.forEach { item ->
+            Label(
+                labelUpper = item,
+                labelLower = labelLower
+            )
+        }
+    }
+}
+
+@Composable
+fun BarChartValue(
+    modifier: Modifier = Modifier,
+    values: List<Int>,
+) {
+
+    Row(
+        modifier = modifier.then(
+            modifier.fillMaxWidth()
+        ),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        values.forEach { item ->
+            Value(
+                value = item
+            )
         }
     }
 }
@@ -122,7 +141,6 @@ internal fun BarChart(
     modifier: Modifier = Modifier,
     values: List<Int>,
     maxHeight: Dp = defaultMaxHeight,
-
     ) {
 
     assert(values.isNotEmpty()) { "Input values are empty" }
@@ -154,7 +172,6 @@ internal fun BarChart(
                     )
 
                      */
-
                 }
         ),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -164,9 +181,8 @@ internal fun BarChart(
             Bar(
                 value = item,
                 color = MaterialTheme.colorScheme.primary,
-                maxHeight = maxHeight,
+                maxHeight = maxHeight
             )
-
         }
     }
 
@@ -177,18 +193,47 @@ private fun RowScope.Bar(
     value: Int,
     color: Color,
     maxHeight: Dp,
-) {
+    ) {
 
     val itemHeight = remember(value) { value * maxHeight.value / 100 }
+        Spacer(
+            modifier = Modifier
+                .padding(horizontal = 5.dp)
+                .height(itemHeight.dp)
+                .weight(1f)
+                .background(color)
+        )
+}
 
-    Spacer(
+@Composable
+private fun RowScope.Label(
+    labelUpper: String,
+    labelLower: String
+) {
+    Column (
         modifier = Modifier
             .padding(horizontal = 5.dp)
-            .height(itemHeight.dp)
             .weight(1f)
-            .background(color)
-    )
-
+        ,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(labelUpper)
+        Text(labelLower)
+    }
+}
+@Composable
+private fun RowScope.Value(
+    value: Int,
+) {
+    Column (
+        modifier = Modifier
+            .padding(horizontal = 5.dp)
+            .weight(1f)
+        ,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(value.toString())
+    }
 }
 
 
