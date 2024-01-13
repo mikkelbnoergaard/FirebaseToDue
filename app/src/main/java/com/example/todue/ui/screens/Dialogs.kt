@@ -1,7 +1,6 @@
 package com.example.todue.ui.screens
 
 import android.widget.ImageView
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,13 +21,8 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialogDefaults.containerColor
-import androidx.compose.material3.AlertDialogDefaults.titleContentColor
-import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -61,15 +54,10 @@ import com.example.todue.dataLayer.source.remote.ApiService
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
-import com.example.todue.ui.theme.backgroundColor
-import com.example.todue.ui.theme.buttonColor
-import com.example.todue.ui.theme.selectedItemColor
-import com.example.todue.ui.theme.textColor
-import com.example.todue.ui.theme.unselectedItemColor
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
-import com.vanpra.composematerialdialogs.datetime.time.TimePickerColors
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -78,7 +66,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateToDoDialog(
     toDoState: ToDoState,
@@ -91,9 +78,15 @@ fun CreateToDoDialog(
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
+    if(toDoState.dueDate != "") {
+        pickedDate = LocalDate.parse(toDoState.dueDate)
+    }
 
     var pickedTime by remember {
         mutableStateOf(LocalTime.now())
+    }
+    if(toDoState.dueTime != ""){
+        pickedTime = LocalTime.parse(toDoState.dueTime)
     }
 
     val dateDialogState = rememberMaterialDialogState()
@@ -178,7 +171,7 @@ fun CreateToDoDialog(
                     Text(text = "Pick date")
                 }
                 Text(
-                    text = dueDateString,
+                    text = toDoState.dueDate,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
@@ -192,7 +185,7 @@ fun CreateToDoDialog(
                     Text(text = "Pick time")
                 }
                 Text(
-                    text = dueTimeString,
+                    text = toDoState.dueTime,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -225,74 +218,8 @@ fun CreateToDoDialog(
             }
         }
     )
-    MaterialDialog(
-        dialogState = dateDialogState,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        ),
-        backgroundColor = MaterialTheme.colorScheme.onTertiary,
-        buttons = {
-            positiveButton(
-                text = "OK",
-                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
-            )
-            negativeButton(
-                text = "Cancel",
-                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
-            )
-        },
-    ) {
-        this.datepicker(
-            initialDate = LocalDate.now(),
-            title = "Pick date",
-            colors = DatePickerDefaults.colors(
-                headerBackgroundColor = MaterialTheme.colorScheme.primary,
-                headerTextColor = MaterialTheme.colorScheme.onPrimary,
-                calendarHeaderTextColor = MaterialTheme.colorScheme.onBackground,
-                dateActiveBackgroundColor = MaterialTheme.colorScheme.primary,
-                dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
-                dateInactiveTextColor = MaterialTheme.colorScheme.onBackground
-            )
-        ) {
-            pickedDate = it
-        }
-    }
-
-    MaterialDialog(
-        dialogState = timeDialogState,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        ),
-        backgroundColor = MaterialTheme.colorScheme.onTertiary,
-        buttons = {
-            positiveButton(
-                text = "OK",
-                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
-            )
-            negativeButton(
-                text = "Cancel",
-                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
-            )
-        }
-    ) {
-        this.timepicker(
-            initialTime = LocalTime.now(),
-            title = "Pick time",
-            is24HourClock = true,
-            colors = TimePickerDefaults.colors(
-                headerTextColor = MaterialTheme.colorScheme.onBackground,
-                selectorColor = MaterialTheme.colorScheme.primary,
-                selectorTextColor = MaterialTheme.colorScheme.onPrimary,
-                inactiveTextColor = MaterialTheme.colorScheme.onBackground,
-                activeBackgroundColor = MaterialTheme.colorScheme.primary,
-                activeTextColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            pickedTime = it
-        }
-    }
+    DatePicker(onToDoEvent = onToDoEvent, dateDialogState = dateDialogState, initialDate = LocalDate.parse(pickedDate.toString()))
+    TimePicker(onToDoEvent = onToDoEvent, timeDialogState = timeDialogState, initialTime = LocalTime.parse(hourZero + pickedTime.hour.toString() + ":" + minuteZero + pickedTime.minute.toString()))
 }
 
 @Composable
@@ -474,7 +401,6 @@ fun CheckToDoDialog(
             }
         }
     )
-
 }
 
 @Composable
@@ -648,6 +574,16 @@ fun EditToDoDialog(
             }
         }
     )
+    DatePicker(onToDoEvent = onToDoEvent, dateDialogState = dateDialogState, initialDate = LocalDate.parse(toDoState.dueDate))
+    TimePicker(onToDoEvent = onToDoEvent, timeDialogState = timeDialogState, initialTime = LocalTime.parse(toDoState.dueTime))
+}
+
+@Composable
+fun DatePicker(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    dateDialogState: MaterialDialogState,
+    initialDate: LocalDate
+){
     MaterialDialog(
         dialogState = dateDialogState,
         properties = DialogProperties(
@@ -667,7 +603,7 @@ fun EditToDoDialog(
         },
     ) {
         this.datepicker(
-            initialDate = LocalDate.parse(toDoState.dueDate),
+            initialDate = initialDate,
             title = "Pick date",
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = MaterialTheme.colorScheme.primary,
@@ -677,12 +613,18 @@ fun EditToDoDialog(
                 dateActiveTextColor = MaterialTheme.colorScheme.onPrimary,
                 dateInactiveTextColor = MaterialTheme.colorScheme.onBackground
             )
-
         ) {
             onToDoEvent(ToDoEvent.SetDueDate(it.toString()))
         }
     }
+}
 
+@Composable
+fun TimePicker(
+    onToDoEvent: (ToDoEvent) -> Unit,
+    timeDialogState: MaterialDialogState,
+    initialTime: LocalTime
+){
     MaterialDialog(
         dialogState = timeDialogState,
         properties = DialogProperties(
@@ -702,7 +644,7 @@ fun EditToDoDialog(
         }
     ) {
         this.timepicker(
-            initialTime = LocalTime.parse(toDoState.dueTime),
+            initialTime = initialTime,
             title = "Pick time",
             is24HourClock = true,
             colors = TimePickerDefaults.colors(
@@ -715,6 +657,7 @@ fun EditToDoDialog(
             )
         ) {
             onToDoEvent(ToDoEvent.SetDueTime(it.toString()))
+            println(it.toString())
         }
     }
 }
