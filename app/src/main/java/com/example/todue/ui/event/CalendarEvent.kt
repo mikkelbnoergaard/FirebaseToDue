@@ -4,6 +4,4 @@ sealed interface CalendarEvent {
 
     data class SortToDosByGivenDate(val date: String): CalendarEvent
 
-    data object ResetCalendarSort: CalendarEvent
-
 }

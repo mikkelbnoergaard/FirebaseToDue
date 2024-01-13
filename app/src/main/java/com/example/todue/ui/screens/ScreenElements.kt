@@ -157,12 +157,12 @@ fun GeneralLayout(
             verticalAlignment = Alignment.Bottom
         ) {index ->
             when(index){
-                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+                0 -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
                 4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+                else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
             }
         }
         TabRow(
@@ -300,8 +300,7 @@ fun TagList(
 fun ToDoList(
     toDoState: ToDoState,
     onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onTagEvent: (TagEvent) -> Unit
 ) {
 
     var selectedToDo by remember {
@@ -317,11 +316,11 @@ fun ToDoList(
     }
     val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, onCalendarEvent = onCalendarEvent) }
+    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
 
     if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
-    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
+    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
 
     if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
@@ -337,15 +336,15 @@ fun ToDoList(
                     onToDoEvent(ToDoEvent.ShowToDoDialog)
                 },
                 modifier = Modifier
-                    .border(border = BorderStroke(10.dp, Color.Transparent))
                     .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                     .requiredWidth(width - 40.dp)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.background),
                 elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onTertiary)
             ) {
-                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, toDo = toDo)
+                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
             }
         }
     }
@@ -355,7 +354,6 @@ fun ToDoList(
 fun ToDoItem(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit,
     toDo: ToDo
 ){
     var clickedFinished by remember { mutableStateOf(false) }
@@ -417,12 +415,10 @@ fun ToDoItem(
                     clickedFinished = if(toDo.finished){
                         onToDoEvent(ToDoEvent.UnFinishToDo(toDo = toDo))
                         onTagEvent(TagEvent.CreateTag(title = toDo.tag))
-                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                         false
                     } else{
                         onToDoEvent(ToDoEvent.FinishToDo(toDo = toDo))
                         onTagEvent(TagEvent.DecreaseToDoAmount(title = toDo.tag))
-                        onCalendarEvent(CalendarEvent.ResetCalendarSort)
                         true
                     }
                 },
@@ -482,8 +478,7 @@ fun PlusButtonRow(
 fun ScrollableToDoColumn(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -491,10 +486,10 @@ fun ScrollableToDoColumn(
             .padding(top = 5.dp, bottom = 5.dp)
     ) {
         if(toDoState.isCreatingToDo){
-            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+            CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
         }
-        ToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent)
-        PlusButtonRow(onToDoEvent)
+        ToDoList(toDoState = toDoState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+        PlusButtonRow(onToDoEvent = onToDoEvent)
     }
 }
 
@@ -602,7 +597,7 @@ fun TopBar(
                 focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                 disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedIndicatorColor = Color.Transparent,
-                backgroundColor = MaterialTheme.colorScheme.onSecondary,
+                backgroundColor = MaterialTheme.colorScheme.onTertiary,
                 textColor = MaterialTheme.colorScheme.onSurface,
                 focusedLabelColor = MaterialTheme.colorScheme.onSurface,
                 placeholderColor =  MaterialTheme.colorScheme.onSurface,

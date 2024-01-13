@@ -20,27 +20,19 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
-import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.screens.TopBar
 import com.example.todue.ui.screens.ScrollableTagRow
 import com.example.todue.ui.screens.ScrollableToDoColumn
-import com.example.todue.ui.screens.TagList
-import com.example.todue.ui.screens.tags.ScaffoldTags
-import com.example.todue.ui.theme.backgroundColor
-import com.example.todue.ui.theme.md_theme_dark_primaryContainer
-import com.example.todue.ui.theme.md_theme_light_onPrimary
-import com.example.todue.ui.theme.textColor
 
 @Composable
 fun ToDosScreen(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
-ScaffoldToDos(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+ScaffoldToDos(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,8 +41,7 @@ fun ScaffoldToDos(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -94,12 +85,10 @@ fun ScaffoldToDos(
                     ) {
                         TopBar(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                         ScrollableTagRow(tagState = tagState, onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-                        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
+                        ScrollableToDoColumn(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                     }
                 }
             }
-
-
         }
     }
 }

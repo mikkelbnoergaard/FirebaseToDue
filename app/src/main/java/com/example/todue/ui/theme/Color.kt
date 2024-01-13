@@ -60,7 +60,7 @@ val md_theme_dark_onSecondary = Color(0xFF3E2D16)
 val md_theme_dark_secondaryContainer = Color(0xFF56442A)
 val md_theme_dark_onSecondaryContainer = Color(0xFFFBDEBC)
 val md_theme_dark_tertiary = Color(0xFF9C9C84)
-val md_theme_dark_onTertiary = Color(0xFF243515)
+val md_theme_dark_onTertiary = Color(0xFF362b1c)
 val md_theme_dark_tertiaryContainer = Color(0xFF3A4C2A)
 val md_theme_dark_onTertiaryContainer = Color(0xFFD4EABB)
 val md_theme_dark_error = Color(0xFFFFB4AB)
@@ -81,7 +81,6 @@ val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFFFFB951)
 val md_theme_dark_outlineVariant = Color(0xFF4F4539)
 val md_theme_dark_scrim = Color(0xFF000000)
-
 
 val seed = Color(0xFF825500)
 
