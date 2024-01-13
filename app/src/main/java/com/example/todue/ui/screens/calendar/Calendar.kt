@@ -108,7 +108,7 @@ fun CalendarToDoList(
             Card(
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
-                    .requiredWidth(width - 40.dp),
+                    .requiredWidth(width),
                 elevation = CardDefaults.elevatedCardElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(4)
             ) {
