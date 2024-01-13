@@ -22,9 +22,13 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialogDefaults.containerColor
+import androidx.compose.material3.AlertDialogDefaults.titleContentColor
+import androidx.compose.material3.DatePickerColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,12 +61,16 @@ import com.example.todue.dataLayer.source.remote.ApiService
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.theme.backgroundColor
 import com.example.todue.ui.theme.buttonColor
 import com.example.todue.ui.theme.selectedItemColor
 import com.example.todue.ui.theme.textColor
 import com.example.todue.ui.theme.unselectedItemColor
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerColors
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +78,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateToDoDialog(
     toDoState: ToDoState,
@@ -109,55 +119,82 @@ fun CreateToDoDialog(
         onDismissRequest = {
             onToDoEvent(ToDoEvent.HideCreateDialog)
         },
-        title = { Text(text = "Create To Do") },
+        title = { Text(
+            text = "Create To Do",
+            color = MaterialTheme.colorScheme.onBackground
+        ) },
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.title,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTitle(it))
                     },
                     placeholder = {
-                        Text(text = "Title")
-                    }
+                        Text(
+                            text = "Title",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
                 )
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.description,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetDescription(it))
                     },
                     placeholder = {
-                        Text(text = "Description")
+                        Text(
+                            text = "Description",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 )
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.tag,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTag(it))
                     },
                     placeholder = {
-                        Text(text = "Tag")
+                        Text(
+                            text = "Tag",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 )
 
                 //date button
-                Button(onClick = {
-                    dateDialogState.show()
-                }) {
+                Button(
+                    onClick = {
+                        dateDialogState.show()
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
                     Text(text = "Pick date")
                 }
-                Text(text = dueDateString)
+                Text(
+                    text = dueDateString,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
                 //time button
-                Button(onClick = {
-                    timeDialogState.show()
-                }) {
+                Button(
+                    onClick = {
+                        timeDialogState.show()
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
                     Text(text = "Pick time")
                 }
-                Text(text = dueTimeString)
-
+                Text(
+                    text = dueTimeString,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         },
 
@@ -177,9 +214,13 @@ fun CreateToDoDialog(
                             onTagEvent(TagEvent.CreateTag(toDoState.tag))
                         }
                     },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     modifier = Modifier
-                        .padding(5.dp)) {
-                    Text(text = "Create")
+                        .padding(end = 5.dp)) {
+                    Text(
+                        text = "Create",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
             }
         }
@@ -190,14 +231,22 @@ fun CreateToDoDialog(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         buttons = {
-            positiveButton(text = "OK")
-            negativeButton(text = "Cancel")
-        }
+            positiveButton(
+                text = "OK",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+            negativeButton(
+                text = "Cancel",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+        },
     ) {
         this.datepicker(
             initialDate = LocalDate.now(),
-            title = "Pick a date",
+            title = "Pick date",
+            colors = DatePickerDefaults.colors(MaterialTheme.colorScheme.primary)
         ) {
             pickedDate = it
         }
@@ -209,15 +258,23 @@ fun CreateToDoDialog(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         buttons = {
-            positiveButton(text = "OK")
-            negativeButton(text = "Cancel")
+            positiveButton(
+                text = "OK",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+            negativeButton(
+                text = "Cancel",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
         }
     ) {
         this.timepicker(
             initialTime = LocalTime.now(),
-            title = "Pick a date",
+            title = "Pick time",
             is24HourClock = true,
+            colors = TimePickerDefaults.colors(MaterialTheme.colorScheme.primary)
         ) {
             pickedTime = it
         }
@@ -234,6 +291,7 @@ fun DeleteToDoDialog(
 
     AlertDialog(
         modifier = modifier,
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         onDismissRequest = {
             onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
         },
@@ -241,7 +299,10 @@ fun DeleteToDoDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Do you want to delete this ToDo?\n\nThis cannot be undone.")
+                Text(
+                    text = "Do you want to delete this ToDo?\nThis cannot be undone.",
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
             }
         },
         buttons = {
@@ -250,6 +311,7 @@ fun DeleteToDoDialog(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     onClick = {
                         onToDoEvent(ToDoEvent.DeleteToDo(toDo = toDo))
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
@@ -259,7 +321,10 @@ fun DeleteToDoDialog(
                     modifier = Modifier
                         .padding(5.dp)
                     ) {
-                    Text(text = "Delete")
+                    Text(
+                        text = "Delete",
+                        color = MaterialTheme.colorScheme.onTertiary,
+                    )
                 }
             }
         }
@@ -275,7 +340,7 @@ fun CheckToDoDialog(
 
     AlertDialog(
         modifier = Modifier,
-        backgroundColor = MaterialTheme.colorScheme.onPrimary,
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         onDismissRequest = {
             onToDoEvent(ToDoEvent.HideToDoDialog)
         },
@@ -285,7 +350,11 @@ fun CheckToDoDialog(
             ) {
                 Row(
                     modifier = Modifier
-                        .border(width = 3.dp, color = MaterialTheme.colorScheme.tertiary, shape = getBottomLineShape())
+                        .border(
+                            width = 3.dp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            shape = getBottomLineShape()
+                        )
                         .padding(bottom = 5.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -404,6 +473,7 @@ fun DeleteTagDialog(
 
     AlertDialog(
         modifier = modifier,
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         onDismissRequest = {
             onTagEvent(TagEvent.HideDeleteDialog)
         },
@@ -411,7 +481,10 @@ fun DeleteTagDialog(
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Do you want to delete this tag?")
+                Text(
+                    text = "Do you want to delete this tag?\nThis cannot be undone.",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         },
         buttons = {
@@ -420,6 +493,7 @@ fun DeleteTagDialog(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     onClick = {
                         onTagEvent(TagEvent.DeleteTag(title = tag.title))
                         onToDoEvent(ToDoEvent.DeleteTagFromToDos(tag = tag.title))
@@ -428,7 +502,10 @@ fun DeleteTagDialog(
                     modifier = Modifier
                         .padding(5.dp)
                 ) {
-                    Text(text = "Delete")
+                    Text(
+                        text = "Delete",
+                        color = MaterialTheme.colorScheme.onTertiary,
+                    )
                 }
             }
         }
@@ -450,54 +527,85 @@ fun EditToDoDialog(
             onToDoEvent(ToDoEvent.HideEditToDoDialog)
             onToDoEvent(ToDoEvent.ResetToDoState)
         },
-        title = { Text(text = "Edit To Do") },
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
+        title = { Text(
+            text = "Edit To Do",
+            color = MaterialTheme.colorScheme.onBackground
+        ) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.title,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTitle(it))
                     },
                     placeholder = {
-                        Text(text = "New title")
+                        Text(
+                            text = "New title",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 )
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.description,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetDescription(it))
                     },
                     placeholder = {
-                        Text(text = "New description")
+                        Text(
+                            text = "New description",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 )
                 TextField(
+                    textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
                     value = toDoState.tag,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTag(it))
                     },
                     placeholder = {
-                        Text(text = "New tag")
+                        Text(
+                            text = "New tag",
+                            color = MaterialTheme.colorScheme.onBackground,
+                            )
                     }
                 )
 
                 //date button
-                Button(onClick = {
-                    dateDialogState.show()
-                }) {
-                    Text(text = "Pick date")
+                Button(
+                    onClick = {
+                        dateDialogState.show()
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(
+                        text = "Pick date",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
-                Text(text = toDoState.dueDate)
+                Text(
+                    text = toDoState.dueDate,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    )
 
                 //time button
-                Button(onClick = {
-                    timeDialogState.show()
-                }) {
+                Button(
+                    onClick = {
+                        timeDialogState.show()
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+                ) {
                     Text(text = "Pick time")
                 }
-                Text(text = toDoState.dueTime)
+                Text(
+                    text = toDoState.dueTime,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
             }
         },
@@ -514,9 +622,13 @@ fun EditToDoDialog(
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
                     },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .padding(5.dp)) {
-                    Text(text = "Save")
+                    Text(
+                        text = "Save",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
             }
         }
@@ -527,14 +639,22 @@ fun EditToDoDialog(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         buttons = {
-            positiveButton(text = "OK")
-            negativeButton(text = "Cancel")
-        }
+            positiveButton(
+                text = "OK",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+            negativeButton(
+                text = "Cancel",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+        },
     ) {
         this.datepicker(
             initialDate = LocalDate.parse(toDoState.dueDate),
-            title = "Pick a date",
+            title = "Pick date",
+            colors = DatePickerDefaults.colors(MaterialTheme.colorScheme.primary)
         ) {
             onToDoEvent(ToDoEvent.SetDueDate(it.toString()))
         }
@@ -546,15 +666,23 @@ fun EditToDoDialog(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
+        backgroundColor = MaterialTheme.colorScheme.onTertiary,
         buttons = {
-            positiveButton(text = "OK")
-            negativeButton(text = "Cancel")
+            positiveButton(
+                text = "OK",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
+            negativeButton(
+                text = "Cancel",
+                textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground)
+            )
         }
     ) {
         this.timepicker(
             initialTime = LocalTime.parse(toDoState.dueTime),
-            title = "Pick a date",
+            title = "Pick time",
             is24HourClock = true,
+            colors = TimePickerDefaults.colors(MaterialTheme.colorScheme.primary)
         ) {
             onToDoEvent(ToDoEvent.SetDueTime(it.toString()))
         }
@@ -571,7 +699,7 @@ fun FinishToDoDialog(
                 .width(400.dp)
                 .height(300.dp)
                 .padding(16.dp),
-            backgroundColor = MaterialTheme.colorScheme.onPrimary,
+            backgroundColor = MaterialTheme.colorScheme.onTertiary,
             shape = RoundedCornerShape(16.dp),
             elevation = 10.dp
         ) {
@@ -582,7 +710,7 @@ fun FinishToDoDialog(
             ) {
                 Text(
                     text = "To-do Completed!",
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
