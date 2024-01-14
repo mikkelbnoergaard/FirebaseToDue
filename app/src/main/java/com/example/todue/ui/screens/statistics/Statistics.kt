@@ -2,6 +2,7 @@ package com.example.todue.ui.screens.statistics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -10,12 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,16 +21,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.ToDoEvent
 
 val defaultMaxHeight = 600.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
     toDoState: ToDoState,
@@ -51,6 +45,24 @@ fun StatisticsScreen(
     )
     val barCharLabelsLower = "Todos"
 
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+    ) {
+        onToDoEvent(ToDoEvent.GetStatistics)
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .height(20.dp)
+        )
+        BarChart(values = barChartValues)
+        BarChartValue(modifier = Modifier, values = barChartValues)
+        BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
+
+    }
+
+    /*
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -69,27 +81,10 @@ fun StatisticsScreen(
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
 
-            ) {
-            onToDoEvent(ToDoEvent.GetStatistics)
-            Row (
-                modifier = Modifier
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ){
-
-            }
-            BarChart(values = barChartValues)
-            BarChartValue(modifier = Modifier, values = barChartValues)
-            BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
-
-        }
     }
+
+     */
 }
 
 @Composable
@@ -98,13 +93,12 @@ fun BarChartLabel(modifier: Modifier = Modifier,
                   labelLower: String
 
 ) {
-
     Row(
         modifier = modifier.then(
             modifier.fillMaxWidth()
         ),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         labelsUpper.forEach { item ->
             Label(
@@ -217,8 +211,14 @@ private fun RowScope.Label(
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(labelUpper)
-        Text(labelLower)
+        Text(
+            labelUpper,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            labelLower,
+            color = MaterialTheme.colorScheme.onBackground
+            )
     }
 }
 @Composable
@@ -232,7 +232,10 @@ private fun RowScope.Value(
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(value.toString())
+        Text(
+            value.toString(),
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
 
