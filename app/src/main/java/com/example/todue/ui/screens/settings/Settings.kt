@@ -61,217 +61,227 @@ fun ScaffoldSettings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
 ) {
-/*
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val paddingBetweenRows = 15.dp
+        val sidePadding = 30.dp
+        val spaceAfterIcon = 15.dp
+        val spaceAfterOption = 150.dp
+        val rowHeight = 40.dp
+        CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
+            title = {
+                Text(
+                    "Settings",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 30.sp
+                )
+            },
+        )
 
-                },
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .padding(start = sidePadding, end = sidePadding),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Outlined.Visibility, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.size(spaceAfterIcon))
+                Text(
+                    text = "Dark Theme",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
+        }
+        // Switch button messes with distance between
+        // the options, so this spacer is hard coded
+        //Spacer(Modifier.size(18.dp))
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.size(sidePadding))
+            Icon(
+                Icons.Outlined.AccountCircle, "Visibility icon",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.size(spaceAfterIcon))
+            Text(
+                text = "Account",
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
-    ) { innerPadding ->
 
- */
-        Column(
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
             modifier = Modifier
-                //.padding(innerPadding)
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            val paddingBetweenRows = 15.dp
-            val sidePadding = 30.dp
-            val spaceAfterIcon = 15.dp
-            val spaceAfterOption = 150.dp
-            val rowHeight = 40.dp
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    Text(
-                        "Settings",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 30.sp
-                    )
-                },
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .padding(start = sidePadding, end = sidePadding),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Notifications, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.size(spaceAfterIcon))
+                Text(
+                    text = "Notifications",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            NotificationSwitch()
+
+        }
+
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.size(sidePadding))
+            Icon(
+                Icons.Outlined.Lock, "Visibility icon",
+                tint = MaterialTheme.colorScheme.primary
             )
+            Spacer(Modifier.size(spaceAfterIcon))
+            Text(
+                text = "Privacy and security",
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
 
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
                 .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight)
-                    .padding(start = sidePadding, end = sidePadding),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Outlined.Visibility, "Visibility icon",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.size(spaceAfterIcon))
-                    Text(
-                        text = "Dark Theme",
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
-            }
-            // Switch button messes with distance between
-            // the options, so this spacer is hard coded
-            //Spacer(Modifier.size(18.dp))
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.size(sidePadding))
+            Icon(
+                Icons.Outlined.QuestionMark, "Visibility icon",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.size(spaceAfterIcon))
+            Text(
+                text = "About",
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
                 .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Spacer(Modifier.size(sidePadding))
-                Icon(
-                    Icons.Outlined.AccountCircle, "Visibility icon",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(
-                    text = "Account",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
 
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
+        //this row is not meant to be included on release, it's purely for testing and showing the application
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .clickable(onClick = {
+                    onToDoEvent(ToDoEvent.PopulateToDoList)
+                    onTagEvent(TagEvent.PopulateTags)
+                }),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Spacer(Modifier.size(sidePadding))
+            Icon(
+                Icons.Outlined.Add, "Visibility icon",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.size(spaceAfterIcon))
+            Text(
+                text = "Populate ToDo list",
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        Spacer(Modifier.size(paddingBetweenRows))
+        Divider(
+            modifier = Modifier
                 .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight)
-                    .padding(start = sidePadding, end = sidePadding),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    //Spacer(Modifier.size(sidePadding))
-                    Icon(
-                        Icons.Outlined.Notifications, "Visibility icon",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.size(spaceAfterIcon))
-                    Text(
-                        text = "Notifications",
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                NotificationSwitch()
-
-            }
-
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
-                .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Spacer(Modifier.size(sidePadding))
-                Icon(
-                    Icons.Outlined.Lock, "Visibility icon",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(
-                    text = "Privacy and security",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
-                .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Spacer(Modifier.size(sidePadding))
-                Icon(
-                    Icons.Outlined.QuestionMark, "Visibility icon",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(
-                    text = "About",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
-                .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-            Spacer(Modifier.size(paddingBetweenRows))
-
-            //this row is not meant to be included on release, it's purely for testing and showing the application
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(rowHeight)
-                    .clickable(onClick = {
-                        onToDoEvent(ToDoEvent.PopulateToDoList)
-                        onTagEvent(TagEvent.PopulateTags)
-                    }),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-            ){
-                Spacer(Modifier.size(sidePadding))
-                Icon(
-                    Icons.Outlined.Add, "Visibility icon",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(
-                    text = "Populate ToDo list",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Spacer(Modifier.size(paddingBetweenRows))
-            Divider(modifier = Modifier
-                .width(350.dp)
-                .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-        //}
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
     }
 }
 
