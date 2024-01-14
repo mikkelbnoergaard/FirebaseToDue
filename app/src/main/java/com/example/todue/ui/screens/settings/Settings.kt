@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -61,8 +61,34 @@ fun ScaffoldSettings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
 ) {
+/*
     Scaffold(
         topBar = {
+            CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                ),
+                title = {
+
+                },
+            )
+        }
+    ) { innerPadding ->
+
+ */
+        Column(
+            modifier = Modifier
+                //.padding(innerPadding)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            val paddingBetweenRows = 15.dp
+            val sidePadding = 30.dp
+            val spaceAfterIcon = 15.dp
+            val spaceAfterOption = 150.dp
+            val rowHeight = 40.dp
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -77,18 +103,7 @@ fun ScaffoldSettings(
                     )
                 },
             )
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize(),
 
-        ){
-            val paddingBetweenRows = 15.dp
-            val leftSpacerPadding = 30.dp
-            val spaceAfterIcon = 15.dp
-            val spaceAfterOption = 150.dp
-            val rowHeight = 40.dp
             Spacer(Modifier.size(paddingBetweenRows))
             Divider(modifier = Modifier
                 .width(350.dp)
@@ -97,15 +112,24 @@ fun ScaffoldSettings(
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(rowHeight),
-                horizontalArrangement = Arrangement.Start,
+                    .height(rowHeight)
+                    .padding(start = sidePadding, end = sidePadding),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.Visibility, "Visibility icon")
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "Dark Theme")
-                Spacer(Modifier.width(spaceAfterOption))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Outlined.Visibility, "Visibility icon",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.size(spaceAfterIcon))
+                    Text(
+                        text = "Dark Theme",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
                 DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
             }
             // Switch button messes with distance between
@@ -123,10 +147,16 @@ fun ScaffoldSettings(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.AccountCircle, "Visibility icon")
+                Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.AccountCircle, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "Account")
+                Text(
+                    text = "Account",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
@@ -134,18 +164,29 @@ fun ScaffoldSettings(
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
             Spacer(Modifier.size(paddingBetweenRows))
+
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(rowHeight),
-                horizontalArrangement = Arrangement.Start,
+                    .height(rowHeight)
+                    .padding(start = sidePadding, end = sidePadding),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.Notifications, "Visibility icon")
-                Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "Notifications")
-                Spacer(Modifier.width(spaceAfterOption))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    //Spacer(Modifier.size(sidePadding))
+                    Icon(
+                        Icons.Outlined.Notifications, "Visibility icon",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.size(spaceAfterIcon))
+                    Text(
+                        text = "Notifications",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
                 NotificationSwitch()
 
             }
@@ -162,10 +203,16 @@ fun ScaffoldSettings(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.Lock, "Visibility icon")
+                Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Lock, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "Privacy and security")
+                Text(
+                    text = "Privacy and security",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
@@ -180,10 +227,16 @@ fun ScaffoldSettings(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.QuestionMark, "Visibility icon")
+                Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.QuestionMark, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "About")
+                Text(
+                    text = "About",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
             Spacer(Modifier.size(paddingBetweenRows))
             Divider(modifier = Modifier
@@ -203,16 +256,22 @@ fun ScaffoldSettings(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
             ){
-                Spacer(Modifier.size(leftSpacerPadding))
-                Icon(Icons.Outlined.Add, "Visibility icon")
+                Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Add, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Spacer(Modifier.size(spaceAfterIcon))
-                Text(text = "Populate ToDo list")
+                Text(
+                    text = "Populate ToDo list",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
             Spacer(Modifier.size(paddingBetweenRows))
             Divider(modifier = Modifier
                 .width(350.dp)
                 .align(Alignment.CenterHorizontally), thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
-        }
+        //}
     }
 }
 
