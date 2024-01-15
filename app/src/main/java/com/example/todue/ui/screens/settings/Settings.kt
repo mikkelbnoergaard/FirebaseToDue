@@ -145,7 +145,7 @@ fun ScaffoldSettings(
             )
             Spacer(Modifier.size(spaceAfterIcon))
             Text(
-                text = "Account",
+                text = "Account - TBA",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -178,7 +178,7 @@ fun ScaffoldSettings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Notifications",
+                    text = "Notifications - TBA",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -209,7 +209,7 @@ fun ScaffoldSettings(
             )
             Spacer(Modifier.size(spaceAfterIcon))
             Text(
-                text = "Privacy and security",
+                text = "Privacy and security - TBA",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
