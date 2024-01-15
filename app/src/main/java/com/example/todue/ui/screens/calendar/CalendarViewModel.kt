@@ -52,7 +52,8 @@ class CalendarViewModel(
 
             is CalendarEvent.Recompose -> {
                 viewModelScope.launch {
-                    delay(100L)
+                    //delay to ensure any other coroutines finish before this
+                    delay(200L)
                     recompose.value = !recompose.value
                 }
             }
