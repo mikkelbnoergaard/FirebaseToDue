@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -298,9 +299,12 @@ fun NotificationSwitch() {
         checked = checked,
         onCheckedChange = {
             checked = it
-        }
+        },
+        colors = SwitchDefaults.colors(
+            uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
+            uncheckedThumbColor = MaterialTheme.colorScheme.primary
+        )
     )}
-
 @Composable
 fun DarkThemeSwitch(
     //darkThemeProvider: DarkThemeProvider
@@ -312,7 +316,11 @@ fun DarkThemeSwitch(
         checked = checked,
         onCheckedChange = {
             checked = it
-        }
+        },
+        colors = SwitchDefaults.colors(
+            uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
+            uncheckedThumbColor = MaterialTheme.colorScheme.primary
+        )
     )
 }
 
