@@ -23,13 +23,13 @@ class TagsViewModel(
     private val showFinished = MutableStateFlow(false)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _tags = tagSortType
-        .flatMapLatest { tagSortType ->
-            when(tagSortType) {
-                TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search.value, showFinished.value)
-                TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search.value, showFinished.value)
-            }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    private val _tags = combine(tagSortType, showFinished, search) { tagSortType, showFinished, search ->
+        when (tagSortType) {
+            TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search, showFinished)
+            TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search, showFinished)
+        }
+    }.flatMapLatest { it }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _tagState = MutableStateFlow(TagState())
     val tagState = combine(_tagState, tagSortType, _tags){ tagState, tagSortType, tags ->
@@ -95,7 +95,6 @@ class TagsViewModel(
             is TagEvent.DecreaseToDoAmount -> {
                 viewModelScope.launch {
                     tagRepository.decreaseToDoAmount(tagEvent.title)
-                    //tagRepository.deleteUnusedTags()
                 }
             }
 
@@ -118,11 +117,6 @@ class TagsViewModel(
             }
 
             is TagEvent.SetSearchInTags -> {
-                _tagState.update { it.copy(
-                    searchInTags = tagEvent.searchInTags
-                )}
-                tagSortType.value = TagSortType.PLACEHOLDER
-                tagSortType.value = TagSortType.TITLE
                 search.value = tagEvent.searchInTags
             }
 
@@ -134,8 +128,6 @@ class TagsViewModel(
             }
 
             is TagEvent.SetSortTagsByFinished -> {
-                tagSortType.value = TagSortType.PLACEHOLDER
-                tagSortType.value = TagSortType.TITLE
                 showFinished.value = tagEvent.finished
             }
         }

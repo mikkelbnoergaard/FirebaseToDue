@@ -11,7 +11,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -26,21 +25,21 @@ class ToDosViewModel(
     private val selectedCalendarDate = MutableStateFlow("")
     private val showFinished = MutableStateFlow(false)
 
-    private var sortInt = 0
+    private val sortInt = MutableStateFlow(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _toDos = combine( toDoSortType, showFinished) {toDoSortType, showFinished ->
+    private val _toDos = combine(toDoSortType, showFinished, sortInt, search, selectedCalendarDate) {toDoSortType, showFinished, _, search, selectedCalendarDate ->
         when(toDoSortType) {
-            ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished)
-            ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished)
-            ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished)
-            ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
+            ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search, showFinished)
+            ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search, showFinished)
+            ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search, showFinished)
+            ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate)
         }
     }.flatMapLatest { it }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _toDoState = MutableStateFlow(ToDoState())
-    val toDoState = combine(_toDoState, toDoSortType, _toDos, showFinished){ toDoState, toDoSortType, toDos, showFinished ->
+    val toDoState = combine(_toDoState, toDoSortType, _toDos){ toDoState, toDoSortType, toDos ->
         toDoState.copy(
             toDos = toDos,
             toDoSortType = toDoSortType
@@ -186,16 +185,14 @@ class ToDosViewModel(
             }
 
             is ToDoEvent.AddTagToSortToDos -> {
-                sortInt++
-                toDoSortType.value = ToDoSortType.PLACEHOLDER
+                sortInt.value++
                 toDoSortType.value = ToDoSortType.TAG
             }
 
             is ToDoEvent.RemoveTagToSortToDos -> {
-                sortInt--
-                toDoSortType.value = ToDoSortType.PLACEHOLDER
-                if (sortInt > 0) {
-                    toDoSortType.value = ToDoSortType.TAG
+                sortInt.value--
+                if (sortInt.value == 0) {
+                    toDoSortType.value = ToDoSortType.DUE_DATE
                 }
             }
 
@@ -275,20 +272,7 @@ class ToDosViewModel(
                 _toDoState.update { it.copy(
                     searchInToDos = toDoEvent.searchInToDos
                 )}
-                if(toDoSortType.value == ToDoSortType.TAG) {
-                    toDoSortType.value = ToDoSortType.DUE_DATE
-                    toDoSortType.value = ToDoSortType.TAG
-                } else {
-                    toDoSortType.value = ToDoSortType.TAG
-                    toDoSortType.value = ToDoSortType.DUE_DATE
-                }
                 search.value = toDoEvent.searchInToDos
-            }
-
-            is ToDoEvent.SortToDosByGivenDate -> {
-                toDoSortType.value = ToDoSortType.DUE_DATE
-                selectedCalendarDate.value = toDoEvent.date
-                toDoSortType.value = ToDoSortType.GIVEN_DATE
             }
 
             //only to avoid creating a bunch of todos when testing
