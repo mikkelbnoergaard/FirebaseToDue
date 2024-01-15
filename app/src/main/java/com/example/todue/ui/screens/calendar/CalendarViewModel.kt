@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 class CalendarViewModel(
@@ -23,13 +22,12 @@ class CalendarViewModel(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _toDos = calendarSortType
-        .flatMapLatest { calendarSortType ->
-            when(calendarSortType) {
-                CalendarSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
-                CalendarSortType.PLACEHOLDER -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
-            }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    private val _toDos = combine(calendarSortType, selectedCalendarDate) { calendarSortType, selectedCalendarDate ->
+        when (calendarSortType) {
+            CalendarSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate)
+        }
+    }.flatMapLatest { it }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _calendarState = MutableStateFlow(CalendarState())
     val calendarState = combine(_calendarState, calendarSortType, _toDos){ calendarState, calendarSortType, toDos ->
@@ -42,16 +40,8 @@ class CalendarViewModel(
     fun onEvent(calendarEvent: CalendarEvent) {
 
         when(calendarEvent) {
-
             is CalendarEvent.SortToDosByGivenDate -> {
-                _calendarState.update {
-                    it.copy(
-                        givenDate = calendarEvent.date
-                    )
-                }
                 selectedCalendarDate.value = calendarEvent.date
-                calendarSortType.value = CalendarSortType.PLACEHOLDER
-                calendarSortType.value = CalendarSortType.GIVEN_DATE
             }
         }
     }

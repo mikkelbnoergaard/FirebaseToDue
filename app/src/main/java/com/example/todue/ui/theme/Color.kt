@@ -2,25 +2,7 @@ package com.example.todue.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
 //Light theme
-
-val textColor = Color(0xFF212121)
-val itemColor = Color(0xFF3F51B5)
-val backgroundColor = Color(0xFFFFFFFF)
-val barColor = Color(0xFFF5F5F5)
-val selectedItemColor = Color(0xFF3F51B5)
-val unselectedItemColor = Color(0xFF212121)
-val buttonColor = Color(0xFF3F51B5)
-val tagColor = Color(0xFFC5CAE9)
-
-
 val md_theme_light_primary = Color(0xFF3F51B5)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFFFDDB3)
@@ -45,7 +27,7 @@ val md_theme_light_outline = Color(0xFF817567)
 val md_theme_light_inverseOnSurface = Color(0xFFF9EFE7)
 val md_theme_light_inverseSurface = Color(0xFF34302A)
 val md_theme_light_inversePrimary = Color(0xFFFFB951)
-val md_theme_light_shadow = Color(0xFF000000)
+//val md_theme_light_shadow = Color(0xFF000000)
 val md_theme_light_surfaceTint = Color(0xFF825500)
 val md_theme_light_outlineVariant = Color(0xFFD3C4B4)
 val md_theme_light_scrim = Color(0xFF000000)
@@ -73,14 +55,14 @@ val md_theme_dark_onSurface = Color(0xFFEAE1D9)
 val md_theme_dark_surfaceVariant = Color(0xFF4F4539)
 val md_theme_dark_onSurfaceVariant = Color(0xFFD3C4B4)
 val md_theme_dark_outline = Color(0xFF9C8F80)
-val md_theme_dark_inverseOnSurface = Color(0xFF1F1B16)
+//val md_theme_dark_inverseOnSurface = Color(0xFF1F1B16)
 val md_theme_dark_inverseSurface = Color(0xFFEAE1D9)
 val md_theme_dark_inversePrimary = Color(0xFF825500)
-val md_theme_dark_shadow = Color(0xFF000000)
+//val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFFFFB951)
 val md_theme_dark_outlineVariant = Color(0xFF4F4539)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-val seed = Color(0xFF825500)
+//val seed = Color(0xFF825500)
 
 

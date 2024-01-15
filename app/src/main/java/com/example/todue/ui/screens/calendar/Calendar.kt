@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,13 +17,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -116,7 +118,12 @@ fun CalendarToDoList(
                     state = dateState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.onTertiary)
+                        .background(MaterialTheme.colorScheme.onTertiary),
+                    colors = DatePickerDefaults.colors(
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                        headlineContentColor = MaterialTheme.colorScheme.onBackground,
+                        weekdayContentColor = MaterialTheme.colorScheme.onBackground
+                    )
                 )
             }
         }
@@ -139,6 +146,14 @@ fun CalendarToDoList(
                 ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
             }
         }
+        item{
+            Card(
+                modifier = Modifier
+                    .height(90.dp)
+            ) {
+
+            }
+        }
     }
 }
 
@@ -151,41 +166,42 @@ fun CalendarScreen(
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState
 ) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    Text(
-                        "Calendar",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 30.sp
-                    )
-                },
-            )
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize(),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+        ) {
 
-            ){
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(top = 5.dp, bottom = 5.dp)
-            ) {
-                if(toDoState.isCreatingToDo){
-                    CreateToDoDialog(toDoState = toDoState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
-                    println(calendarState.givenDate)
-                }
-                CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
-                PlusButtonRow(onToDoEvent)
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
+            title = {
+                Text(
+                    "Calendar",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 5.dp, bottom = 5.dp)
+        ) {
+            if (toDoState.isCreatingToDo) {
+                CreateToDoDialog(
+                    toDoState = toDoState,
+                    onTagEvent = onTagEvent,
+                    onToDoEvent = onToDoEvent
+                )
+                println(calendarState.givenDate)
             }
+            CalendarToDoList(toDoState, onToDoEvent, onTagEvent, onCalendarEvent, calendarState)
+            PlusButtonRow(onToDoEvent)
         }
     }
 }

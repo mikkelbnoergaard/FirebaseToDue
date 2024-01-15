@@ -1,3 +1,6 @@
+//suppression of a warning when checking if stats return null; compiler things statement is always true which is not the case
+@file:Suppress("SENSELESS_COMPARISON")
+
 package com.example.todue.dataLayer.source.local
 
 import kotlinx.coroutines.flow.Flow
@@ -57,9 +60,8 @@ class ToDoRepository @Inject constructor(
 
 
 
-
     //for statistics. they have to check for null, if not then app doesn't work when 0 todos are created
-    //warnings are wrong, app doesn't run correctly without if statements
+    //warnings are suppressed, app doesn't run correctly without if statements
     suspend fun getTotalAmountOfCreatedToDos(): Int {
         return if(dataSource.getTotalAmountOfCreatedToDos() != null) {
             dataSource.getTotalAmountOfCreatedToDos()

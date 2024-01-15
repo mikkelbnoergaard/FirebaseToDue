@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,6 +23,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.ToDoEvent
 
-val defaultMaxHeight = 600.dp
+val defaultMaxHeight = 550.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,44 +51,33 @@ fun StatisticsScreen(
     )
     val barCharLabelsLower = "Todos"
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                ),
-                title = {
-                    Text(
-                        "Statistics",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 30.sp
-                    )
-                },
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize()
+    ) {
 
-            ) {
-            onToDoEvent(ToDoEvent.GetStatistics)
-            Row (
-                modifier = Modifier
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.Bottom
-            ){
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
+            title = {
+                Text(
+                    "Statistics",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 20.sp,
+                    fontWeight = Bold
+                )
+            },
+        )
 
-            }
-            BarChart(values = barChartValues)
-            BarChartValue(modifier = Modifier, values = barChartValues)
-            BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
+        onToDoEvent(ToDoEvent.GetStatistics)
+        BarChart(values = barChartValues)
+        BarChartValue(modifier = Modifier, values = barChartValues)
+        BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
 
-        }
     }
 }
 
@@ -98,13 +87,12 @@ fun BarChartLabel(modifier: Modifier = Modifier,
                   labelLower: String
 
 ) {
-
     Row(
         modifier = modifier.then(
             modifier.fillMaxWidth()
         ),
         horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         labelsUpper.forEach { item ->
             Label(
@@ -217,8 +205,14 @@ private fun RowScope.Label(
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(labelUpper)
-        Text(labelLower)
+        Text(
+            labelUpper,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            labelLower,
+            color = MaterialTheme.colorScheme.onBackground
+            )
     }
 }
 @Composable
@@ -232,7 +226,10 @@ private fun RowScope.Value(
         ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(value.toString())
+        Text(
+            value.toString(),
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
 
