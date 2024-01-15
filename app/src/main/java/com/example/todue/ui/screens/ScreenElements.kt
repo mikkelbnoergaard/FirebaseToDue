@@ -402,7 +402,8 @@ fun ToDoItem(
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .requiredHeight(100.dp)
+                .requiredHeight(90.dp)
+                .padding(top = 5.dp)
         ) {
             Text(
                 text = toDo.dueDate + "\n" + toDo.dueTime,
@@ -428,7 +429,6 @@ fun ToDoItem(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(5.dp)
             ) {
-
                 if(toDo.finished){
                     Icon(Icons.Filled.CheckBox, "Floating toggled filter button")
                 } else{
@@ -588,9 +588,10 @@ fun TopBar(
         val focusManager = LocalFocusManager.current
 
         //BackHandler does not work yet for some reason
-        BackHandler(enabled = false, onBack = {
+        BackHandler(enabled = true, onBack = {
             focusManager.clearFocus()
         })
+
         TextField(
             value = toDoState.searchInToDos,
             colors = TextFieldDefaults.textFieldColors(
@@ -612,7 +613,7 @@ fun TopBar(
             },
             singleLine = true,
             modifier = Modifier
-                .focusRequester(focusRequester)
+                //.focusRequester(focusRequester)
                 .padding(end = 5.dp, start = 5.dp),
             trailingIcon = {
                 IconButton(
