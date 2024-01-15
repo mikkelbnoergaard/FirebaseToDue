@@ -2,7 +2,6 @@ package com.example.todue.ui.screens.statistics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -11,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,6 +23,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -56,7 +56,8 @@ fun StatisticsScreen(
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
     ) {
-        CenterAlignedTopAppBar(
+
+        TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
@@ -66,27 +67,18 @@ fun StatisticsScreen(
                     "Statistics",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    fontSize = 30.sp
+                    fontSize = 20.sp,
+                    fontWeight = Bold
                 )
             },
         )
+
         onToDoEvent(ToDoEvent.GetStatistics)
         BarChart(values = barChartValues)
         BarChartValue(modifier = Modifier, values = barChartValues)
         BarChartLabel(modifier = Modifier, labelsUpper = barChartLabelsUpper, labelLower = barCharLabelsLower)
 
     }
-
-    /*
-    Scaffold(
-        topBar = {
-
-        }
-    ) { innerPadding ->
-
-    }
-
-     */
 }
 
 @Composable

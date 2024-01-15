@@ -19,13 +19,13 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.QuestionMark
 import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,8 +43,9 @@ import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.theme.*
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(
+fun SettingsScreen(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
 ){
@@ -51,13 +53,28 @@ fun Settings(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ScaffoldSettings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+            ),
+            title = {
+                Text(
+                    "Settings",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+        )
+        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldSettings(
+fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
 ) {
@@ -70,23 +87,7 @@ fun ScaffoldSettings(
         val paddingBetweenRows = 15.dp
         val sidePadding = 30.dp
         val spaceAfterIcon = 15.dp
-        val spaceAfterOption = 150.dp
         val rowHeight = 40.dp
-        CenterAlignedTopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                titleContentColor = MaterialTheme.colorScheme.onBackground,
-            ),
-            title = {
-                Text(
-                    "Settings",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontSize = 30.sp
-                )
-            },
-        )
-
         Spacer(Modifier.size(paddingBetweenRows))
         Divider(
             modifier = Modifier

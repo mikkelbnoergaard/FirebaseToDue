@@ -168,7 +168,10 @@ fun CreateToDoDialog(
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Pick date")
+                    Text(
+                        text = "Pick date",
+                        color = MaterialTheme.colorScheme.onTertiary
+                        )
                 }
                 Text(
                     text = toDoState.dueDate,
@@ -182,7 +185,10 @@ fun CreateToDoDialog(
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
-                    Text(text = "Pick time")
+                    Text(
+                        text = "Pick time",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
                 Text(
                     text = toDoState.dueTime,
@@ -540,7 +546,10 @@ fun EditToDoDialog(
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                 ) {
-                    Text(text = "Pick time")
+                    Text(
+                        text = "Pick time",
+                        color = MaterialTheme.colorScheme.onTertiary
+                    )
                 }
                 Text(
                     text = toDoState.dueTime,

@@ -58,8 +58,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
@@ -81,7 +79,7 @@ import com.example.todue.state.ToDoState
 import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.screens.calendar.CalendarScreen
 import com.example.todue.ui.screens.overview.ToDosScreen
-import com.example.todue.ui.screens.settings.Settings
+import com.example.todue.ui.screens.settings.SettingsScreen
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
 //import com.example.todue.ui.theme.backgroundColor
@@ -163,7 +161,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
-                4 -> Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
             }
         }
@@ -340,16 +338,15 @@ fun ToDoList(
                 modifier = Modifier
                     .padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
                     .requiredWidth(width - 40.dp)
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.background),
+                    .fillMaxHeight(),
                 elevation = elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onTertiary)
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.inverseOnSurface)
             ) {
                 ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
             }
         }
-        item(){
+        item{
             Card(
                 modifier = Modifier
                     .height(90.dp)
@@ -575,12 +572,10 @@ fun TagItem(
     ) {
         Text(
             text = "#" + tag.title,
-            color =
-
-            if (!tag.sort) {
+            color = if(!tag.sort) {
                 MaterialTheme.colorScheme.onBackground
             } else {
-                MaterialTheme.colorScheme.onSecondary
+                MaterialTheme.colorScheme.onTertiary
             }
         )
     }
@@ -605,7 +600,6 @@ fun TopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        val focusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
         //BackHandler does not work yet for some reason
@@ -619,8 +613,8 @@ fun TopBar(
                 focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                 disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedIndicatorColor = Color.Transparent,
-                backgroundColor = MaterialTheme.colorScheme.onTertiary,
-                textColor = MaterialTheme.colorScheme.onSurface,
+                backgroundColor = MaterialTheme.colorScheme.inverseOnSurface,
+                textColor = MaterialTheme.colorScheme.onBackground,
                 focusedLabelColor = MaterialTheme.colorScheme.onSurface,
                 placeholderColor =  MaterialTheme.colorScheme.onSurface,
                 cursorColor =  MaterialTheme.colorScheme.primary,
@@ -630,11 +624,13 @@ fun TopBar(
                 onTagEvent(TagEvent.SetSearchInTags(it))
             },
             placeholder = {
-                Text(text = "search...")
+                Text(
+                    text = "search...",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             },
             singleLine = true,
             modifier = Modifier
-                //.focusRequester(focusRequester)
                 .padding(end = 5.dp, start = 5.dp),
             trailingIcon = {
                 IconButton(
@@ -642,8 +638,11 @@ fun TopBar(
                         focusManager.clearFocus()
                         onToDoEvent(ToDoEvent.SetSearchInToDos(""))
                         onTagEvent(TagEvent.SetSearchInTags(""))
+
                     }) {
-                    Icon(Icons.Filled.ArrowBack, "Lose focus button")
+                    Icon(Icons.Filled.ArrowBack, "Lose focus button",
+                        tint = MaterialTheme.colorScheme.onBackground)
+
                 }
 
             }
