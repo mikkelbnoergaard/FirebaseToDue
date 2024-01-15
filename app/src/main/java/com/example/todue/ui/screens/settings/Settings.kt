@@ -301,7 +301,6 @@ fun NotificationSwitch() {
             uncheckedThumbColor = MaterialTheme.colorScheme.primary
         )
     )}
-
 @Composable
 fun DarkThemeSwitch(
     //darkThemeProvider: DarkThemeProvider
