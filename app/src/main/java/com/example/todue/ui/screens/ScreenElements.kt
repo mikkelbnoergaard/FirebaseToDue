@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
@@ -39,6 +40,7 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonDefaults.elevatedButtonElevation
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -347,6 +349,14 @@ fun ToDoList(
                 ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
             }
         }
+        item(){
+            Card(
+                modifier = Modifier
+                    .height(90.dp)
+            ) {
+
+            }
+        }
     }
 }
 
@@ -464,8 +474,8 @@ fun PlusButtonRow(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
-                    .padding(end = 10.dp)
-                    .requiredSize(50.dp)
+                    .padding(end = 20.dp, bottom = 10.dp)
+                    .requiredSize(60.dp)
             ) {
                 Icon(Icons.Filled.Add, "Floating action button")
             }
@@ -505,7 +515,11 @@ fun ScrollableTagRow(
         modifier = Modifier
             .requiredHeight(50.dp)
             .fillMaxWidth()
-            .border(width = 3.dp, color = MaterialTheme.colorScheme.onSecondary, shape = getBottomLineShape())
+            .border(
+                width = 3.dp,
+                color = MaterialTheme.colorScheme.onSecondary,
+                shape = getBottomLineShape()
+            )
             .padding(start = 10.dp, top = 5.dp, bottom = 5.dp)
 
     ) {
@@ -580,7 +594,11 @@ fun TopBar(
             .fillMaxWidth()
             .fillMaxHeight(0.09f)
             .background(MaterialTheme.colorScheme.background)
-            .border(width = 3.dp, color = MaterialTheme.colorScheme.background, shape = getBottomLineShape()),
+            .border(
+                width = 3.dp,
+                color = MaterialTheme.colorScheme.background,
+                shape = getBottomLineShape()
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
