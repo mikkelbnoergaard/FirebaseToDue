@@ -214,10 +214,8 @@ fun FilterButton(
                 onTagEvent(TagEvent.SetSortTagsByFinished(true))
                 true
             } else {
-                onToDoEvent(ToDoEvent.SortToDosByDueDate)
                 onToDoEvent(ToDoEvent.SetSortToDosByFinished(false))
                 onTagEvent(TagEvent.SetSortTagsByFinished(false))
-                onTagEvent(TagEvent.ResetTagSort)
                 false
             }
         },
