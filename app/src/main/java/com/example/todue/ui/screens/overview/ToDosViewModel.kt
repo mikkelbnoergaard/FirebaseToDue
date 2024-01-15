@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -28,18 +29,18 @@ class ToDosViewModel(
     private var sortInt = 0
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val _toDos = toDoSortType
-        .flatMapLatest { toDoSortType ->
-            when(toDoSortType) {
-                ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished.value)
-                ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
-                ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished.value)
-                ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
-            }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    private val _toDos = combine( toDoSortType, showFinished) {toDoSortType, showFinished ->
+        when(toDoSortType) {
+            ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search.value, showFinished)
+            ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished)
+            ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search.value, showFinished)
+            ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate.value)
+        }
+    }.flatMapLatest { it }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _toDoState = MutableStateFlow(ToDoState())
-    val toDoState = combine(_toDoState, toDoSortType, _toDos){ toDoState, toDoSortType, toDos ->
+    val toDoState = combine(_toDoState, toDoSortType, _toDos, showFinished){ toDoState, toDoSortType, toDos, showFinished ->
         toDoState.copy(
             toDos = toDos,
             toDoSortType = toDoSortType
@@ -192,20 +193,14 @@ class ToDosViewModel(
 
             is ToDoEvent.RemoveTagToSortToDos -> {
                 sortInt--
-                toDoSortType.value = ToDoSortType.DUE_DATE
+                toDoSortType.value = ToDoSortType.PLACEHOLDER
                 if (sortInt > 0) {
                     toDoSortType.value = ToDoSortType.TAG
                 }
             }
 
             is ToDoEvent.SetSortToDosByFinished -> {
-                val temp = toDoSortType.value
-                toDoSortType.value = ToDoSortType.PLACEHOLDER
-                toDoSortType.value = temp
                 showFinished.value = toDoEvent.finished
-                _toDoState.update {it.copy(
-                    sortByFinished = toDoEvent.finished
-                )}
             }
 
             is ToDoEvent.SortToDosByDueDate -> {
