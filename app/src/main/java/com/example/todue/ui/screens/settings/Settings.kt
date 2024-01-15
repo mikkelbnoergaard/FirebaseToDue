@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -34,7 +35,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalMapOf
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todue.ui.event.TagEvent
@@ -89,6 +92,8 @@ fun ScaffoldSettings(
             val spaceAfterIcon = 15.dp
             val spaceAfterOption = 150.dp
             val rowHeight = 40.dp
+            val rowLength = 350.dp
+
             Spacer(Modifier.size(paddingBetweenRows))
             Divider(modifier = Modifier
                 .width(350.dp)
@@ -96,7 +101,7 @@ fun ScaffoldSettings(
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -106,7 +111,7 @@ fun ScaffoldSettings(
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(text = "Dark Theme")
                 Spacer(Modifier.width(spaceAfterOption))
-                DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
+                DarkThemeSwitch()
             }
             // Switch button messes with distance between
             // the options, so this spacer is hard coded
@@ -118,7 +123,7 @@ fun ScaffoldSettings(
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -127,6 +132,7 @@ fun ScaffoldSettings(
                 Icon(Icons.Outlined.AccountCircle, "Visibility icon")
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(text = "Account")
+                Spacer(Modifier.width(spaceAfterOption))
             }
 
             Spacer(Modifier.size(paddingBetweenRows))
@@ -136,7 +142,7 @@ fun ScaffoldSettings(
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -157,7 +163,7 @@ fun ScaffoldSettings(
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -175,7 +181,7 @@ fun ScaffoldSettings(
             Spacer(Modifier.size(paddingBetweenRows))
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
@@ -194,7 +200,7 @@ fun ScaffoldSettings(
             //this row is not meant to be included on release, it's purely for testing and showing the application
             Row (
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .width(rowLength)
                     .height(rowHeight)
                     .clickable(onClick = {
                         onToDoEvent(ToDoEvent.PopulateToDoList)
@@ -217,38 +223,45 @@ fun ScaffoldSettings(
 }
 
 @Composable
-fun NotificationSwitch() {
+fun NotificationSwitch(
+    ) {
     var checked by remember { mutableStateOf(false) }
 
     Switch(
         checked = checked,
         onCheckedChange = {
             checked = it
-        }
-    )}
-
-@Composable
-fun DarkThemeSwitch(
-    darkThemeProvider: DarkThemeProvider
-) {
-    var checked by remember { mutableStateOf(false) }
-
-
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = it
-        }
+        },
+        colors = SwitchDefaults.colors(
+            uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
+            uncheckedIconColor = MaterialTheme.colorScheme.primary,
+            uncheckedThumbColor = MaterialTheme.colorScheme.primary,
+            uncheckedTrackColor = MaterialTheme.colorScheme.onPrimary,
+            checkedBorderColor = MaterialTheme.colorScheme.onPrimary
+        )
     )
 }
 
-/*
 @Composable
-fun SettingsPreview(
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
-){
-    Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-}
+fun DarkThemeSwitch(
 
- */
+    ) {
+    var checked by remember { mutableStateOf(false) }
+
+
+    Switch(
+        checked = checked,
+        onCheckedChange = {
+            checked = it
+        },
+        colors = SwitchDefaults.colors(
+            uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
+            uncheckedIconColor = MaterialTheme.colorScheme.primary,
+            uncheckedThumbColor = MaterialTheme.colorScheme.primary,
+            uncheckedTrackColor = MaterialTheme.colorScheme.onPrimary,
+            checkedBorderColor = MaterialTheme.colorScheme.onPrimary
+
+        )
+
+    )
+}
