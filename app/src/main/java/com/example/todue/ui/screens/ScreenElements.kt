@@ -475,9 +475,12 @@ fun PlusButtonRow(
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
                     .padding(end = 20.dp, bottom = 10.dp)
-                    .requiredSize(60.dp)
+                    .requiredSize(55.dp)
             ) {
-                Icon(Icons.Filled.Add, "Floating action button")
+                Icon(
+                    Icons.Filled.Add, "Floating action button",
+                    modifier = Modifier.size(25.dp)
+                )
             }
         }
     }
