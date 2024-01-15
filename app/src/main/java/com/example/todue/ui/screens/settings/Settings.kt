@@ -210,7 +210,7 @@ fun Settings(
             )
             Spacer(Modifier.size(spaceAfterIcon))
             Text(
-                text = "Privacy and security - TBA",
+                text = "Privacy and Security - TBA",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -271,7 +271,7 @@ fun Settings(
             )
             Spacer(Modifier.size(spaceAfterIcon))
             Text(
-                text = "Populate ToDo list",
+                text = "Populate ToDo list - Experimental",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
