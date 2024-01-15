@@ -24,7 +24,7 @@ sealed interface ToDoEvent {
     data object PopulateToDoList: ToDoEvent
 
 
-    data class SetSortToDosByFinished(val finished: Boolean): ToDoEvent
+    data class SortToDosByFinished(val finished: Boolean): ToDoEvent
     data class SetTitle(val title: String): ToDoEvent
     data class SetDescription(val description: String): ToDoEvent
     data class SetTag(val tag: String): ToDoEvent

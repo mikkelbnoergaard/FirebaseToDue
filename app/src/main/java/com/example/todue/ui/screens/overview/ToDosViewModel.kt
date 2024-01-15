@@ -31,7 +31,6 @@ class ToDosViewModel(
     private val _toDos = combine(toDoSortType, showFinished, sortInt, search, selectedCalendarDate) {toDoSortType, showFinished, _, search, selectedCalendarDate ->
         when(toDoSortType) {
             ToDoSortType.TAG -> toDoRepository.getToDosOrderedByTags(search, showFinished)
-            ToDoSortType.PLACEHOLDER -> toDoRepository.getToDosOrderedByDueDate(search, showFinished)
             ToDoSortType.DUE_DATE -> toDoRepository.getToDosOrderedByDueDate(search, showFinished)
             ToDoSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate)
         }
@@ -184,6 +183,18 @@ class ToDosViewModel(
                 ) }
             }
 
+            is ToDoEvent.ShowEditToDoDialog -> {
+                _toDoState.update {it.copy(
+                    isEditingToDo = true
+                )}
+            }
+
+            is ToDoEvent.HideEditToDoDialog -> {
+                _toDoState.update {it.copy(
+                    isEditingToDo = false
+                )}
+            }
+
             is ToDoEvent.AddTagToSortToDos -> {
                 sortInt.value++
                 toDoSortType.value = ToDoSortType.TAG
@@ -196,7 +207,7 @@ class ToDosViewModel(
                 }
             }
 
-            is ToDoEvent.SetSortToDosByFinished -> {
+            is ToDoEvent.SortToDosByFinished -> {
                 showFinished.value = toDoEvent.finished
             }
 
@@ -210,20 +221,7 @@ class ToDosViewModel(
                 }
             }
 
-            is ToDoEvent.ShowEditToDoDialog -> {
-                _toDoState.update {it.copy(
-                    isEditingToDo = true
-                )}
-            }
-
-            is ToDoEvent.HideEditToDoDialog -> {
-                _toDoState.update {it.copy(
-                    isEditingToDo = false
-                )}
-            }
-
             is ToDoEvent.EditToDo -> {
-
                 viewModelScope.launch {
                     toDoRepository.editToDo(newTitle = toDoEvent.newTitle, newDescription = toDoEvent.newDescription, newTag = toDoEvent.newTag, newDueDate = toDoEvent.newDueDate, newDueTime = toDoEvent.newDueTime, toDoId = toDoEvent.toDoId)
                 }
@@ -273,6 +271,18 @@ class ToDosViewModel(
                     searchInToDos = toDoEvent.searchInToDos
                 )}
                 search.value = toDoEvent.searchInToDos
+            }
+
+            is ToDoEvent.GetStatistics -> {
+                viewModelScope.launch {
+                    _toDoState.update {
+                        it.copy(
+                            totalAmountOfCreatedToDos = toDoRepository.getTotalAmountOfCreatedToDos(),
+                            totalAmountOfFinishedToDos = toDoRepository.getTotalAmountOfFinishedToDos(),
+                            totalAmountOfUnfinishedToDos = toDoRepository.getTotalAmountOfUnfinishedToDos()
+                        )
+                    }
+                }
             }
 
             //only to avoid creating a bunch of todos when testing
@@ -357,18 +367,6 @@ class ToDosViewModel(
                         "21:00",
                         false
                     )
-                }
-            }
-
-            is ToDoEvent.GetStatistics -> {
-                viewModelScope.launch {
-                    _toDoState.update {
-                        it.copy(
-                            totalAmountOfCreatedToDos = toDoRepository.getTotalAmountOfCreatedToDos(),
-                            totalAmountOfFinishedToDos = toDoRepository.getTotalAmountOfFinishedToDos(),
-                            totalAmountOfUnfinishedToDos = toDoRepository.getTotalAmountOfUnfinishedToDos()
-                        )
-                    }
                 }
             }
         }

@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,12 +22,11 @@ import com.example.todue.ui.screens.tags.TagsViewModel
 import com.example.todue.ui.screens.overview.ToDosViewModel
 import com.example.todue.ui.screens.calendar.CalendarViewModel
 import com.example.todue.ui.screens.GeneralLayout
-import com.example.todue.ui.theme.backgroundColor
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.TagEvent
-import com.example.todue.ui.theme.DarkThemeProvider
+//import com.example.todue.ui.theme.DarkThemeProvider
 
 class MainActivity : ComponentActivity() {
 
@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = backgroundColor
+                    color = MaterialTheme.colorScheme.background
                 ) {
                     GeneralLayout(
                         toDoState = toDoState,

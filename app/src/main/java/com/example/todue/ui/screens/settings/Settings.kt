@@ -118,7 +118,7 @@ fun Settings(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-            DarkThemeSwitch(darkThemeProvider = DarkThemeProvider())
+            DarkThemeSwitch(/*darkThemeProvider = DarkThemeProvider()*/)
         }
         // Switch button messes with distance between
         // the options, so this spacer is hard coded
@@ -299,7 +299,7 @@ fun NotificationSwitch() {
 
 @Composable
 fun DarkThemeSwitch(
-    darkThemeProvider: DarkThemeProvider
+    //darkThemeProvider: DarkThemeProvider
 ) {
     var checked by remember { mutableStateOf(false) }
 

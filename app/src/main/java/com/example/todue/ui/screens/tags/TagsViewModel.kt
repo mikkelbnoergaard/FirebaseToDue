@@ -26,7 +26,6 @@ class TagsViewModel(
     private val _tags = combine(tagSortType, showFinished, search) { tagSortType, showFinished, search ->
         when (tagSortType) {
             TagSortType.TITLE -> tagRepository.getTagsOrderedByTitle(search, showFinished)
-            TagSortType.PLACEHOLDER -> tagRepository.getTagsOrderedByTitle(search, showFinished)
         }
     }.flatMapLatest { it }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -120,15 +119,15 @@ class TagsViewModel(
                 search.value = tagEvent.searchInTags
             }
 
+            is TagEvent.SetSortTagsByFinished -> {
+                showFinished.value = tagEvent.finished
+            }
+
             is TagEvent.PopulateTags -> {
                 viewModelScope.launch {
                     tagRepository.createTag("Final delivery", 7, false)
                     tagRepository.createTag("Cleaning", 2, false)
                 }
-            }
-
-            is TagEvent.SetSortTagsByFinished -> {
-                showFinished.value = tagEvent.finished
             }
         }
     }

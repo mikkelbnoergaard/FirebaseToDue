@@ -1,8 +1,8 @@
 package com.example.todue.ui.theme
 
+/*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-
 
 class DarkThemeProvider(
     private var useDarkTheme: Boolean = false
@@ -22,3 +22,5 @@ class DarkThemeProvider(
         return useDarkTheme
     }
 }
+
+ */

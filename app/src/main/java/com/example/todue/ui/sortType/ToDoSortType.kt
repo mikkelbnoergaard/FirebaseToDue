@@ -4,7 +4,6 @@ enum class ToDoSortType {
 
     TAG,
     DUE_DATE,
-    GIVEN_DATE,
-    PLACEHOLDER
+    GIVEN_DATE
 
 }

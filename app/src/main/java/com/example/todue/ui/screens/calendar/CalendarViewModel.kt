@@ -23,10 +23,8 @@ class CalendarViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _toDos = combine(calendarSortType, selectedCalendarDate) { calendarSortType, selectedCalendarDate ->
-
         when (calendarSortType) {
             CalendarSortType.GIVEN_DATE -> toDoRepository.getToDosByGivenDate(selectedCalendarDate)
-            CalendarSortType.PLACEHOLDER -> toDoRepository.getToDosByGivenDate(selectedCalendarDate)
         }
     }.flatMapLatest { it }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
@@ -42,7 +40,6 @@ class CalendarViewModel(
     fun onEvent(calendarEvent: CalendarEvent) {
 
         when(calendarEvent) {
-
             is CalendarEvent.SortToDosByGivenDate -> {
                 selectedCalendarDate.value = calendarEvent.date
             }

@@ -203,6 +203,7 @@ fun FilterButton(
     onTagEvent: (TagEvent) -> Unit
 ) {
     var clicked by remember { mutableStateOf(false) }
+
     if(toDoState.sortByFinished) {
         clicked = true
     }
@@ -210,11 +211,11 @@ fun FilterButton(
     FloatingActionButton(
         onClick = {
             clicked = if (!clicked) {
-                onToDoEvent(ToDoEvent.SetSortToDosByFinished(true))
+                onToDoEvent(ToDoEvent.SortToDosByFinished(true))
                 onTagEvent(TagEvent.SetSortTagsByFinished(true))
                 true
             } else {
-                onToDoEvent(ToDoEvent.SetSortToDosByFinished(false))
+                onToDoEvent(ToDoEvent.SortToDosByFinished(false))
                 onTagEvent(TagEvent.SetSortTagsByFinished(false))
                 false
             }
@@ -347,9 +348,9 @@ fun ToDoList(
         item{
             Card(
                 modifier = Modifier
-                    .height(90.dp)
+                    .height(80.dp)
             ) {
-
+                
             }
         }
     }
