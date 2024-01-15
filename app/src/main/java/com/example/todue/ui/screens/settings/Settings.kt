@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.theme.*
@@ -48,6 +49,7 @@ import com.example.todue.ui.theme.*
 fun SettingsScreen(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ){
     Column(
         modifier = Modifier
@@ -69,7 +71,7 @@ fun SettingsScreen(
                 )
             },
         )
-        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
+        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent)
     }
 }
 
@@ -77,6 +79,7 @@ fun SettingsScreen(
 fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -258,8 +261,9 @@ fun Settings(
                 .fillMaxWidth()
                 .height(rowHeight)
                 .clickable(onClick = {
-                    onToDoEvent(ToDoEvent.PopulateToDoList)
                     onTagEvent(TagEvent.PopulateTags)
+                    onToDoEvent(ToDoEvent.PopulateToDoList)
+                    onCalendarEvent(CalendarEvent.Recompose)
                 }),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,

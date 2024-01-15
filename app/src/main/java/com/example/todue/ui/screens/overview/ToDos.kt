@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.screens.TopBar
 import com.example.todue.ui.screens.ScrollableTagRow
@@ -30,18 +31,20 @@ fun ToDosScreen(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-ScaffoldToDos(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent)
+ToDos(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldToDos(
+fun ToDos(
     toDoState: ToDoState,
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
-    onToDoEvent: (ToDoEvent) -> Unit
+    onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -93,7 +96,8 @@ fun ScaffoldToDos(
                     ScrollableToDoColumn(
                         toDoState = toDoState,
                         onTagEvent = onTagEvent,
-                        onToDoEvent = onToDoEvent
+                        onToDoEvent = onToDoEvent,
+                        onCalendarEvent = onCalendarEvent
                     )
                 }
             }

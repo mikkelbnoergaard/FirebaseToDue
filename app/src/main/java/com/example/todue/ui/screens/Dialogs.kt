@@ -54,6 +54,7 @@ import com.example.todue.dataLayer.source.remote.ApiService
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.modifiers.getBottomLineShape
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
@@ -71,6 +72,7 @@ fun CreateToDoDialog(
     toDoState: ToDoState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -211,6 +213,7 @@ fun CreateToDoDialog(
                         if(toDoState.title.isNotBlank()) {
                             onToDoEvent(ToDoEvent.CreateToDo)
                             onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                            onCalendarEvent(CalendarEvent.Recompose)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
@@ -232,6 +235,7 @@ fun CreateToDoDialog(
 fun DeleteToDoDialog(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     modifier: Modifier = Modifier,
     toDo: ToDo
 ) {
@@ -264,6 +268,7 @@ fun DeleteToDoDialog(
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onToDoEvent(ToDoEvent.HideDeleteToDoDialog)
                         onToDoEvent(ToDoEvent.HideToDoDialog)
+                        onCalendarEvent(CalendarEvent.Recompose)
                     },
                     modifier = Modifier
                         .padding(5.dp)
@@ -413,6 +418,7 @@ fun CheckToDoDialog(
 fun DeleteTagDialog(
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     modifier: Modifier = Modifier,
     tag: Tag
 ) {
@@ -444,6 +450,7 @@ fun DeleteTagDialog(
                         onTagEvent(TagEvent.DeleteTag(title = tag.title))
                         onToDoEvent(ToDoEvent.DeleteTagFromToDos(tag = tag.title))
                         onTagEvent(TagEvent.HideDeleteDialog)
+                        onCalendarEvent(CalendarEvent.Recompose)
                     },
                     modifier = Modifier
                         .padding(5.dp)
@@ -463,6 +470,7 @@ fun EditToDoDialog(
     toDo: ToDo,
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     toDoState: ToDoState
 ) {
     val dateDialogState = rememberMaterialDialogState()
@@ -571,6 +579,7 @@ fun EditToDoDialog(
                         onToDoEvent(ToDoEvent.EditToDo(toDoState.title, toDoState.description, toDoState.tag, toDoState.dueDate, toDoState.dueTime, toDo.id))
                         onTagEvent(TagEvent.DecreaseToDoAmount(toDo.tag))
                         onTagEvent(TagEvent.CreateTag(toDoState.tag))
+                        onCalendarEvent(CalendarEvent.Recompose)
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                     modifier = Modifier
@@ -673,7 +682,7 @@ fun TimePicker(
 
 @Composable
 fun FinishToDoDialog(
-    onToDoEvent: (ToDoEvent) -> Unit,
+    onToDoEvent: (ToDoEvent) -> Unit
     ) {
     Dialog(onDismissRequest = { onToDoEvent(ToDoEvent.ResetToDoState) }) {
         Card(

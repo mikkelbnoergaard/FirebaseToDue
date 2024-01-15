@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.state.TagState
 import com.example.todue.state.ToDoState
+import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.screens.TagList
 
@@ -29,6 +30,7 @@ fun TagsScreen(
     tagState: TagState,
     onTagEvent: (TagEvent) -> Unit,
     onToDoEvent: (ToDoEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     toDoState: ToDoState
 ) {
     Column(
@@ -50,7 +52,7 @@ fun TagsScreen(
                 )
             },
         )
-        Tags(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, tagState = tagState, toDoState = toDoState)
+        Tags(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, tagState = tagState, toDoState = toDoState)
     }
 
 
@@ -60,6 +62,7 @@ fun TagsScreen(
 fun Tags(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
+    onCalendarEvent: (CalendarEvent) -> Unit,
     tagState: TagState,
     toDoState: ToDoState
     ) {
@@ -81,7 +84,7 @@ fun Tags(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.End
             ) {
-                TagList(tagState, onTagEvent, onToDoEvent, toDoState)
+                TagList(tagState, onTagEvent, onToDoEvent, onCalendarEvent, toDoState)
             }
         }
     }

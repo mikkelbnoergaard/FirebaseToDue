@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -80,11 +81,11 @@ fun CalendarToDoList(
 
     val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
 
-    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo) }
+    if(toDoState.isDeletingToDo) { DeleteToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, toDo = selectedToDo) }
 
     if(toDoState.isCheckingToDo) { CheckToDoDialog(onToDoEvent = onToDoEvent, toDo = selectedToDo) }
 
-    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState) }
+    if(toDoState.isEditingToDo) { EditToDoDialog(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = selectedToDo, toDoState = toDoState, onCalendarEvent = onCalendarEvent) }
 
     if(toDoState.isFinishingToDo) { FinishToDoDialog(onToDoEvent = onToDoEvent) }
 
@@ -143,16 +144,14 @@ fun CalendarToDoList(
                 shape = RoundedCornerShape(10),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
             ) {
-                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo)
+                ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo, onCalendarEvent = onCalendarEvent)
             }
         }
         item{
-            Card(
+            Spacer(
                 modifier = Modifier
-                    .height(90.dp)
-            ) {
-
-            }
+                    .height(80.dp)
+            )
         }
     }
 }
@@ -196,7 +195,8 @@ fun CalendarScreen(
                 CreateToDoDialog(
                     toDoState = toDoState,
                     onTagEvent = onTagEvent,
-                    onToDoEvent = onToDoEvent
+                    onToDoEvent = onToDoEvent,
+                    onCalendarEvent = onCalendarEvent
                 )
                 println(calendarState.givenDate)
             }
