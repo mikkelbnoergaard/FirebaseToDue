@@ -142,7 +142,7 @@ fun CalendarToDoList(
                     .fillMaxHeight(),
                 elevation = ButtonDefaults.elevatedButtonElevation(5.dp, 5.dp, 5.dp, 5.dp, 5.dp),
                 shape = RoundedCornerShape(10),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.background),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.inverseOnSurface),
             ) {
                 ToDoItem(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, toDo = toDo, onCalendarEvent = onCalendarEvent)
             }
