@@ -118,7 +118,7 @@ fun Settings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Dark Theme",
+                    text = "Dark Theme - TBA",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
