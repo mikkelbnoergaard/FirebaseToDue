@@ -122,11 +122,9 @@ fun Settings(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-            DarkThemeSwitch(/*darkThemeProvider = DarkThemeProvider()*/)
+            DarkThemeSwitch()
         }
-        // Switch button messes with distance between
-        // the options, so this spacer is hard coded
-        //Spacer(Modifier.size(18.dp))
+
         Spacer(Modifier.size(paddingBetweenRows))
         Divider(
             modifier = Modifier
@@ -307,9 +305,7 @@ fun NotificationSwitch() {
         )
     )}
 @Composable
-fun DarkThemeSwitch(
-    //darkThemeProvider: DarkThemeProvider
-) {
+fun DarkThemeSwitch() {
     var checked by remember { mutableStateOf(false) }
 
 
@@ -324,14 +320,3 @@ fun DarkThemeSwitch(
         )
     )
 }
-
-/*
-@Composable
-fun SettingsPreview(
-    onToDoEvent: (ToDoEvent) -> Unit,
-    onTagEvent: (TagEvent) -> Unit
-){
-    Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent)
-}
-
- */
