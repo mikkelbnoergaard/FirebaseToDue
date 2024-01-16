@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -33,6 +34,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Equalizer
 import androidx.compose.material.icons.outlined.Home
@@ -56,6 +58,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -81,9 +84,6 @@ import com.example.todue.ui.screens.overview.ToDosScreen
 import com.example.todue.ui.screens.settings.SettingsScreen
 import com.example.todue.ui.screens.statistics.StatisticsScreen
 import com.example.todue.ui.screens.tags.TagsScreen
-//import com.example.todue.ui.theme.backgroundColor
-//import com.example.todue.ui.theme.itemColor
-//import com.example.todue.ui.theme.tagColor
 
 
 //The general layout used on all the screens with navigation bar
@@ -251,6 +251,9 @@ fun TagList(
             )
         )
     }
+
+    val (_, width) = LocalConfiguration.current.run { screenHeightDp.dp to screenWidthDp.dp }
+
     Column(
         horizontalAlignment = Alignment.End
     ) {
@@ -284,11 +287,55 @@ fun TagList(
                     shape = RoundedCornerShape(10),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
-
-                    Text(
-                        text = "#" + tag.title,
-                        color = MaterialTheme.colorScheme.background
-                    )
+                    Row(
+                        horizontalArrangement =  Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .requiredWidth(width/6)
+                                .height(30.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = tag.toDoAmount.toString() + " ToDos",
+                                color = MaterialTheme.colorScheme.background,
+                                textAlign = TextAlign.Center,
+                                fontSize = 12.sp
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .width(width/3+30.dp)
+                                .height(30.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = CenterHorizontally
+                        ) {
+                            Text(
+                                text = "#" + tag.title,
+                                maxLines = 1,
+                                color = MaterialTheme.colorScheme.background,
+                                fontSize = 15.sp,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .requiredWidth(width/6)
+                                .height(30.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End
+                        ) {
+                            Icon(
+                                Icons.Filled.Delete, "Delete tag",
+                                tint = MaterialTheme.colorScheme.background
+                            )
+                        }
+                    }
                 }
             }
         }
