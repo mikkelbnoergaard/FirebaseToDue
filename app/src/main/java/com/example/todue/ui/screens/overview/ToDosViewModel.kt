@@ -38,10 +38,11 @@ class ToDosViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _toDoState = MutableStateFlow(ToDoState())
-    val toDoState = combine(_toDoState, toDoSortType, _toDos){ toDoState, toDoSortType, toDos ->
+    val toDoState = combine(_toDoState, toDoSortType, _toDos, showFinished){ toDoState, toDoSortType, toDos, showFinished ->
         toDoState.copy(
             toDos = toDos,
-            toDoSortType = toDoSortType
+            toDoSortType = toDoSortType,
+            sortByFinished = showFinished
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ToDoState())
 
