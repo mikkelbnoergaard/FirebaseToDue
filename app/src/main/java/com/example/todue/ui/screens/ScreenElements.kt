@@ -203,13 +203,6 @@ fun FilterButton(
 ) {
     var clicked by remember { mutableStateOf(toDoState.sortByFinished) }
 
-    /*
-    if(toDoState.sortByFinished) {
-        clicked = true
-    }
-
-     */
-
     FloatingActionButton(
         onClick = {
             clicked = if (!clicked) {
