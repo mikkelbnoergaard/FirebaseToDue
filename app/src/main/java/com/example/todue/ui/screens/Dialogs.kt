@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-//import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -35,7 +34,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +45,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.bumptech.glide.Glide
+import com.example.todue.R
 import com.example.todue.dataLayer.source.local.Tag
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.dataLayer.source.local.ToDo
@@ -64,6 +63,8 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -733,8 +734,10 @@ fun GifScreen() {
                     tag = searchTerm
                 )
                 response.data.images.downsized.url
-            } catch (e: Exception) {
-                "https://giphy.com/gifs/g5games-cat-g5-games-hidden-city-TNkxUEn97iluf7jCsh"
+            } catch (e: UnknownHostException) {
+                "Failure to call gif"
+            } catch (e: SocketTimeoutException) {
+                "Failure to call gif"
             }
         }
     }
@@ -747,19 +750,33 @@ fun GifScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         if (imageUrl.isNotEmpty()) {
-            AndroidView(
-                factory = { context ->
-                    ImageView(context).apply {
-                        Glide.with(context)
-                            .asGif()
-                            .load(imageUrl)
-                            .into(this)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(15.dp))
-            )
+            if (imageUrl == "Failure to call gif"){
+                AndroidView(
+                    factory = { context ->
+                        ImageView(context).apply {
+                            Glide.with(context)
+                                .asGif()
+                                .load(R.drawable.giphy)
+                                .into(this)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            } else {
+                AndroidView(
+                    factory = { context ->
+                        ImageView(context).apply {
+                            Glide.with(context)
+                                .asGif()
+                                .load(imageUrl)
+                                .into(this)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
         } else {
             Text(text = "Loading GIF...", color = MaterialTheme.colorScheme.onSurface)
         }

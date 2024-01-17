@@ -10,8 +10,8 @@ data class GifData(
 )
 
 data class GifImages(
-    val fixedHeight: GifImage,
-    val fixedWidth: GifImage,
+    val fixed_Height: GifImage,
+    val fixed_Width: GifImage,
     val downsized: GifImage
 )
 
