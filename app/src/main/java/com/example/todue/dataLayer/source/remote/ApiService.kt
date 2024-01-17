@@ -27,5 +27,4 @@ class ApiService {
                 .create(GiphyApiService::class.java)
         }
     }
-
 }
