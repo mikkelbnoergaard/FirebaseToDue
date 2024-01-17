@@ -240,7 +240,7 @@ fun Settings(
             )
             Spacer(Modifier.size(spaceAfterIcon))
             Text(
-                text = "About",
+                text = "About - TBA",
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -263,7 +263,6 @@ fun Settings(
                     onTagEvent(TagEvent.PopulateTags)
                     onToDoEvent(ToDoEvent.PopulateToDoList)
                     onCalendarEvent(CalendarEvent.Recompose)
-                    println("HEY")
                 }),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
