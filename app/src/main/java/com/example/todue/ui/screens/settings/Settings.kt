@@ -1,5 +1,6 @@
 package com.example.todue.ui.screens.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,11 +41,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todue.dataLayer.source.local.ToDo
+import com.example.todue.ui.MainActivity
 import com.example.todue.ui.event.CalendarEvent
 import com.example.todue.ui.event.TagEvent
 import com.example.todue.ui.event.ToDoEvent
 import com.example.todue.ui.theme.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
+private val db = Firebase.firestore.collection("toDos")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,6 +95,18 @@ fun Settings(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
+    fun firebaseSaveToDo(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch{
+        try {
+            db.add(toDo).await()
+            withContext(Dispatchers.Main) {
+                println("Successfully uploaded ToDo")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                println(e.message)
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -279,6 +304,7 @@ fun Settings(
             )
         }
         Spacer(Modifier.size(paddingBetweenRows))
+
         Divider(
             modifier = Modifier
                 .width(350.dp)
@@ -286,7 +312,50 @@ fun Settings(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.tertiary
         )
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        val counter = remember { mutableIntStateOf(0)}
+
+
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .padding(start = sidePadding, end = sidePadding)
+                .clickable(onClick = {
+                    counter.intValue++
+                    val firebaseToDo = ToDo(
+                        title = "title",
+                        description = "description",
+                        tag = "tag",
+                        dueDate = "dueDate",
+                        dueTime = "dueTime",
+                        finished = false
+                    )
+                    firebaseSaveToDo(firebaseToDo)
+                }),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Notifications, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.size(spaceAfterIcon))
+                Text(
+                    text = "Upload to Firebase - TBA " + counter.intValue,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+        }
     }
+
 }
 
 @Composable

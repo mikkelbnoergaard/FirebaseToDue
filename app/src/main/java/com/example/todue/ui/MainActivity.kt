@@ -26,6 +26,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.todue.dataLayer.source.local.TagRepository
 import com.example.todue.dataLayer.source.local.ToDoRepository
 import com.example.todue.ui.event.TagEvent
+import kotlinx.coroutines.GlobalScope.coroutineContext
+import kotlin.coroutines.coroutineContext
+
 //import com.example.todue.ui.theme.DarkThemeProvider
 
 class MainActivity : ComponentActivity() {
@@ -105,4 +108,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
 }
+
