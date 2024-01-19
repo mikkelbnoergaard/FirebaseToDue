@@ -3,7 +3,6 @@
 package com.example.firebasetodue.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -19,14 +18,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.firebasetodue.ui.theme.ToDoTheme
 import com.example.firebasetodue.di.DatabaseModules
-import com.example.firebasetodue.ui.screens.tags.TagsViewModel
-import com.example.firebasetodue.ui.screens.overview.ToDosViewModel
-import com.example.firebasetodue.ui.screens.calendar.CalendarViewModel
+import com.example.firebasetodue.ui.stateholder.TagsViewModel
+import com.example.firebasetodue.ui.stateholder.ToDosViewModel
+import com.example.firebasetodue.ui.stateholder.CalendarViewModel
 import com.example.firebasetodue.ui.screens.GeneralLayout
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.firebasetodue.dataLayer.source.local.TagRepository
 import com.example.firebasetodue.dataLayer.source.local.ToDoRepository
+import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseRepository
 import com.example.firebasetodue.ui.event.TagEvent
+import com.example.firebasetodue.ui.stateholder.FirebaseViewModel
 
 //import com.example.todue.ui.theme.DarkThemeProvider
 
@@ -67,6 +68,20 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+
+    private val firebaseViewModel by viewModels<FirebaseViewModel>( // ViewModels to manage the state of the tags.
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return FirebaseViewModel(
+                        FirebaseRepository(DatabaseModules.provideFirebaseDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
+                }
+            }
+        }
+    )
+
+
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
         setContent {

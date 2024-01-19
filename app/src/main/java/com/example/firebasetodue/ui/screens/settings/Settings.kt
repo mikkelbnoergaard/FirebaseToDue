@@ -61,7 +61,8 @@ import com.example.firebasetodue.dataLayer.source.remote.database.*
 fun SettingsScreen(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    firebaseRepository: FirebaseRepository
 ){
     Column(
         modifier = Modifier

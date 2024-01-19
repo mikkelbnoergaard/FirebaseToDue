@@ -1,4 +1,4 @@
-package com.example.firebasetodue.ui.screens.tags
+package com.example.firebasetodue.ui.stateholder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
