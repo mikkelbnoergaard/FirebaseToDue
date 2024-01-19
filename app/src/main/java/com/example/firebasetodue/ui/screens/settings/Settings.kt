@@ -1,5 +1,6 @@
 package com.example.firebasetodue.ui.screens.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -52,8 +54,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
-private val db = Firebase.firestore.collection("toDos")
+import com.example.firebasetodue.dataLayer.source.remote.database.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,18 +93,6 @@ fun Settings(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit
 ) {
-    fun firebaseSaveToDo(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch{
-        try {
-            db.add(toDo).await()
-            withContext(Dispatchers.Main) {
-                println("Successfully uploaded ToDo")
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                println(e.message)
-            }
-        }
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -314,6 +303,7 @@ fun Settings(
         val counter = remember { mutableIntStateOf(0)}
 
 
+        val context = LocalContext.current
 
         Row(
             modifier = Modifier
@@ -330,7 +320,7 @@ fun Settings(
                         dueTime = "dueTime",
                         finished = false
                     )
-                    firebaseSaveToDo(firebaseToDo)
+                    Toast.makeText(context, "HELLO", Toast.LENGTH_LONG).show()
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
