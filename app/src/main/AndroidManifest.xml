@@ -19,7 +19,7 @@
         android:theme="@style/Theme.ToDue"
         tools:targetApi="31">
         <activity
-            android:name="com.example.todue.ui.MainActivity"
+            android:name="com.example.firebasetodue.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ToDue">
             <intent-filter>
