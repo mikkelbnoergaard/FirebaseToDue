@@ -45,6 +45,7 @@ import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.ui.theme.*
 import com.example.firebasetodue.dataLayer.source.remote.database.*
+import com.example.firebasetodue.state.ToDoState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +53,8 @@ fun SettingsScreen(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
-    firebaseRepository: FirebaseRepository
+    firebaseRepository: FirebaseRepository,
+    toDoState: ToDoState
 ){
     Column(
         modifier = Modifier
@@ -74,7 +76,7 @@ fun SettingsScreen(
                 )
             },
         )
-        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository)
+        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState)
     }
 }
 
@@ -83,7 +85,8 @@ fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
-    firebaseRepository: FirebaseRepository
+    firebaseRepository: FirebaseRepository,
+    toDoState: ToDoState
 ) {
     Column(
         modifier = Modifier
@@ -298,16 +301,9 @@ fun Settings(
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    val firebaseToDo = ToDo(
-                        title = "firebasetest",
-                        description = "description",
-                        tag = "yeeees",
-                        dueDate = "dueDate",
-                        dueTime = "dueTime",
-                        finished = false,
-                        id = 100
-                    )
-                    firebaseRepository.firebaseSaveToDo(firebaseToDo)
+                    for(item in toDoState.toDos){
+                        firebaseRepository.firebaseSaveToDo(item)
+                    }
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -322,12 +318,14 @@ fun Settings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Upload to Firebase - TBA",
+                    text = "Sync from Firebase to Room",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
         }
+
+
         Spacer(Modifier.size(paddingBetweenRows))
 
         Divider(
@@ -345,8 +343,10 @@ fun Settings(
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    firebaseRepository.retrieveOneToDo(100)
-                    firebaseRepository.retrieveToDosByDueDate()
+                    for(item in firebaseRepository.getToDoListInFirebase()){
+                        firebaseRepository.clearToDoList()
+                        onToDoEvent(ToDoEvent.EditToDo(item.title, item.description, item.tag, item.dueDate, item.dueTime, item.id))
+                    }
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -361,14 +361,12 @@ fun Settings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Print all ToDos in database",
+                    text = "Sync from Firebase to Room",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-
         }
     }
-
 }
 
 @Composable
@@ -384,7 +382,9 @@ fun NotificationSwitch() {
             uncheckedBorderColor = MaterialTheme.colorScheme.secondary,
             uncheckedThumbColor = MaterialTheme.colorScheme.primary
         )
-    )}
+    )
+}
+
 @Composable
 fun DarkThemeSwitch() {
     var checked by remember { mutableStateOf(false) }

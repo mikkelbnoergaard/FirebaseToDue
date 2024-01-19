@@ -4,6 +4,7 @@ package com.example.firebasetodue.dataLayer.source.remote.database
 import android.content.Context
 import android.widget.Toast
 import com.example.firebasetodue.dataLayer.source.local.ToDo
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
@@ -19,12 +20,73 @@ class FirebaseRepository(context: Context){
 
     private val firebaseDb = Firebase.firestore.collection("toDos")
 
-    fun firebaseSaveToDo(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch{
-        try {
-            firebaseDb.add(toDo).await()
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Successfully saved data", Toast.LENGTH_LONG).show()
+    fun updateToDoInFirebase(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch {
+
+        var newToDo: ToDo? = ToDo(
+            id = toDo.id,
+            title = toDo.title,
+            description = toDo.description,
+            tag = toDo.tag,
+            dueDate = toDo.dueDate,
+            dueTime = toDo.dueTime,
+            finished = toDo.finished
+        )
+
+        val toDoQuery = firebaseDb
+            .whereEqualTo("id", toDo.id)
+            .get()
+            .await()
+
+        if(toDoQuery.documents.isNotEmpty()) {
+            for(document in toDoQuery) {
+                try {
+                    if (newToDo != null) {
+                        firebaseDb.document(document.id).set(
+                            newToDo,
+                            SetOptions.merge()
+                        ).await()
+                    }
+                } catch(e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
+        } else {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "No ToDo to update", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    //Saves an object in the firebase database. Only if the todo doesn't exist already.
+    fun firebaseSaveToDo(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch{
+        var retrievedToDo: ToDo? = ToDo(
+            title = "",
+            description = "",
+            tag = "",
+            dueDate = "",
+            dueTime = "",
+            finished = false
+        )
+
+        try {
+            //tries to retrieve an object with the same id. if it exists, it does nothing; if not, it uploads the object
+            val querySnapshot = firebaseDb.whereEqualTo("id", toDo.id).get().await()
+            for (document in querySnapshot.documents) {
+                retrievedToDo = document.toObject<ToDo>()
+            }
+            if (retrievedToDo != null) {
+                if(retrievedToDo.id != toDo.id) {
+                    firebaseDb.add(toDo).await()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Successfully saved data", Toast.LENGTH_LONG).show()
+                    }
+                } else if(retrievedToDo.id == toDo.id) {
+                    updateToDoInFirebase(toDo)
+                }
+            }
+
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -64,16 +126,22 @@ class FirebaseRepository(context: Context){
             }
             withContext(Dispatchers.Main) {
                 if (toDo != null) {
-                    println(toDo.title)
-                    println(toDo.description)
-                    println(toDo.tag)
-                    println(toDo.dueDate)
-                    println(toDo.dueTime)
                 }
             }
         } catch (e: Exception) {
             Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
         }
+    }
+
+    val toDoList = mutableListOf<ToDo>()
+
+    fun getToDoListInFirebase(): List<ToDo> {
+        retrieveToDosByDueDate()
+        return toDoList.toList()
+    }
+
+    fun clearToDoList() {
+        toDoList.clear()
     }
 
     fun retrieveToDosByDueDate() = CoroutineScope(Dispatchers.IO).launch {
@@ -85,6 +153,10 @@ class FirebaseRepository(context: Context){
             val stringBuilder = StringBuilder()
             for(document in querySnapshot.documents) {
                 val toDo = document.toObject<ToDo>()
+                if (toDo != null) {
+                    toDoList.add(toDo)
+                    println(toDoList)
+                }
                 stringBuilder.append("$toDo\n")
             }
             withContext(Dispatchers.Main) {
@@ -93,6 +165,7 @@ class FirebaseRepository(context: Context){
         } catch(e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                println(e.message)
             }
         }
     }

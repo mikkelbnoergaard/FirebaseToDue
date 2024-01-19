@@ -162,7 +162,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
-                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository)
+                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }
