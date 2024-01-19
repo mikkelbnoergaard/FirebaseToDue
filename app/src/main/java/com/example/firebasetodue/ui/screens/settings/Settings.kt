@@ -1,6 +1,5 @@
 package com.example.firebasetodue.ui.screens.settings
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,13 +30,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,13 +44,6 @@ import com.example.firebasetodue.ui.event.CalendarEvent
 import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.ui.theme.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import com.example.firebasetodue.dataLayer.source.remote.database.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +74,7 @@ fun SettingsScreen(
                 )
             },
         )
-        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent)
+        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository)
     }
 }
 
@@ -92,7 +82,8 @@ fun SettingsScreen(
 fun Settings(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
-    onCalendarEvent: (CalendarEvent) -> Unit
+    onCalendarEvent: (CalendarEvent) -> Unit,
+    firebaseRepository: FirebaseRepository
 ) {
     Column(
         modifier = Modifier
@@ -301,27 +292,22 @@ fun Settings(
         )
         Spacer(Modifier.size(paddingBetweenRows))
 
-        val counter = remember { mutableIntStateOf(0)}
-
-
-        val context = LocalContext.current
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    counter.intValue++
                     val firebaseToDo = ToDo(
-                        title = "title",
+                        title = "firebasetest",
                         description = "description",
-                        tag = "tag",
+                        tag = "yeeees",
                         dueDate = "dueDate",
                         dueTime = "dueTime",
-                        finished = false
+                        finished = false,
+                        id = 100
                     )
-                    Toast.makeText(context, "HELLO", Toast.LENGTH_LONG).show()
+                    firebaseRepository.firebaseSaveToDo(firebaseToDo)
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -336,7 +322,46 @@ fun Settings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Upload to Firebase - TBA " + counter.intValue,
+                    text = "Upload to Firebase - TBA",
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+        }
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        Divider(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .padding(start = sidePadding, end = sidePadding)
+                .clickable(onClick = {
+                    firebaseRepository.retrieveOneToDo(100)
+                    firebaseRepository.retrieveToDosByDueDate()
+                }),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Notifications, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.size(spaceAfterIcon))
+                Text(
+                    text = "Print all ToDos in database",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }

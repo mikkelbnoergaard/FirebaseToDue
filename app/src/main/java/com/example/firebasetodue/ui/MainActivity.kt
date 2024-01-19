@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.firebasetodue.ui.theme.ToDoTheme
@@ -27,8 +28,6 @@ import com.example.firebasetodue.dataLayer.source.local.TagRepository
 import com.example.firebasetodue.dataLayer.source.local.ToDoRepository
 import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseRepository
 import com.example.firebasetodue.ui.event.TagEvent
-import com.example.firebasetodue.ui.stateholder.FirebaseViewModel
-
 //import com.example.todue.ui.theme.DarkThemeProvider
 
 class MainActivity : ComponentActivity() {
@@ -69,18 +68,7 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-    private val firebaseViewModel by viewModels<FirebaseViewModel>( // ViewModels to manage the state of the tags.
-        factoryProducer = {
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return FirebaseViewModel(
-                        FirebaseRepository(DatabaseModules.provideFirebaseDao(DatabaseModules.provideDataBase(applicationContext)))
-                    ) as T
-                }
-            }
-        }
-    )
-
+    private val firebaseRepository = FirebaseRepository(this@MainActivity)
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
@@ -116,7 +104,8 @@ class MainActivity : ComponentActivity() {
                         onToDoEvent = onToDoEvent,
                         onTagEvent = onTagEvent,
                         onCalendarEvent = onCalendarEvent,
-                        calendarState = calendarState
+                        calendarState = calendarState,
+                        firebaseRepository
                     )
                 }
             }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/*
 interface FirebaseDao {
 
     fun firebaseSaveToDo(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch{
@@ -46,4 +47,6 @@ interface FirebaseDao {
     }
 
 }
+
+ */
 

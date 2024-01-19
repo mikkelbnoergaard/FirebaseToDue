@@ -72,6 +72,7 @@ import androidx.compose.ui.unit.sp
 import com.example.firebasetodue.dataLayer.source.local.Tag
 import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.dataLayer.source.local.ToDo
+import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseRepository
 import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.navigation.TabItem
 import com.example.firebasetodue.state.CalendarState
@@ -95,7 +96,8 @@ fun GeneralLayout(
     onToDoEvent: (ToDoEvent) -> Unit,
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
-    calendarState: CalendarState
+    calendarState: CalendarState,
+    firebaseRepository: FirebaseRepository
 ){
 
 
@@ -160,7 +162,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
-                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent)
+                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }
