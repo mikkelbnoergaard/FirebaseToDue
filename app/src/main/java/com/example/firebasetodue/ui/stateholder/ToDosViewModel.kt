@@ -370,6 +370,11 @@ class ToDosViewModel(
                     )
                 }
             }
+            is ToDoEvent.CheckIfToDoExists -> {
+                viewModelScope.launch {
+                    toDoRepository.checkIfToDoExists(toDoEvent.toDo)
+                }
+            }
         }
     }
 }

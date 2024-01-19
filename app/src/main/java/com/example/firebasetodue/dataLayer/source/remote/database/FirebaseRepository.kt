@@ -14,15 +14,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class FirebaseRepository(context: Context){
-
-    val context = context
+class FirebaseRepository(private val context: Context){
 
     private val firebaseDb = Firebase.firestore.collection("toDos")
 
-    fun updateToDoInFirebase(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch {
+    //edits an object in Firebase to match the input object
+    private fun updateToDoInFirebase(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch {
 
-        var newToDo: ToDo? = ToDo(
+        val newToDo = ToDo(
             id = toDo.id,
             title = toDo.title,
             description = toDo.description,
@@ -40,12 +39,10 @@ class FirebaseRepository(context: Context){
         if(toDoQuery.documents.isNotEmpty()) {
             for(document in toDoQuery) {
                 try {
-                    if (newToDo != null) {
-                        firebaseDb.document(document.id).set(
-                            newToDo,
-                            SetOptions.merge()
-                        ).await()
-                    }
+                    firebaseDb.document(document.id).set(
+                        newToDo,
+                        SetOptions.merge()
+                    ).await()
                 } catch(e: Exception) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -110,6 +107,7 @@ class FirebaseRepository(context: Context){
         }
     }
 
+    //gets a single object from firebase database
     fun retrieveOneToDo(id: Int) = CoroutineScope(Dispatchers.IO).launch {
         var toDo: ToDo? = ToDo(
             title = "",
@@ -126,6 +124,7 @@ class FirebaseRepository(context: Context){
             }
             withContext(Dispatchers.Main) {
                 if (toDo != null) {
+                    //add stuff
                 }
             }
         } catch (e: Exception) {
@@ -133,18 +132,20 @@ class FirebaseRepository(context: Context){
         }
     }
 
-    val toDoList = mutableListOf<ToDo>()
+    private val toDoList = mutableListOf<ToDo>()
 
+    //returns toDoList
     fun getToDoListInFirebase(): List<ToDo> {
         retrieveToDosByDueDate()
         return toDoList.toList()
     }
 
+    //clears the toDoList, to be used after getToDoListInFirebase() is called so list is up to date at all times
     fun clearToDoList() {
         toDoList.clear()
     }
 
-    fun retrieveToDosByDueDate() = CoroutineScope(Dispatchers.IO).launch {
+    private fun retrieveToDosByDueDate() = CoroutineScope(Dispatchers.IO).launch {
         try {
             val querySnapshot = firebaseDb
                 .orderBy("dueDate")
@@ -155,12 +156,11 @@ class FirebaseRepository(context: Context){
                 val toDo = document.toObject<ToDo>()
                 if (toDo != null) {
                     toDoList.add(toDo)
-                    println(toDoList)
                 }
                 stringBuilder.append("$toDo\n")
             }
             withContext(Dispatchers.Main) {
-                println(stringBuilder.toString())
+                //println(stringBuilder.toString())
             }
         } catch(e: Exception) {
             withContext(Dispatchers.Main) {

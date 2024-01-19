@@ -44,6 +44,9 @@ interface ToDoDao {
     @Query("UPDATE todo SET tag = '' WHERE tag = :tag")
     suspend fun deleteTagFromToDos(tag: String)
 
+    @Query("SELECT EXISTS (SELECT * FROM todo WHERE id = :id)")
+    suspend fun checkIfToDoExists(id: Int): Boolean
+
 
 
 

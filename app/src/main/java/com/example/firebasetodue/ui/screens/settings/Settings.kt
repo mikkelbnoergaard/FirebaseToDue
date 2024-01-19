@@ -318,7 +318,7 @@ fun Settings(
                 )
                 Spacer(Modifier.size(spaceAfterIcon))
                 Text(
-                    text = "Sync from Firebase to Room",
+                    text = "Sync from Room to Firebase",
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -345,6 +345,9 @@ fun Settings(
                 .clickable(onClick = {
                     for(item in firebaseRepository.getToDoListInFirebase()){
                         firebaseRepository.clearToDoList()
+                        if(onToDoEvent(ToDoEvent.CheckIfToDoExists(item)) != false) {
+
+                        }
                         onToDoEvent(ToDoEvent.EditToDo(item.title, item.description, item.tag, item.dueDate, item.dueTime, item.id))
                     }
                 }),
