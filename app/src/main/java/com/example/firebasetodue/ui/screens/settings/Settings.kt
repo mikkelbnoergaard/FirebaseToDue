@@ -361,7 +361,6 @@ fun Settings(
                             )
                         }
                     }
-
                     firebaseRepository.clearToDoList()
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
