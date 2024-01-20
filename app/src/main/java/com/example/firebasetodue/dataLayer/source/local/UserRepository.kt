@@ -21,4 +21,8 @@ class UserRepository @Inject constructor (
         return dataSource.getSubscribedKeys()
     }
 
+    suspend fun getUserKey(): String {
+        return dataSource.getUserKey()
+    }
+
 }

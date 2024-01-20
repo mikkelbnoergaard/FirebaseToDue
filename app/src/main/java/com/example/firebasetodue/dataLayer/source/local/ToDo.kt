@@ -14,6 +14,7 @@ data class ToDo(
     val tag: String = "",
     val dueDate: String = "",
     val dueTime: String = "",
-    val finished: Boolean = false
+    val finished: Boolean = false,
+    val userKey: String = ""
 
 )

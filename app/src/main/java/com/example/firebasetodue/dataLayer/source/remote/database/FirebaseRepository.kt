@@ -10,17 +10,13 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 
-class FirebaseRepository(private val context: Context){
+class FirebaseRepository(private val context: Context, private val userKey: String){
 
-    private val firebaseDb = Firebase.firestore.collection("toDos")
+    private val firebaseToDos = Firebase.firestore.collection("toDos")
 
     //edits an object in Firebase to match the input object
     private fun updateToDoInFirebase(toDo: ToDo) = CoroutineScope(Dispatchers.IO).launch {
@@ -32,10 +28,11 @@ class FirebaseRepository(private val context: Context){
             tag = toDo.tag,
             dueDate = toDo.dueDate,
             dueTime = toDo.dueTime,
-            finished = toDo.finished
+            finished = toDo.finished,
+            userKey = userKey
         )
 
-        val toDoQuery = firebaseDb
+        val toDoQuery = firebaseToDos
             .whereEqualTo("id", toDo.id)
             .get()
             .await()
@@ -43,7 +40,7 @@ class FirebaseRepository(private val context: Context){
         if(toDoQuery.documents.isNotEmpty()) {
             for(document in toDoQuery) {
                 try {
-                    firebaseDb.document(document.id).set(
+                    firebaseToDos.document(document.id).set(
                         newToDo,
                         SetOptions.merge()
                     ).await()
@@ -68,22 +65,23 @@ class FirebaseRepository(private val context: Context){
             tag = "",
             dueDate = "",
             dueTime = "",
-            finished = false
+            finished = false,
+            userKey = userKey
         )
 
         try {
             //tries to retrieve an object with the same id. if it exists, it does nothing; if not, it uploads the object
-            val querySnapshot = firebaseDb.whereEqualTo("id", toDo.id).get().await()
+            val querySnapshot = firebaseToDos.whereEqualTo("id", toDo.id).get().await()
             for (document in querySnapshot.documents) {
                 retrievedToDo = document.toObject<ToDo>()
             }
             if (retrievedToDo != null) {
-                if(retrievedToDo.id != toDo.id) {
-                    firebaseDb.add(toDo).await()
+                if(retrievedToDo.userKey != toDo.userKey) {
+                    firebaseToDos.add(toDo).await()
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Successfully saved data", Toast.LENGTH_LONG).show()
                     }
-                } else if(retrievedToDo.id == toDo.id) {
+                } else if(retrievedToDo.userKey == toDo.userKey) {
                     updateToDoInFirebase(toDo)
                 }
             }
@@ -96,7 +94,7 @@ class FirebaseRepository(private val context: Context){
     }
 
     fun subscribeToRealtimeUpdates() {
-        firebaseDb.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+        firebaseToDos.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             firebaseFirestoreException?.let {
                 return@addSnapshotListener
             }
@@ -113,21 +111,22 @@ class FirebaseRepository(private val context: Context){
 
     //gets a single object from firebase database
     fun retrieveOneToDo(id: Int) = CoroutineScope(Dispatchers.IO).launch {
-        var toDo: ToDo? = ToDo(
+        var retrievedToDo: ToDo? = ToDo(
             title = "",
             description = "",
             tag = "",
             dueDate = "",
             dueTime = "",
-            finished = false
+            finished = false,
+            userKey = ""
         )
         try {
-            val querySnapshot = firebaseDb.whereEqualTo("id", id).get().await()
+            val querySnapshot = firebaseToDos.whereEqualTo("id", id).get().await()
             for (document in querySnapshot.documents) {
-                toDo = document.toObject<ToDo>()
+                retrievedToDo = document.toObject<ToDo>()
             }
             withContext(Dispatchers.Main) {
-                if (toDo != null) {
+                if (retrievedToDo != null) {
                     //add stuff
                 }
             }
@@ -139,8 +138,8 @@ class FirebaseRepository(private val context: Context){
     private val toDoList = mutableListOf<ToDo>()
 
     //returns toDoList
-    fun getToDoListInFirebase(): List<ToDo> {
-        retrieveToDosByDueDate()
+    fun getToDoListInFirebase(subscribedKeys: List<String>): List<ToDo> {
+        retrieveToDosByDueDate(subscribedKeys)
         return toDoList.toList()
     }
 
@@ -149,11 +148,10 @@ class FirebaseRepository(private val context: Context){
         toDoList.clear()
     }
 
-    private fun retrieveToDosByDueDate() = CoroutineScope(Dispatchers.IO).launch {
+    private fun retrieveToDosByDueDate(subscribedKeys: List<String>) = CoroutineScope(Dispatchers.IO).launch {
         try {
-            val querySnapshot = firebaseDb
-                .orderBy("dueDate")
-                .orderBy("dueTime")
+            val querySnapshot = firebaseToDos
+                .whereIn("userKey", subscribedKeys)
                 .get().await()
             val stringBuilder = StringBuilder()
             for(document in querySnapshot.documents) {

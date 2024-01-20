@@ -423,7 +423,7 @@ fun Settings(
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    for (item in firebaseRepository.getToDoListInFirebase()) {
+                    for (item in firebaseRepository.getToDoListInFirebase(userState.subscribedKeys)) {
                         coroutineScope.launch {
                             onToDoEvent(
                                 ToDoEvent.CreateToDoFromFirebase(

@@ -22,4 +22,7 @@ interface UserDao {
     @Query("INSERT INTO User (userKey, subscribedKeys) VALUES('', :key)")
     suspend fun subscribeToKey(key:String)
 
+    @Query("SELECT userKey FROM user")
+    suspend fun getUserKey(): String
+
 }

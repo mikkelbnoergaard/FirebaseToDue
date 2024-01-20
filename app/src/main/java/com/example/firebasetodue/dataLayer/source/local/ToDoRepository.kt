@@ -14,14 +14,16 @@ class ToDoRepository @Inject constructor(
                            tag: String,
                            dueDate: String,
                            dueTime: String,
-                           finished: Boolean) {
+                           finished: Boolean,
+                           userKey: String) {
         val toDo = ToDo(
             title = title,
             description = description,
             tag = tag,
             dueDate = dueDate,
             dueTime = dueTime,
-            finished = finished
+            finished = finished,
+            userKey = userKey
         )
         dataSource.createToDo(toDo)
     }

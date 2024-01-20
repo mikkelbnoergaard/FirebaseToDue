@@ -79,7 +79,8 @@ class ToDosViewModel(
                         toDoObject.tag,
                         toDoObject.dueDate,
                         toDoObject.dueTime,
-                        toDoObject.finished
+                        toDoObject.finished,
+                        toDoState.value.userKey
                     )
                 }
 
@@ -92,7 +93,8 @@ class ToDosViewModel(
                     tag = "",
                     dueDate = "",
                     dueTime = "",
-                    finished = false
+                    finished = false,
+                    userKey = ""
                 ) }
 
             }
@@ -296,7 +298,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -305,7 +308,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -314,7 +318,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -323,7 +328,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -332,7 +338,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -341,7 +348,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     delay(10L)
                     toDoRepository.createToDo(
@@ -350,7 +358,8 @@ class ToDosViewModel(
                         "Final delivery",
                         "2024-01-17",
                         "15:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     toDoRepository.createToDo(
                         "Clean the kitchen",
@@ -358,7 +367,8 @@ class ToDosViewModel(
                         "Cleaning",
                         "2024-01-18",
                         "21:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                     toDoRepository.createToDo(
                         "Mop the floor",
@@ -366,7 +376,8 @@ class ToDosViewModel(
                         "Cleaning",
                         "2024-01-18",
                         "21:00",
-                        false
+                        false,
+                        toDoState.value.userKey
                     )
                 }
             }
@@ -383,6 +394,12 @@ class ToDosViewModel(
                         finished = toDoEvent.finished
                     )
                 }
+            }
+
+            is ToDoEvent.SetUserKey -> {
+                _toDoState.update {it.copy(
+                    userKey = toDoEvent.userKey
+                )}
             }
         }
     }

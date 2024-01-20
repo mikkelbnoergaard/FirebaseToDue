@@ -33,6 +33,7 @@ import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseReposi
 import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.ui.event.UserEvent
 import com.example.firebasetodue.ui.stateholder.UserViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -90,13 +91,13 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-    private val firebaseRepository = FirebaseRepository(this@MainActivity)
-
+    val userKey = UUID.randomUUID().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
         setContent {
             ToDoTheme(useDarkTheme = isSystemInDarkTheme()) {
+
                 val toDoState by toDosViewModel.toDoState.collectAsState()
                 val tagState by tagsViewModel.tagState.collectAsState()
                 val systemUiController = rememberSystemUiController() // Control the system UI bars.
@@ -110,7 +111,9 @@ class MainActivity : ComponentActivity() {
 
 
                 onTagEvent(TagEvent.ResetTagSort)
-                onUserEvent(UserEvent.CreateUser(User(userKey = UUID.randomUUID().toString())))
+                onUserEvent(UserEvent.SetUserKey)
+                onUserEvent(UserEvent.CreateUser(User(userKey = userState.userKey, subscribedKeys = userState.userKey)))
+                val firebaseRepository = FirebaseRepository(this@MainActivity, userState.userKey)
 
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent,
