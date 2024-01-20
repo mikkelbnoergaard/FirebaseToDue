@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,8 @@ import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.ui.theme.*
 import com.example.firebasetodue.dataLayer.source.remote.database.*
 import com.example.firebasetodue.state.ToDoState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +91,8 @@ fun Settings(
     firebaseRepository: FirebaseRepository,
     toDoState: ToDoState
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -345,10 +350,33 @@ fun Settings(
                 .clickable(onClick = {
                     for(item in firebaseRepository.getToDoListInFirebase()){
                         firebaseRepository.clearToDoList()
-                        if(onToDoEvent(ToDoEvent.CheckIfToDoExists(item)) != false) {
+                        onToDoEvent(ToDoEvent.CheckIfToDoExists(item))
+                        if (!toDoState.existsInDatabase) {
+                            coroutineScope.launch {
+                                onToDoEvent(ToDoEvent.SetTitle(item.title))
+                                onToDoEvent(ToDoEvent.SetDescription(item.description))
+                                onToDoEvent(ToDoEvent.SetTag(item.tag))
+                                onToDoEvent(ToDoEvent.SetDueDate(item.dueDate))
+                                onToDoEvent(ToDoEvent.SetDueTime(item.dueTime))
 
+                                onToDoEvent(ToDoEvent.CreateToDo)
+                                delay(100)
+                            }
+
+                        } else {
+                            coroutineScope.launch {
+                                onToDoEvent(
+                                    ToDoEvent.EditToDo(
+                                        item.title,
+                                        item.description,
+                                        item.tag,
+                                        item.dueDate,
+                                        item.dueTime,
+                                        item.id
+                                    )
+                                )
+                            }
                         }
-                        onToDoEvent(ToDoEvent.EditToDo(item.title, item.description, item.tag, item.dueDate, item.dueTime, item.id))
                     }
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,

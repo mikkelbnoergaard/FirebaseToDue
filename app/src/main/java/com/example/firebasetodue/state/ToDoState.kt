@@ -23,6 +23,8 @@ data class ToDoState(
     val searchInToDos: String = "",
     val sortByFinished: Boolean = false,
 
+    val existsInDatabase: Boolean = false,
+
     //for statistics
     val totalAmountOfFinishedToDos: Int = 0,
     val totalAmountOfCreatedToDos: Int = 0,

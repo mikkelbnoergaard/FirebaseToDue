@@ -372,7 +372,11 @@ class ToDosViewModel(
             }
             is ToDoEvent.CheckIfToDoExists -> {
                 viewModelScope.launch {
-                    toDoRepository.checkIfToDoExists(toDoEvent.toDo)
+                    if(toDoRepository.checkIfToDoExists(toDoEvent.toDo)){
+                        _toDoState.update { it.copy (
+                            existsInDatabase = true
+                        )}
+                    }
                 }
             }
         }
