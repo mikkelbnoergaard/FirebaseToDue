@@ -20,6 +20,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
@@ -34,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -126,6 +128,14 @@ fun CreateToDoDialog(
             ) {
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.title,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTitle(it))
@@ -139,6 +149,14 @@ fun CreateToDoDialog(
                 )
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.description,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetDescription(it))
@@ -152,6 +170,14 @@ fun CreateToDoDialog(
                 )
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.tag,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTag(it))
@@ -493,6 +519,14 @@ fun EditToDoDialog(
             ) {
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.title,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTitle(it))
@@ -506,6 +540,14 @@ fun EditToDoDialog(
                 )
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.description,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetDescription(it))
@@ -519,6 +561,14 @@ fun EditToDoDialog(
                 )
                 TextField(
                     textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
                     value = toDoState.tag,
                     onValueChange = {
                         onToDoEvent(ToDoEvent.SetTag(it))

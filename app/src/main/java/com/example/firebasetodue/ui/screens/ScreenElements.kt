@@ -660,7 +660,6 @@ fun TopBar(
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                 disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedIndicatorColor = Color.Transparent,
                 backgroundColor = MaterialTheme.colorScheme.inverseOnSurface,
                 textColor = MaterialTheme.colorScheme.onBackground,
                 focusedLabelColor = MaterialTheme.colorScheme.onSurface,
