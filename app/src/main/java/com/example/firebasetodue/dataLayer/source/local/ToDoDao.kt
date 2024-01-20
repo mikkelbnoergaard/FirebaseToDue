@@ -3,6 +3,7 @@ package com.example.firebasetodue.dataLayer.source.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ToDoDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createToDo(toDo: ToDo)
 
     @Delete
@@ -46,7 +47,6 @@ interface ToDoDao {
 
     @Query("SELECT (EXISTS (SELECT * FROM todo WHERE id = :id))")
     suspend fun checkIfToDoExists(id: Int): Boolean
-
 
 
 

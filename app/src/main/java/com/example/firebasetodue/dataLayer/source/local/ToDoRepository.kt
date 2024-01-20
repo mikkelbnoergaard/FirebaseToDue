@@ -64,6 +64,31 @@ class ToDoRepository @Inject constructor(
 
 
 
+
+    suspend fun createToDoFromFirebase(
+        id: Int,
+        title: String,
+        description: String,
+        tag: String,
+        dueDate: String,
+        dueTime: String,
+        finished: Boolean) {
+        val toDo = ToDo(
+            id = id,
+            title = title,
+            description = description,
+            tag = tag,
+            dueDate = dueDate,
+            dueTime = dueTime,
+            finished = finished
+        )
+        dataSource.createToDo(toDo)
+    }
+
+
+
+
+
     //for statistics. they have to check for null, if not then app doesn't work when 0 todos are created
     //warnings are suppressed, app doesn't run correctly without if statements
     suspend fun getTotalAmountOfCreatedToDos(): Int {

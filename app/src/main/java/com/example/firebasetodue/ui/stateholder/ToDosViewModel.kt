@@ -383,7 +383,8 @@ class ToDosViewModel(
 
             is ToDoEvent.CreateToDoFromFirebase -> {
                 viewModelScope.launch{
-                    toDoRepository.createToDo(
+                    toDoRepository.createToDoFromFirebase(
+                        id = toDoEvent.id,
                         title = toDoEvent.title,
                         description = toDoEvent.description,
                         tag = toDoEvent.tag,

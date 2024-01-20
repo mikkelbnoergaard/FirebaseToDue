@@ -40,14 +40,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.firebasetodue.dataLayer.source.local.ToDo
 import com.example.firebasetodue.ui.event.CalendarEvent
 import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.ui.theme.*
 import com.example.firebasetodue.dataLayer.source.remote.database.*
 import com.example.firebasetodue.state.ToDoState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -348,44 +346,19 @@ fun Settings(
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    firebaseRepository.getToDoListInFirebase()
-                    val toDoList: List<ToDo> = firebaseRepository.getToDoListInFirebase()
-                    for (item in toDoList) {
+                    for (item in firebaseRepository.getToDoListInFirebase()) {
                         coroutineScope.launch {
-                            onToDoEvent(ToDoEvent.CheckIfToDoExists(item))
-                            delay(10)
-                        }
-                        onToDoEvent(ToDoEvent.CheckIfToDoExists(item))
-                        println("exists: " + toDoState.existsInDatabase)
-                        if (!toDoState.existsInDatabase) {
-                            coroutineScope.launch {
-                                println("PRINT: " + item.title + item.description + item.tag + item.dueDate + item.dueTime)
-
-                                onToDoEvent(
-                                    ToDoEvent.CreateToDoFromFirebase(
-                                        item.title,
-                                        item.description,
-                                        item.tag,
-                                        item.dueDate,
-                                        item.dueTime,
-                                        item.finished
-                                    )
+                            onToDoEvent(
+                                ToDoEvent.CreateToDoFromFirebase(
+                                    item.id,
+                                    item.title,
+                                    item.description,
+                                    item.tag,
+                                    item.dueDate,
+                                    item.dueTime,
+                                    item.finished
                                 )
-                            }
-
-                        } else {
-                            coroutineScope.launch {
-                                onToDoEvent(
-                                    ToDoEvent.EditToDo(
-                                        item.title,
-                                        item.description,
-                                        item.tag,
-                                        item.dueDate,
-                                        item.dueTime,
-                                        item.id
-                                    )
-                                )
-                            }
+                            )
                         }
                     }
 

@@ -40,6 +40,6 @@ sealed interface ToDoEvent {
     data class SetToDoStateForEdit(val toDo: ToDo): ToDoEvent
     data class SetSearchInToDos(val searchInToDos: String): ToDoEvent
     data class CheckIfToDoExists(val toDo: ToDo): ToDoEvent
-    data class CreateToDoFromFirebase(val title: String, val description: String, val tag: String, val dueDate: String, val dueTime: String, val finished: Boolean): ToDoEvent
+    data class CreateToDoFromFirebase(val id: Int, val title: String, val description: String, val tag: String, val dueDate: String, val dueTime: String, val finished: Boolean): ToDoEvent
 
 }
