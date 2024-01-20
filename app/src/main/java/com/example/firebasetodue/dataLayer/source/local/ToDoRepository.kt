@@ -58,9 +58,6 @@ class ToDoRepository @Inject constructor(
         dataSource.editToDo(newTitle = newTitle, newDescription = newDescription, newTag = newTag, newDueDate = newDueDate, newDueTime = newDueTime, toDoId = toDoId)
     }
 
-    suspend fun checkIfToDoExists(toDo: ToDo): Boolean {
-        return dataSource.checkIfToDoExists(id = toDo.id)
-    }
 
 
 

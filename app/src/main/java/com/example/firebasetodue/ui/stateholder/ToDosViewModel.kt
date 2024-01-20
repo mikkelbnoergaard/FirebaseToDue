@@ -371,16 +371,6 @@ class ToDosViewModel(
                 }
             }
 
-            is ToDoEvent.CheckIfToDoExists -> {
-                viewModelScope.launch {
-                    if(toDoRepository.checkIfToDoExists(toDoEvent.toDo)){
-                        _toDoState.update { it.copy (
-                            existsInDatabase = true
-                        )}
-                    }
-                }
-            }
-
             is ToDoEvent.CreateToDoFromFirebase -> {
                 viewModelScope.launch{
                     toDoRepository.createToDoFromFirebase(
