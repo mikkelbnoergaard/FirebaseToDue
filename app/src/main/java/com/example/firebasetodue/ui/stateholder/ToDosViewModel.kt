@@ -370,6 +370,7 @@ class ToDosViewModel(
                     )
                 }
             }
+
             is ToDoEvent.CheckIfToDoExists -> {
                 viewModelScope.launch {
                     if(toDoRepository.checkIfToDoExists(toDoEvent.toDo)){
@@ -377,6 +378,19 @@ class ToDosViewModel(
                             existsInDatabase = true
                         )}
                     }
+                }
+            }
+
+            is ToDoEvent.CreateToDoFromFirebase -> {
+                viewModelScope.launch{
+                    toDoRepository.createToDo(
+                        title = toDoEvent.title,
+                        description = toDoEvent.description,
+                        tag = toDoEvent.tag,
+                        dueDate = toDoEvent.dueDate,
+                        dueTime = toDoEvent.dueTime,
+                        finished = toDoEvent.finished
+                    )
                 }
             }
         }

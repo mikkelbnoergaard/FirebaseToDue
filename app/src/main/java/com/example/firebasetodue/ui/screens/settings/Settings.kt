@@ -348,19 +348,29 @@ fun Settings(
                 .height(rowHeight)
                 .padding(start = sidePadding, end = sidePadding)
                 .clickable(onClick = {
-                    for(item in firebaseRepository.getToDoListInFirebase()){
-                        firebaseRepository.clearToDoList()
+                    firebaseRepository.getToDoListInFirebase()
+                    val toDoList: List<ToDo> = firebaseRepository.getToDoListInFirebase()
+                    for (item in toDoList) {
+                        coroutineScope.launch {
+                            onToDoEvent(ToDoEvent.CheckIfToDoExists(item))
+                            delay(10)
+                        }
                         onToDoEvent(ToDoEvent.CheckIfToDoExists(item))
+                        println("exists: " + toDoState.existsInDatabase)
                         if (!toDoState.existsInDatabase) {
                             coroutineScope.launch {
-                                onToDoEvent(ToDoEvent.SetTitle(item.title))
-                                onToDoEvent(ToDoEvent.SetDescription(item.description))
-                                onToDoEvent(ToDoEvent.SetTag(item.tag))
-                                onToDoEvent(ToDoEvent.SetDueDate(item.dueDate))
-                                onToDoEvent(ToDoEvent.SetDueTime(item.dueTime))
+                                println("PRINT: " + item.title + item.description + item.tag + item.dueDate + item.dueTime)
 
-                                onToDoEvent(ToDoEvent.CreateToDo)
-                                delay(100)
+                                onToDoEvent(
+                                    ToDoEvent.CreateToDoFromFirebase(
+                                        item.title,
+                                        item.description,
+                                        item.tag,
+                                        item.dueDate,
+                                        item.dueTime,
+                                        item.finished
+                                    )
+                                )
                             }
 
                         } else {
@@ -378,6 +388,8 @@ fun Settings(
                             }
                         }
                     }
+
+                    firebaseRepository.clearToDoList()
                 }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
