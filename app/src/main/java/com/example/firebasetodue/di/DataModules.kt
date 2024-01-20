@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.firebasetodue.dataLayer.source.local.TagDao
 import com.example.firebasetodue.dataLayer.source.local.ToDoDao
 import com.example.firebasetodue.dataLayer.source.local.ToDoDatabase
+import com.example.firebasetodue.dataLayer.source.local.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,4 +32,7 @@ object DatabaseModules {
 
     @Provides
     fun provideTagDao(database: ToDoDatabase) : TagDao = database.tagDao
+
+    @Provides
+    fun provideUserDao(database: ToDoDatabase) : UserDao = database.userDao
 }

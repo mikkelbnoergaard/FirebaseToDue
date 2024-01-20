@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -26,11 +27,20 @@ import com.example.firebasetodue.ui.screens.GeneralLayout
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.example.firebasetodue.dataLayer.source.local.TagRepository
 import com.example.firebasetodue.dataLayer.source.local.ToDoRepository
+import com.example.firebasetodue.dataLayer.source.local.User
+import com.example.firebasetodue.dataLayer.source.local.UserRepository
 import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseRepository
 import com.example.firebasetodue.ui.event.TagEvent
+import com.example.firebasetodue.ui.event.UserEvent
+import com.example.firebasetodue.ui.stateholder.UserViewModel
+import kotlinx.coroutines.launch
+import java.util.UUID
+
 //import com.example.todue.ui.theme.DarkThemeProvider
 
 class MainActivity : ComponentActivity() {
+
+
 
     private val toDosViewModel by viewModels<ToDosViewModel>( // ViewModels to manage the state of the to-do lists.
         factoryProducer = {
@@ -68,7 +78,20 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+    private val userViewModel by viewModels<UserViewModel>( // ViewModels to manage the state of the tags.
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return UserViewModel(
+                        UserRepository(DatabaseModules.provideUserDao(DatabaseModules.provideDataBase(applicationContext)))
+                    ) as T
+                }
+            }
+        }
+    )
+
     private val firebaseRepository = FirebaseRepository(this@MainActivity)
+
 
     override fun onCreate(savedInstanceState: Bundle?) { // Collect the state of the to-do list and tags into composable functions.
         super.onCreate(savedInstanceState)
@@ -82,8 +105,12 @@ class MainActivity : ComponentActivity() {
                 val onToDoEvent = toDosViewModel::onEvent
                 val onCalendarEvent = calendarViewModel::onEvent
                 val calendarState by calendarViewModel.calendarState.collectAsState()
+                val onUserEvent = userViewModel::onEvent
+                val userState by userViewModel.userState.collectAsState()
+
 
                 onTagEvent(TagEvent.ResetTagSort)
+                onUserEvent(UserEvent.CreateUser(User(userKey = UUID.randomUUID().toString())))
 
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent,
@@ -97,7 +124,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
+
                 ) {
+
                     GeneralLayout(
                         toDoState = toDoState,
                         tagState = tagState,
@@ -105,7 +134,9 @@ class MainActivity : ComponentActivity() {
                         onTagEvent = onTagEvent,
                         onCalendarEvent = onCalendarEvent,
                         calendarState = calendarState,
-                        firebaseRepository
+                        onUserEvent = onUserEvent,
+                        userState = userState,
+                        firebaseRepository = firebaseRepository
                     )
                 }
             }

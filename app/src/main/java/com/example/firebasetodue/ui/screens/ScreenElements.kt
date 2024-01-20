@@ -72,6 +72,7 @@ import androidx.compose.ui.unit.sp
 import com.example.firebasetodue.dataLayer.source.local.Tag
 import com.example.firebasetodue.ui.event.TagEvent
 import com.example.firebasetodue.dataLayer.source.local.ToDo
+import com.example.firebasetodue.dataLayer.source.local.UserRepository
 import com.example.firebasetodue.dataLayer.source.remote.database.FirebaseRepository
 import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.navigation.TabItem
@@ -79,7 +80,9 @@ import com.example.firebasetodue.state.CalendarState
 import com.example.firebasetodue.ui.modifiers.getBottomLineShape
 import com.example.firebasetodue.state.TagState
 import com.example.firebasetodue.state.ToDoState
+import com.example.firebasetodue.state.UserState
 import com.example.firebasetodue.ui.event.CalendarEvent
+import com.example.firebasetodue.ui.event.UserEvent
 import com.example.firebasetodue.ui.screens.calendar.CalendarScreen
 import com.example.firebasetodue.ui.screens.overview.ToDosScreen
 import com.example.firebasetodue.ui.screens.settings.SettingsScreen
@@ -97,7 +100,9 @@ fun GeneralLayout(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
     calendarState: CalendarState,
-    firebaseRepository: FirebaseRepository
+    firebaseRepository: FirebaseRepository,
+    onUserEvent: (UserEvent) -> Unit,
+    userState: UserState
 ){
 
 
@@ -162,7 +167,7 @@ fun GeneralLayout(
                 1 -> TagsScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
                 2 -> CalendarScreen(onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, toDoState = toDoState, onCalendarEvent = onCalendarEvent, calendarState = calendarState)
                 3 -> StatisticsScreen(toDoState = toDoState, onToDoEvent = onToDoEvent)
-                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState)
+                4 -> SettingsScreen(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState, onUserEvent = onUserEvent, userState = userState)
                 else -> ToDosScreen(toDoState = toDoState, tagState = tagState, onTagEvent = onTagEvent, onToDoEvent = onToDoEvent, onCalendarEvent = onCalendarEvent)
             }
         }

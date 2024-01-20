@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Add
@@ -36,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,6 +49,8 @@ import com.example.firebasetodue.ui.event.ToDoEvent
 import com.example.firebasetodue.ui.theme.*
 import com.example.firebasetodue.dataLayer.source.remote.database.*
 import com.example.firebasetodue.state.ToDoState
+import com.example.firebasetodue.state.UserState
+import com.example.firebasetodue.ui.event.UserEvent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +60,9 @@ fun SettingsScreen(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
     firebaseRepository: FirebaseRepository,
-    toDoState: ToDoState
+    toDoState: ToDoState,
+    onUserEvent: (UserEvent) -> Unit,
+    userState: UserState
 ){
     Column(
         modifier = Modifier
@@ -77,7 +84,7 @@ fun SettingsScreen(
                 )
             },
         )
-        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState)
+        Settings(onToDoEvent = onToDoEvent, onTagEvent = onTagEvent, onCalendarEvent = onCalendarEvent, firebaseRepository = firebaseRepository, toDoState = toDoState, onUserEvent = onUserEvent, userState = userState)
     }
 }
 
@@ -87,7 +94,9 @@ fun Settings(
     onTagEvent: (TagEvent) -> Unit,
     onCalendarEvent: (CalendarEvent) -> Unit,
     firebaseRepository: FirebaseRepository,
-    toDoState: ToDoState
+    toDoState: ToDoState,
+    onUserEvent: (UserEvent) -> Unit,
+    userState: UserState
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -287,6 +296,74 @@ fun Settings(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        Divider(
+            modifier = Modifier
+                .width(350.dp)
+                .align(Alignment.CenterHorizontally),
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(Modifier.size(paddingBetweenRows))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(rowHeight)
+                .padding(start = sidePadding, end = sidePadding),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //Spacer(Modifier.size(sidePadding))
+                Icon(
+                    Icons.Outlined.Notifications, "Visibility icon",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .clickable (
+                            onClick = {
+                                onUserEvent(UserEvent.SubscribeToKey)
+                            }
+                        )
+                )
+                Spacer(Modifier.size(spaceAfterIcon))
+                TextField(
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 15.sp
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        disabledIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        placeholderColor =  MaterialTheme.colorScheme.onSurface,
+                        cursorColor =  MaterialTheme.colorScheme.primary,
+                    ),
+                    value = userState.keyTyping,
+                    onValueChange = {
+                        onUserEvent(UserEvent.KeyTyping(it))
+                    },
+                    placeholder = {
+                        androidx.compose.material.Text(
+                            text = "Insert key",
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
+                )
+            }
+
+        }
+
+
+
+
+
+
         Spacer(Modifier.size(paddingBetweenRows))
 
         Divider(
